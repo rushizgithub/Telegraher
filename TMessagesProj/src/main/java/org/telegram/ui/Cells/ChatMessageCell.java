@@ -10090,7 +10090,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 //        } else if (edited) {
         } else if (edited || deleted) {
 //            timeString = LocaleController.getString("EditedMessage", R.string.EditedMessage) + " " + LocaleController.getInstance().formatterDay.format((long) (messageObject.messageOwner.date) * 1000);
-            timeString = deleted ? LocaleController.getString("DeletedMessage", R.string.DeletedMessage) : LocaleController.getString("EditedMessage", R.string.EditedMessage) + " " + LocaleController.getInstance().formatterDay.format((long) (messageObject.messageOwner.date) * 1000);
+            timeString = (deleted ? LocaleController.getString("DeletedMessage", R.string.DeletedMessage) : LocaleController.getString("EditedMessage", R.string.EditedMessage)) + " " + LocaleController.getInstance().formatterDay.format((long) (messageObject.messageOwner.date) * 1000);
         } else {
             timeString = LocaleController.getInstance().formatterDay.format((long) (messageObject.messageOwner.date) * 1000);
         }
