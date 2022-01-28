@@ -161,7 +161,7 @@ It's very simple
 
 ### APKs & sha256
 
-* **sdk23** mean for android 4.2+, the other are working from 6+
+* **sdk23** mean for android 6+, the other are working from 4.1+
 * arm64-v8a (new devices)
     * `a5e2a859b45567ae008c433c9f133d1ada171d5180109261d454568abe9d0ee3`  [Telegraher.8.4.4r2.arm64-v8a.apk](https://github.com/nikitasius/Telegraher/releases/download/noshit_8.4.4_release2/Telegraher.8.4.4r2.arm64-v8a.apk)
     * `c70865e2d2fbd384bbdcdc8a79d0b1be6eb67d2bb78c356b429e6ea26c75755f`  [Telegraher.8.4.4r2.arm64-v8a-sdk23.apk](https://github.com/nikitasius/Telegraher/releases/download/noshit_8.4.4_release2/Telegraher.8.4.4r2.arm64-v8a-sdk23.apk)
