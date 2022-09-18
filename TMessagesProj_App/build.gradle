@@ -133,7 +133,7 @@ android {
                 abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
             }
             ext {
-                abiVersionCode = 1
+                abiVersionCode = 2
             }
         }
         bundleAfat_SDK23 {
@@ -168,7 +168,7 @@ android {
                 manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_standalone.xml'
             }
             ext {
-                abiVersionCode = 9
+                abiVersionCode = 2
             }
         }
     }
