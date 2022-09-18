@@ -25,7 +25,10 @@ public class BuildVars {
     public static boolean CHECK_UPDATES = true;
     public static boolean NO_SCOPED_STORAGE = Build.VERSION.SDK_INT <= 29;
     public static int BUILD_VERSION = 2800;
-    public static String BUILD_VERSION_STRING = "9.0.1";
+    public static int BUILD_VERSION_FULL = 28002;
+    public static String BUILD_VENDOR = "com.android.vending";
+    public static String BUILD_DUROV = "org.telegram.messenger";
+    public static String BUILD_VERSION_STRING = "9.0.0";
     public static int APP_ID = 4;
     public static String APP_HASH = "014b35b6184100b085b0d0572f9b5103";
     public static String APPCENTER_HASH = "f9726602-67c9-48d2-b5d0-4761f1c1a8f3";
