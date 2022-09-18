@@ -54,8 +54,6 @@ public class MessagesStorage extends BaseController {
     private DispatchQueue storageQueue;
     private SQLiteDatabase database;
     private File cacheFile;
-    private File walCacheFile;
-    private File shmCacheFile;
     private AtomicLong lastTaskId = new AtomicLong(System.currentTimeMillis());
     private SparseArray<ArrayList<Runnable>> tasks = new SparseArray<>();
 
@@ -248,12 +246,6 @@ public class MessagesStorage extends BaseController {
         if (cacheFile != null) {
             size += cacheFile.length();
         }
-        if (shmCacheFile != null) {
-            size += shmCacheFile.length();
-        }
-        /*if (walCacheFile != null) {
-            size += walCacheFile.length();
-        }*/
         return size;
     }
 
@@ -264,8 +256,6 @@ public class MessagesStorage extends BaseController {
             filesDir.mkdirs();
         }
         cacheFile = new File(filesDir, "cache4.db");
-        walCacheFile = new File(filesDir, "cache4.db-wal");
-        shmCacheFile = new File(filesDir, "cache4.db-shm");
 
         boolean createTable = false;
 
@@ -276,7 +266,7 @@ public class MessagesStorage extends BaseController {
             database = new SQLiteDatabase(cacheFile.getPath());
             database.executeFast("PRAGMA secure_delete = ON").stepThis().dispose();
             database.executeFast("PRAGMA temp_store = MEMORY").stepThis().dispose();
-            database.executeFast("PRAGMA journal_mode = WAL").stepThis().dispose();
+            database.executeFast("PRAGMA journal_mode = OFF").stepThis().dispose();
             database.executeFast("PRAGMA journal_size_limit = 10485760").stepThis().dispose();
 
             if (createTable) {
@@ -1664,14 +1654,6 @@ public class MessagesStorage extends BaseController {
             if (cacheFile != null) {
                 cacheFile.delete();
                 cacheFile = null;
-            }
-            if (walCacheFile != null) {
-                walCacheFile.delete();
-                walCacheFile = null;
-            }
-            if (shmCacheFile != null) {
-                shmCacheFile.delete();
-                shmCacheFile = null;
             }
         }
     }
