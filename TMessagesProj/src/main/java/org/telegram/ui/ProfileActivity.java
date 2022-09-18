@@ -7856,7 +7856,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     try {
                         int code = BuildVars.BUILD_VERSION;
                         String abi = "";
-                        switch (BuildVars.BUILD_VERSION_FULL) {
+                        switch (BuildVars.BUILD_VERSION_FULL % 10) {
                             case 1:
                             case 2:
                                 abi = "store bundled " + Build.CPU_ABI + " " + Build.CPU_ABI2;
