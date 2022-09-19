@@ -3364,7 +3364,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 LocaleController.getString("DebugMenuReloadContacts", R.string.DebugMenuReloadContacts),
                                 LocaleController.getString("DebugMenuResetContacts", R.string.DebugMenuResetContacts),
                                 LocaleController.getString("DebugMenuResetDialogs", R.string.DebugMenuResetDialogs),
-                                BuildVars.DEBUG_VERSION ? null : (BuildVars.LOGS_ENABLED ? LocaleController.getString("DebugMenuDisableLogs", R.string.DebugMenuDisableLogs) : LocaleController.getString("DebugMenuEnableLogs", R.string.DebugMenuEnableLogs)),
+                                BuildVars.LOGS_ENABLED ? LocaleController.getString("DebugMenuDisableLogs", R.string.DebugMenuDisableLogs) : LocaleController.getString("DebugMenuEnableLogs", R.string.DebugMenuEnableLogs),
                                 SharedConfig.inappCamera ? LocaleController.getString("DebugMenuDisableCamera", R.string.DebugMenuDisableCamera) : LocaleController.getString("DebugMenuEnableCamera", R.string.DebugMenuEnableCamera),
                                 LocaleController.getString("DebugMenuClearMediaCache", R.string.DebugMenuClearMediaCache),
                                 LocaleController.getString("DebugMenuCallSettings", R.string.DebugMenuCallSettings),
