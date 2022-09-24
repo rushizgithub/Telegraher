@@ -327,7 +327,7 @@ public class BitmapsCache {
                 selectedFrame = frameOffsets.get(index);
                 randomAccessFile.seek(selectedFrame.frameOffset);
                 if (bufferTmp == null || bufferTmp.length < selectedFrame.frameSize) {
-                    bufferTmp = new byte[(int) (selectedFrame.frameSize * 1.3f)];
+                    bufferTmp = new byte[selectedFrame.frameSize];
                 }
                 randomAccessFile.readFully(bufferTmp, 0, selectedFrame.frameSize);
                 if (!recycled) {

@@ -84,12 +84,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -4555,8 +4549,6 @@ public class LoginActivity extends BaseFragment {
         private String phone, emailPhone;
         private String requestPhone, phoneHash;
 
-        private GoogleSignInAccount googleAccount;
-
         public LoginActivitySetupEmail(Context context) {
             super(context);
 
@@ -4620,7 +4612,7 @@ public class LoginActivity extends BaseFragment {
             signInWithGoogleView.setMaxLines(2);
 
             SpannableStringBuilder str = new SpannableStringBuilder("d ");
-            Drawable dr = ContextCompat.getDrawable(context, R.drawable.googleg_standard_color_18);
+            Drawable dr = ContextCompat.getDrawable(context, R.drawable.msg_report_drugs);
             dr.setBounds(0, AndroidUtilities.dp(9), AndroidUtilities.dp(18), AndroidUtilities.dp(18 + 9));
             str.setSpan(new ImageSpan(dr, ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             str.setSpan(new ReplacementSpan() {
@@ -4655,23 +4647,8 @@ public class LoginActivity extends BaseFragment {
                         int result = (int) args[1];
                         Intent data = (Intent) args[2];
                         NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.onActivityResultReceived);
-
-                        if (request == BasePermissionsActivity.REQUEST_CODE_SIGN_IN_WITH_GOOGLE) {
-                            try {
-                                googleAccount = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
-                                onNextPressed(null);
-                            } catch (ApiException e) {
-                                FileLog.e(e);
-                            }
-                        }
                     }
                 }, NotificationCenter.onActivityResultReceived);
-
-                GoogleSignInClient googleClient = GoogleSignIn.getClient(getContext(), new GoogleSignInOptions.Builder()
-                        .requestIdToken(BuildVars.GOOGLE_AUTH_CLIENT_ID)
-                        .requestEmail()
-                        .build());
-                googleClient.signOut().addOnCompleteListener(command -> getParentActivity().startActivityForResult(googleClient.getSignInIntent(), BasePermissionsActivity.REQUEST_CODE_SIGN_IN_WITH_GOOGLE));
             });
         }
 
@@ -4738,7 +4715,7 @@ public class LoginActivity extends BaseFragment {
                 return;
             }
 
-            String email = googleAccount != null ? googleAccount.getEmail() : emailField.getText().toString();
+            String email = emailField.getText().toString();
             Bundle params = new Bundle();
             params.putString("phone", phone);
             params.putString("ephone", emailPhone);
@@ -4746,44 +4723,6 @@ public class LoginActivity extends BaseFragment {
             params.putString("phoneHash", phoneHash);
             params.putString("email", email);
             params.putBoolean("setup", true);
-
-            if (googleAccount != null) {
-                TLRPC.TL_account_verifyEmail verifyEmail = new TLRPC.TL_account_verifyEmail();
-                if (activityMode == MODE_CHANGE_LOGIN_EMAIL) {
-                    verifyEmail.purpose = new TLRPC.TL_emailVerifyPurposeLoginChange();
-                } else {
-                    TLRPC.TL_emailVerifyPurposeLoginSetup purpose = new TLRPC.TL_emailVerifyPurposeLoginSetup();
-                    purpose.phone_number = requestPhone;
-                    purpose.phone_code_hash = phoneHash;
-                    verifyEmail.purpose = purpose;
-                }
-                TLRPC.TL_emailVerificationGoogle verificationGoogle = new TLRPC.TL_emailVerificationGoogle();
-                verificationGoogle.token = googleAccount.getIdToken();
-                verifyEmail.verification = verificationGoogle;
-
-                googleAccount = null;
-                ConnectionsManager.getInstance(currentAccount).sendRequest(verifyEmail, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                    if (response instanceof TLRPC.TL_account_emailVerified && activityMode == MODE_CHANGE_LOGIN_EMAIL) {
-                        finishFragment();
-                        emailChangeFinishCallback.run();
-                    } else if (response instanceof TLRPC.TL_account_emailVerifiedLogin) {
-                        TLRPC.TL_account_emailVerifiedLogin emailVerifiedLogin = (TLRPC.TL_account_emailVerifiedLogin) response;
-
-                        params.putString("email", emailVerifiedLogin.email);
-                        fillNextCodeParams(params, emailVerifiedLogin.sent_code);
-                    } else if (error != null) {
-                        if (error.text.contains("EMAIL_NOT_ALLOWED")) {
-                            needShowAlert(LocaleController.getString(R.string.RestorePasswordNoEmailTitle), LocaleController.getString(R.string.EmailNotAllowed));
-                        } else if (error.text.contains("EMAIL_TOKEN_INVALID")) {
-                            needShowAlert(LocaleController.getString(R.string.RestorePasswordNoEmailTitle), LocaleController.getString(R.string.EmailTokenInvalid));
-                        } else if (error.code != -1000) {
-                            AlertsCreator.processError(currentAccount, error, LoginActivity.this, verifyEmail);
-                        }
-                    }
-                }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
-
-                return;
-            }
 
             if (TextUtils.isEmpty(email)) {
                 onPasscodeError(false);
@@ -4879,7 +4818,6 @@ public class LoginActivity extends BaseFragment {
 
         private Bundle currentParams;
         private boolean nextPressed;
-        private GoogleSignInAccount googleAccount;
 
         private String phone, emailPhone, email;
         private String requestPhone, phoneHash;
@@ -4951,7 +4889,7 @@ public class LoginActivity extends BaseFragment {
             signInWithGoogleView.setMaxLines(2);
 
             SpannableStringBuilder str = new SpannableStringBuilder("d ");
-            Drawable dr = ContextCompat.getDrawable(context, R.drawable.googleg_standard_color_18);
+            Drawable dr = ContextCompat.getDrawable(context, R.drawable.msg_report_drugs);
             dr.setBounds(0, AndroidUtilities.dp(9), AndroidUtilities.dp(18), AndroidUtilities.dp(18 + 9));
             str.setSpan(new ImageSpan(dr, ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             str.setSpan(new ReplacementSpan() {
@@ -4974,23 +4912,8 @@ public class LoginActivity extends BaseFragment {
                         int result = (int) args[1];
                         Intent data = (Intent) args[2];
                         NotificationCenter.getGlobalInstance().removeObserver(this, NotificationCenter.onActivityResultReceived);
-
-                        if (request == BasePermissionsActivity.REQUEST_CODE_SIGN_IN_WITH_GOOGLE) {
-                            try {
-                                googleAccount = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
-                                onNextPressed(null);
-                            } catch (ApiException e) {
-                                FileLog.e(e);
-                            }
-                        }
                     }
                 }, NotificationCenter.onActivityResultReceived);
-
-                GoogleSignInClient googleClient = GoogleSignIn.getClient(getContext(), new GoogleSignInOptions.Builder()
-                                .requestIdToken(BuildVars.GOOGLE_AUTH_CLIENT_ID)
-                                .requestEmail()
-                                .build());
-                googleClient.signOut().addOnCompleteListener(command -> getParentActivity().startActivityForResult(googleClient.getSignInIntent(), BasePermissionsActivity.REQUEST_CODE_SIGN_IN_WITH_GOOGLE));
             });
 
             resendCodeView = new TextView(context);
@@ -5224,7 +5147,7 @@ public class LoginActivity extends BaseFragment {
             }
 
             code = codeFieldContainer.getCode();
-            if (code.length() == 0 && googleAccount == null) {
+            if (code.length() == 0) {
                 onPasscodeError(false);
                 return;
             }
@@ -5253,15 +5176,9 @@ public class LoginActivity extends BaseFragment {
                 TLRPC.TL_auth_signIn request = new TLRPC.TL_auth_signIn();
                 request.phone_number = requestPhone;
                 request.phone_code_hash = phoneHash;
-                if (googleAccount != null) {
-                    TLRPC.TL_emailVerificationGoogle verification = new TLRPC.TL_emailVerificationGoogle();
-                    verification.token = googleAccount.getIdToken();
-                    request.email_verification = verification;
-                } else {
-                    TLRPC.TL_emailVerificationCode verification = new TLRPC.TL_emailVerificationCode();
-                    verification.code = code;
-                    request.email_verification = verification;
-                }
+                TLRPC.TL_emailVerificationCode verification = new TLRPC.TL_emailVerificationCode();
+                verification.code = code;
+                request.email_verification = verification;
                 request.flags |= 2;
                 req = request;
             }
@@ -5362,15 +5279,10 @@ public class LoginActivity extends BaseFragment {
                         }
                     }
                 }
-                googleAccount = null;
             }), ConnectionsManager.RequestFlagFailOnServerErrors | ConnectionsManager.RequestFlagWithoutLogin);
         }
 
         private void animateSuccess(Runnable callback) {
-            if (googleAccount != null) {
-                callback.run();
-                return;
-            }
             for (int i = 0; i < codeFieldContainer.codeField.length; i++) {
                 int finalI = i;
                 codeFieldContainer.postDelayed(()-> codeFieldContainer.codeField[finalI].animateSuccessProgress(1f), i * 75L);
