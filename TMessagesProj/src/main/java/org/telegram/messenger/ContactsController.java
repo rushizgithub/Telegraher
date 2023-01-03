@@ -328,7 +328,7 @@ public class ContactsController extends BaseController {
         if (true) return;
         AccountManager am = AccountManager.get(ApplicationLoader.applicationContext);
         try {
-            Account[] accounts = am.getAccountsByType("org.telegram.messenger");
+            Account[] accounts = am.getAccountsByType(BuildVars.BUILD_DUROV);
             systemAccount = null;
             for (int a = 0; a < accounts.length; a++) {
                 Account acc = accounts[a];
@@ -361,7 +361,7 @@ public class ContactsController extends BaseController {
             readContacts();
             if (systemAccount == null) {
                 try {
-                    systemAccount = new Account("" + getUserConfig().getClientUserId(), "org.telegram.messenger");
+                    systemAccount = new Account("" + getUserConfig().getClientUserId(), BuildVars.BUILD_DUROV);
                     am.addAccountExplicitly(systemAccount, "", null);
                 } catch (Exception ignore) {
 
@@ -375,7 +375,7 @@ public class ContactsController extends BaseController {
         try {
             systemAccount = null;
             AccountManager am = AccountManager.get(ApplicationLoader.applicationContext);
-            Account[] accounts = am.getAccountsByType("org.telegram.messenger");
+            Account[] accounts = am.getAccountsByType(BuildVars.BUILD_DUROV);
             for (int a = 0; a < accounts.length; a++) {
                 Account acc = accounts[a];
                 boolean found = false;
@@ -452,7 +452,7 @@ public class ContactsController extends BaseController {
                     if (false) {
                         AccountManager am = AccountManager.get(ApplicationLoader.applicationContext);
                         try {
-                            Account[] accounts = am.getAccountsByType("org.telegram.messenger");
+                            Account[] accounts = am.getAccountsByType(BuildVars.BUILD_DUROV);
                             systemAccount = null;
                             for (int a = 0; a < accounts.length; a++) {
                                 Account acc = accounts[a];
@@ -470,7 +470,7 @@ public class ContactsController extends BaseController {
 
                         }
                         try {
-                            systemAccount = new Account("" + getUserConfig().getClientUserId(), "org.telegram.messenger");
+                            systemAccount = new Account("" + getUserConfig().getClientUserId(), BuildVars.BUILD_DUROV);
                             am.addAccountExplicitly(systemAccount, "", null);
                         } catch (Exception ignore) {
 
@@ -2118,7 +2118,7 @@ public class ContactsController extends BaseController {
         ContentResolver contentResolver = ApplicationLoader.applicationContext.getContentResolver();
         if (check) {
             try {
-                Uri rawContactUri = ContactsContract.RawContacts.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME, Long.valueOf(UserConfig.getInstance(currentAccount).getClientUserId()).toString()).appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_TYPE, "org.telegram.messenger").build();
+                Uri rawContactUri = ContactsContract.RawContacts.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME, Long.valueOf(UserConfig.getInstance(currentAccount).getClientUserId()).toString()).appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_TYPE, BuildVars.BUILD_DUROV).build();
                 int value = contentResolver.delete(rawContactUri, ContactsContract.RawContacts.SYNC2 + " = " + user.id, null);
             } catch (Exception ignore) {
 
