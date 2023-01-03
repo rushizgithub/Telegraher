@@ -6302,7 +6302,7 @@ public class PassportActivity extends BaseFragment implements NotificationCenter
         req.phone_number = phone;
         req.settings = new TLRPC.TL_codeSettings();
         req.settings.allow_flashcall = simcardAvailable && allowCall;
-        req.settings.allow_app_hash = PushListenerController.GooglePushListenerServiceProvider.INSTANCE.hasServices();
+        req.settings.allow_app_hash = LoginActivity.hasServices;
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
         if (req.settings.allow_app_hash) {
             preferences.edit().putString("sms_hash", BuildVars.SMS_HASH).commit();
