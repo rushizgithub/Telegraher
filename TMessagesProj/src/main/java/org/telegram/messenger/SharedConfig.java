@@ -433,7 +433,7 @@ public class SharedConfig {
                         data.cleanup();
                     }
                 }
-                if (pendingAppUpdate != null) {
+                if (false) {
                     long updateTime = 0;
                     int updateVersion = 0;
                     String updateVersionString = null;
@@ -613,6 +613,7 @@ public class SharedConfig {
     }
 
     public static boolean isAppUpdateAvailable() {
+        if (true) return false;
         if (pendingAppUpdate == null || pendingAppUpdate.document == null || !BuildVars.isStandaloneApp()) {
             return false;
         }
@@ -628,6 +629,7 @@ public class SharedConfig {
     }
 
     public static boolean setNewAppVersionAvailable(TLRPC.TL_help_appUpdate update) {
+        if (true) return false;
         String updateVersionString = null;
         int versionCode = 0;
         try {

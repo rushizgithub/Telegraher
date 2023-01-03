@@ -122,6 +122,7 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.compatqual.NullableType;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.telegram.messenger.BuildVars;
 
 /** Miscellaneous utility methods. */
 public final class Util {

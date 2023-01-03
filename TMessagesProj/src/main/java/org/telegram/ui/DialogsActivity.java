@@ -2739,7 +2739,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, AndroidUtilities.dp(26));
                 statusDrawable.center = true;
                 if (BuildVars.DEBUG_VERSION) {
-                    actionBar.setTitle(LocaleController.getString("AppNameBeta", R.string.AppNameBeta), statusDrawable);
+                    actionBar.setTitle("Telegraher DEBUG", statusDrawable);
                 } else {
                     actionBar.setTitle(LocaleController.getString("AppName", R.string.AppName), statusDrawable);
                 }
