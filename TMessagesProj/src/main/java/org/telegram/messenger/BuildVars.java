@@ -12,10 +12,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 
-import com.android.billingclient.api.ProductDetails;
-
-import java.util.Objects;
-
 public class BuildVars {
 
     public static boolean DEBUG_VERSION = false;
@@ -35,7 +31,7 @@ public class BuildVars {
     public static String APPCENTER_HASH = "f9726602-67c9-48d2-b5d0-4761f1c1a8f3";
 
     public static String SMS_HASH = "oLeq9AcOZkT";
-    public static String PLAYSTORE_APP_URL = "https://play.google.com/store/apps/details?id=org.telegram.messenger";
+    public static String PLAYSTORE_APP_URL = "https://github.com/nikitasius/Telegraher/releases";
     public static String GOOGLE_AUTH_CLIENT_ID = "760348033671-81kmi3pi84p11ub8hp9a1funsv0rn2p9.apps.googleusercontent.com";
 
 

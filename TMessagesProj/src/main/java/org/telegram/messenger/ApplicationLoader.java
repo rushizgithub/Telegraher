@@ -30,11 +30,10 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import org.telegram.messenger.voip.VideoCapturerDevice;
 import org.telegram.tgnet.ConnectionsManager;
@@ -45,6 +44,7 @@ import org.telegram.ui.LauncherIconController;
 import java.io.File;
 
 public class ApplicationLoader extends Application {
+    private static PendingIntent pendingIntent;
 
     private static ApplicationLoader applicationLoaderInstance;
 
@@ -70,36 +70,12 @@ public class ApplicationLoader extends Application {
     public static volatile long mainInterfacePausedStageQueueTime;
 
     private static PushListenerController.IPushListenerServiceProvider pushProvider;
-    private static IMapsProvider mapsProvider;
     private static ILocationServiceProvider locationServiceProvider;
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
-    }
-
-    public static ILocationServiceProvider getLocationServiceProvider() {
-        if (locationServiceProvider == null) {
-            locationServiceProvider = applicationLoaderInstance.onCreateLocationServiceProvider();
-            locationServiceProvider.init(applicationContext);
-        }
-        return locationServiceProvider;
-    }
-
-    protected ILocationServiceProvider onCreateLocationServiceProvider() {
-        return new GoogleLocationProvider();
-    }
-
-    public static IMapsProvider getMapsProvider() {
-        if (mapsProvider == null) {
-            mapsProvider = applicationLoaderInstance.onCreateMapsProvider();
-        }
-        return mapsProvider;
-    }
-
-    protected IMapsProvider onCreateMapsProvider() {
-        return new GoogleMapsProvider();
     }
 
     public static PushListenerController.IPushListenerServiceProvider getPushProvider() {
@@ -220,7 +196,6 @@ public class ApplicationLoader extends Application {
         }
 
         ApplicationLoader app = (ApplicationLoader) ApplicationLoader.applicationContext;
-        app.initPushServices();
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("app initied");
         }
@@ -278,6 +253,8 @@ public class ApplicationLoader extends Application {
         AndroidUtilities.runOnUIThread(ApplicationLoader::startPushService);
 
         LauncherIconController.tryFixLauncherIconIfNeeded();
+        org.osmdroid.config.Configuration.getInstance().setUserAgentValue("Telegraher " + BuildVars.BUILD_VERSION_STRING);
+        org.osmdroid.config.Configuration.getInstance().setOsmdroidBasePath(new File(getCacheDir(), "osmdroid"));
     }
 
     public static void startPushService() {
@@ -286,13 +263,35 @@ public class ApplicationLoader extends Application {
         if (preferences.contains("pushService")) {
             enabled = preferences.getBoolean("pushService", true);
         } else {
-            enabled = MessagesController.getMainSettings(UserConfig.selectedAccount).getBoolean("keepAliveService", false);
+            enabled = MessagesController.getMainSettings(UserConfig.selectedAccount).getBoolean("keepAliveService", true);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("pushService", enabled);
+            editor.putBoolean("pushConnection", enabled);
+            editor.apply();
+            SharedPreferences preferencesCA = MessagesController.getNotificationsSettings(UserConfig.selectedAccount);
+            SharedPreferences.Editor editorCA = preferencesCA.edit();
+            editorCA.putBoolean("pushConnection", enabled);
+            editorCA.putBoolean("pushService", enabled);
+            editorCA.apply();
+            ConnectionsManager.getInstance(UserConfig.selectedAccount).setPushConnectionEnabled(true);
         }
         if (enabled) {
-            try {
-                applicationContext.startService(new Intent(applicationContext, NotificationsService.class));
-            } catch (Throwable ignore) {
+            Log.d("GRAHER", "Trying to start push service every minute");
+            AlarmManager am = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
+            Intent i = new Intent(applicationContext, NotificationsService.class);
+            pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, i, PendingIntent.FLAG_MUTABLE);
 
+            am.cancel(pendingIntent);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, pendingIntent);
+            try {
+                Log.d("GRAHER", "Starting push service...");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    applicationContext.startForegroundService(new Intent(applicationContext, NotificationsService.class));
+                } else {
+                    applicationContext.startService(new Intent(applicationContext, NotificationsService.class));
+                }
+            } catch (Throwable ignore) {
+                Log.d("GRAHER", "Failed to start push service");
             }
         } else {
             applicationContext.stopService(new Intent(applicationContext, NotificationsService.class));
@@ -300,6 +299,9 @@ public class ApplicationLoader extends Application {
             PendingIntent pintent = PendingIntent.getService(applicationContext, 0, new Intent(applicationContext, NotificationsService.class), PendingIntent.FLAG_MUTABLE);
             AlarmManager alarm = (AlarmManager)applicationContext.getSystemService(Context.ALARM_SERVICE);
             alarm.cancel(pintent);
+            if (pendingIntent != null) {
+                alarm.cancel(pendingIntent);
+            }
         }
     }
 
@@ -314,30 +316,6 @@ public class ApplicationLoader extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void initPushServices() {
-        AndroidUtilities.runOnUIThread(() -> {
-            if (getPushProvider().hasServices()) {
-                getPushProvider().onRequestPushToken();
-            } else {
-                if (BuildVars.LOGS_ENABLED) {
-                    FileLog.d("No valid " + getPushProvider().getLogTitle() + " APK found.");
-                }
-                SharedConfig.pushStringStatus = "__NO_GOOGLE_PLAY_SERVICES__";
-                PushListenerController.sendRegistrationToServer(getPushProvider().getPushType(), null);
-            }
-        }, 1000);
-    }
-
-    private boolean checkPlayServices() {
-        try {
-            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-            return resultCode == ConnectionResult.SUCCESS;
-        } catch (Exception e) {
-            FileLog.e(e);
-        }
-        return true;
     }
 
     private static void ensureCurrentNetworkGet(boolean force) {

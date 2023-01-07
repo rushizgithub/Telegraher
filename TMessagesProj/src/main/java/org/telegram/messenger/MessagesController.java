@@ -157,7 +157,7 @@ public class MessagesController extends BaseController implements NotificationCe
     private int pollsToCheckSize;
     private long lastViewsCheckTime;
     public SparseIntArray premiumFeaturesTypesToPosition = new SparseIntArray();
-    
+
     public ArrayList<DialogFilter> dialogFilters = new ArrayList<>();
     public SparseArray<DialogFilter> dialogFiltersById = new SparseArray<>();
     private boolean loadingSuggestedFilters;
@@ -1086,8 +1086,8 @@ public class MessagesController extends BaseController implements NotificationCe
         canRevokePmInbox = mainPreferences.getBoolean("canRevokePmInbox", canRevokePmInbox);
         preloadFeaturedStickers = mainPreferences.getBoolean("preloadFeaturedStickers", false);
         youtubePipType = mainPreferences.getString("youtubePipType", "disabled");
-        keepAliveService = mainPreferences.getBoolean("keepAliveService", false);
-        backgroundConnection = mainPreferences.getBoolean("keepAliveService", false);
+        keepAliveService = mainPreferences.getBoolean("keepAliveService", true);
+        backgroundConnection = mainPreferences.getBoolean("keepAliveService", true);
         promoDialogId = mainPreferences.getLong("proxy_dialog", 0);
         nextPromoInfoCheckTime = mainPreferences.getInt("nextPromoInfoCheckTime", 0);
         promoDialogType = mainPreferences.getInt("promo_dialog_type", 0);
@@ -1152,7 +1152,6 @@ public class MessagesController extends BaseController implements NotificationCe
         telegramAntispamUserId = mainPreferences.getLong("telegramAntispamUserId", -1);
         telegramAntispamGroupSizeMin = mainPreferences.getInt("telegramAntispamGroupSizeMin", 100);
         hiddenMembersGroupSizeMin = mainPreferences.getInt("hiddenMembersGroupSizeMin", 100);
-        BuildVars.GOOGLE_AUTH_CLIENT_ID = mainPreferences.getString("googleAuthClientId", BuildVars.GOOGLE_AUTH_CLIENT_ID);
 
         Set<String> currencySet = mainPreferences.getStringSet("directPaymentsCurrency", null);
         if (currencySet != null) {
@@ -1824,17 +1823,6 @@ public class MessagesController extends BaseController implements NotificationCe
                 for (int a = 0, N = object.value.size(); a < N; a++) {
                     TLRPC.TL_jsonObjectValue value = object.value.get(a);
                     switch (value.key) {
-                        case "login_google_oauth_client_id": {
-                            if (value.value instanceof TLRPC.TL_jsonString) {
-                                String str = ((TLRPC.TL_jsonString) value.value).value;
-                                if (!Objects.equals(BuildVars.GOOGLE_AUTH_CLIENT_ID, str)) {
-                                    BuildVars.GOOGLE_AUTH_CLIENT_ID = str;
-                                    editor.putString("googleAuthClientId", BuildVars.GOOGLE_AUTH_CLIENT_ID);
-                                    changed = true;
-                                }
-                            }
-                            break;
-                        }
                         case "premium_playmarket_direct_currency_list": {
                             if (value.value instanceof TLRPC.TL_jsonArray) {
                                 TLRPC.TL_jsonArray arr = (TLRPC.TL_jsonArray) value.value;
@@ -2789,7 +2777,7 @@ public class MessagesController extends BaseController implements NotificationCe
             if (pendingSuggestions.remove(suggestion)) {
                 SharedPreferences.Editor editor = mainPreferences.edit();
                 editor.putStringSet("pendingSuggestions", pendingSuggestions);
-                editor.commit();
+                editor.apply();
                 getNotificationCenter().postNotificationName(NotificationCenter.newSuggestionsAvailable);
             } else {
                 return;
@@ -16582,15 +16570,6 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public static String getRestrictionReason(ArrayList<TLRPC.TL_restrictionReason> reasons) {
-        if (reasons.isEmpty()) {
-            return null;
-        }
-        for (int a = 0, N = reasons.size(); a < N; a++) {
-            TLRPC.TL_restrictionReason reason = reasons.get(a);
-            if ("all".equals(reason.platform) || !BuildVars.isStandaloneApp() && !BuildVars.isBetaApp() && "android".equals(reason.platform)) {
-                return reason.text;
-            }
-        }
         return null;
     }
 

@@ -131,7 +131,6 @@ import org.telegram.messenger.FileLog;
 import org.telegram.messenger.ForwardingMessagesParams;
 import org.telegram.messenger.ImageLocation;
 import org.telegram.messenger.ImageReceiver;
-import org.telegram.messenger.LanguageDetector;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MediaDataController;
@@ -23644,49 +23643,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             return true;
                         };
                         TLRPC.InputPeer inputPeer = selectedObject != null && (selectedObject.isPoll() || selectedObject.isVoiceTranscriptionOpen() || selectedObject.isSponsored()) ? null : getMessagesController().getInputPeer(dialog_id);
-                        if (LanguageDetector.hasSupport()) {
-                            final String[] fromLang = {null};
-                            cell.setVisibility(View.GONE);
-                            waitForLangDetection.set(true);
-                            LanguageDetector.detectLanguage(
-                                finalMessageText.toString(),
-                                (String lang) -> {
-                                    fromLang[0] = lang;
-                                    if (fromLang[0] != null && (!fromLang[0].equals(toLang) || fromLang[0].equals("und")) && (
-                                            translateButtonEnabled && !RestrictedLanguagesSelectActivity.getRestrictedLanguages().contains(fromLang[0]) ||
-                                            (currentChat != null && (currentChat.has_link || ChatObject.isPublic(currentChat)) || selectedObject.messageOwner.fwd_from != null) && ("uk".equals(fromLang[0]) || "ru".equals(fromLang[0]))
-                                        )) {
-                                        cell.setVisibility(View.VISIBLE);
-                                    }
-                                    waitForLangDetection.set(false);
-                                    if (onLangDetectionDone.get() != null) {
-                                        onLangDetectionDone.get().run();
-                                        onLangDetectionDone.set(null);
-                                    }
-                                },
-                                (Exception e) -> {
-                                    FileLog.e("mlkit: failed to detect language in message");
-                                    waitForLangDetection.set(false);
-                                    if (onLangDetectionDone.get() != null) {
-                                        onLangDetectionDone.get().run();
-                                        onLangDetectionDone.set(null);
-                                    }
-                                }
-                            );
-                            cell.setOnClickListener(e -> {
-                                if (selectedObject == null || i >= options.size() || getParentActivity() == null) {
-                                    return;
-                                }
-                                TranslateAlert alert = TranslateAlert.showAlert(getParentActivity(), this, currentAccount, inputPeer, messageIdToTranslate[0], fromLang[0], toLang, finalMessageText, noforwards, onLinkPress, () -> dimBehindView(false));
-                                alert.showDim(false);
-                                closeMenu(false);
-                            });
-                            cell.postDelayed(() -> {
-                                if (onLangDetectionDone.get() != null) {
-                                    onLangDetectionDone.getAndSet(null).run();
-                                }
-                            }, 250);
-                        } else if (translateButtonEnabled) {
+                        if (translateButtonEnabled) {
                             cell.setOnClickListener(e -> {
                                 if (selectedObject == null || i >= options.size() || getParentActivity() == null) {
                                     return;

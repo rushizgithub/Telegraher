@@ -10,7 +10,6 @@ configurations {
 }
 
 configurations.all {
-    exclude group: 'com.google.firebase', module: 'firebase-core'
     exclude group: 'androidx.recyclerview', module: 'recyclerview'
 }
 
@@ -18,7 +17,6 @@ dependencies {
     implementation project(':TMessagesProj')
     implementation 'androidx.multidex:multidex:2.0.1'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
-    implementation files('../TMessagesProj/libs/libgsaverification-client.aar')
 }
 
 android {
@@ -121,56 +119,36 @@ android {
                 abiVersionCode = 2
             }
         }
-        bundleAfat_SDK23 {
-            ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-            }
-            sourceSets.debug {
-                manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest_SDK23.xml'
-            }
-            sourceSets.release {
-                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_SDK23.xml'
-            }
-            sourceSets.standalone {
-                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_standalone.xml'
-            }
-            minSdkVersion 23
-            ext {
-                abiVersionCode = 2
-            }
-        }
-        arm64_v8a_sdk23 {
+        arm64_v8a {
             ndk {
                 abiFilters "arm64-v8a"
             }
             sourceSets.debug {
-                manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest_SDK23.xml'
+                manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest.xml'
             }
             sourceSets.release {
-                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_SDK23.xml'
+                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest.xml'
             }
             sourceSets.standalone {
                 manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_standalone.xml'
             }
-            minSdkVersion 23
             ext {
                 abiVersionCode = 2
             }
         }
-        armeabi_v7a_sdk23 {
+        armeabi_v7a {
             ndk {
                 abiFilters "armeabi-v7a"
             }
             sourceSets.debug {
-                manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest_SDK23.xml'
+                manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest.xml'
             }
             sourceSets.release {
-                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_SDK23.xml'
+                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest.xml'
             }
             sourceSets.standalone {
-                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_standalone.xml'
+                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest.xml'
             }
-            minSdkVersion 23
             ext {
                 abiVersionCode = 2
             }
@@ -180,13 +158,13 @@ android {
                 abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
             }
             sourceSets.debug {
-                manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest_SDK23.xml'
+                manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest.xml'
             }
             sourceSets.release {
-                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_SDK23.xml'
+                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest.xml'
             }
             sourceSets.standalone {
-                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest_standalone.xml'
+                manifest.srcFile '../TMessagesProj/config/release/AndroidManifest.xml'
             }
             ext {
                 abiVersionCode = 2
@@ -236,5 +214,3 @@ android {
         checkReleaseBuilds false
     }
 }
-
-apply plugin: 'com.google.gms.google-services'

@@ -189,7 +189,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 uploadSet.remove(path);
             }
         }
-        
+
         private void addUploadProgress(String path, long sz, float progress) {
             uploadProgresses.put(path, progress);
             uploadSize.put(path, sz);
@@ -673,7 +673,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         public boolean performMediaUpload;
 
         public boolean retriedToSend;
-        
+
         public int topMessageId;
 
         public TLRPC.InputMedia inputUploadMedia;
@@ -6735,6 +6735,29 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 }
             });
         }
+    }
+
+    @UiThread
+    public static void prepareSendingLocation(AccountInstance accountInstance, final Location location, final long dialog_id) {
+        accountInstance.getMessagesStorage().getStorageQueue().postRunnable(() -> Utilities.stageQueue.postRunnable(() -> AndroidUtilities.runOnUIThread(() -> {
+            CharSequence venueTitle = location.getExtras().getCharSequence("venueTitle");
+            CharSequence venueAddress = location.getExtras().getCharSequence("venueAddress");
+            TLRPC.MessageMedia sendingMedia;
+            if(venueTitle != null || venueAddress != null) {
+                sendingMedia = new TLRPC.TL_messageMediaVenue();
+                sendingMedia.address = venueAddress == null ? "" : venueAddress.toString();
+                sendingMedia.title = venueTitle == null ? "" : venueTitle.toString();
+                sendingMedia.provider = "";
+                sendingMedia.venue_id = "";
+            }
+            else {
+                sendingMedia = new TLRPC.TL_messageMediaGeo();
+            }
+            sendingMedia.geo = new TLRPC.TL_geoPoint();
+            sendingMedia.geo.lat = location.getLatitude();
+            sendingMedia.geo._long = location.getLongitude();
+            accountInstance.getSendMessagesHelper().sendMessage(sendingMedia, dialog_id, null, null, null, null, true, 0);
+        })));
     }
 
     @UiThread
