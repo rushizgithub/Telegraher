@@ -232,7 +232,7 @@ public class EditWidgetActivity extends BaseFragment {
 
             shadowDrawable = Theme.getThemedDrawable(context, R.drawable.greydivider_bottom, Theme.key_windowBackgroundGrayShadow);
         }
-        
+
         public void updateDialogs() {
             if (widgetType == TYPE_CHATS) {
                 for (int a = 0; a < 2; a++) {
@@ -813,7 +813,7 @@ public class EditWidgetActivity extends BaseFragment {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putInt("account" + currentWidgetId, currentAccount);
                     editor.putInt("type" + currentWidgetId, widgetType);
-                    editor.commit();
+                    editor.apply();
 
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getParentActivity());
                     if (widgetType == TYPE_CHATS) {

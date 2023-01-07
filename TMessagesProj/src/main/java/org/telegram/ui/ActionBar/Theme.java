@@ -941,7 +941,7 @@ public class Theme {
                 lastRect.set(bounds);
                 return invalidate;
             }
-            
+
             public Path getPath() {
                 return path;
             }
@@ -2007,7 +2007,7 @@ public class Theme {
                 jsonObject.put("wMotion", isMotion);
                 jsonObject.put("pIntensity", intensity);
                 editor.putString(key, jsonObject.toString());
-                editor.commit();
+                editor.apply();
             } catch (Throwable e) {
                 FileLog.e(e);
             }
@@ -2016,7 +2016,7 @@ public class Theme {
         private void delete() {
             String key = getKey();
             SharedPreferences themeConfig = ApplicationLoader.applicationContext.getSharedPreferences("themeconfig", Activity.MODE_PRIVATE);
-            themeConfig.edit().remove(key).commit();
+            themeConfig.edit().remove(key).apply();
             new File(ApplicationLoader.getFilesDirFixed(), fileName).delete();
             new File(ApplicationLoader.getFilesDirFixed(), originalFileName).delete();
         }
@@ -5431,7 +5431,7 @@ public class Theme {
                     }
                 }
                 saveOtherThemes(true, true);
-                themeConfig.edit().remove("themes").commit();
+                themeConfig.edit().remove("themes").apply();
             }
         }
 
@@ -5454,7 +5454,7 @@ public class Theme {
                 if (applyingTheme != null && !themeConfig.contains("lastDayTheme")) {
                     SharedPreferences.Editor editor = themeConfig.edit();
                     editor.putString("lastDayTheme", applyingTheme.getKey());
-                    editor.commit();
+                    editor.apply();
                 }
             }
 
@@ -5475,7 +5475,7 @@ public class Theme {
             if (currentNightTheme != null && !themeConfig.contains("lastDarkTheme")) {
                 SharedPreferences.Editor editor = themeConfig.edit();
                 editor.putString("lastDarkTheme", currentNightTheme.getKey());
-                editor.commit();
+                editor.apply();
             }
 
             SharedPreferences.Editor oldEditor = null;
@@ -5627,8 +5627,8 @@ public class Theme {
                 }
             }
             if (oldEditor != null) {
-                oldEditor.commit();
-                oldEditorNew.commit();
+                oldEditor.apply();
+                oldEditorNew.apply();
             }
 
             selectedAutoNightType = preferences.getInt("selectedAutoNightType", Build.VERSION.SDK_INT >= 29 ? AUTO_NIGHT_TYPE_SYSTEM : AUTO_NIGHT_TYPE_NONE);
@@ -5689,7 +5689,7 @@ public class Theme {
                     currentNightTheme.setOverrideWallpaper(overrideWallpaper);
                 }
             }
-            preferences.edit().remove("overrideThemeWallpaper").remove("selectedBackground2").commit();
+            preferences.edit().remove("overrideThemeWallpaper").remove("selectedBackground2").apply();
         }
 
         int switchToTheme = needSwitchToTheme();
@@ -5758,7 +5758,7 @@ public class Theme {
         } else {
             editor.remove("nighttheme");
         }
-        editor.commit();
+        editor.apply();
     }
 
     @SuppressLint("PrivateApi")
@@ -7518,7 +7518,7 @@ public class Theme {
                 }
             }
             editor.putInt("accent_current_" + theme.assetName, theme.currentAccentId);
-            editor.commit();
+            editor.apply();
         } else {
             if (theme.prevAccentId != -1) {
                 if (remove) {
@@ -7567,7 +7567,7 @@ public class Theme {
         }
 
         editor.putInt("lastLoadingCurrentThemeTime", lastLoadingCurrentThemeTime);
-        editor.commit();
+        editor.apply();
 
         if (full) {
             for (int b = 0; b < 5; b++) {
@@ -8037,7 +8037,7 @@ public class Theme {
                 SharedPreferences preferences = MessagesController.getGlobalMainSettings();
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("theme", currentDayTheme.getKey());
-                editor.commit();
+                editor.apply();
             }
         } catch (Exception e) {
             FileLog.e(e);
