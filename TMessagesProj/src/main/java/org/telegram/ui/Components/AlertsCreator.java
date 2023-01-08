@@ -5057,6 +5057,9 @@ public class AlertsCreator {
 
         final boolean[] checks = new boolean[3];
         final boolean[] deleteForAll = new boolean[]{true};
+        final int[] clicknclick = new int[]{0};//some dirty stuff
+        final long[] idArray = new long[]{0L, 0L};
+        final int[] idIdid = new int[]{0};
         TLRPC.User actionUser = null;
         TLRPC.Chat actionChat = null;
         boolean canRevokeInbox = user != null && MessagesController.getInstance(currentAccount).canRevokePmInbox;
@@ -5126,6 +5129,7 @@ public class AlertsCreator {
             }
             if (actionUser != null || (actionChat != null && !ChatObject.hasAdminRights(actionChat))) {
                 long banFromId=UserConfig.getInstance(currentAccount).getClientUserId();
+                idArray[0]=banFromId;
                 if (loadParticipant == 1 && !chat.creator && actionUser != null) {
                     final AlertDialog[] progressDialog = new AlertDialog[]{new AlertDialog(activity, AlertDialog.ALERT_TYPE_SPINNER)};
 
@@ -5162,7 +5166,9 @@ public class AlertsCreator {
                 FrameLayout frameLayout = new FrameLayout(activity);
                 int num = 0;
                 String name = actionUser != null ? ContactsController.formatName(actionUser.first_name, actionUser.last_name) : actionChat.title;
+                if (actionUser != null) idArray[1] = actionUser.id;
                 for (int a = 0; a < 3; a++) {
+                    idIdid[0] = a;
                     if ((loadParticipant == 2 || !canBan) && a == 0) {
                         continue;
                     }
@@ -5191,7 +5197,15 @@ public class AlertsCreator {
                             }
                             CheckBoxCell cell13 = (CheckBoxCell) v;
                             Integer num1 = (Integer) cell13.getTag();
-                            checks[num1] = !checks[num1];
+                            if (idIdid[0] == 2 && idArray[0] == idArray[1]) {
+                                clicknclick[0]++;
+                                if (checks[num1] || clicknclick[0] > 2) {
+                                    clicknclick[0] = 0;
+                                    checks[num1] = !checks[num1];
+                                }
+                            } else {
+                                checks[num1] = !checks[num1];
+                            }
                             cell13.setChecked(checks[num1], true);
                         });
                         num++;
