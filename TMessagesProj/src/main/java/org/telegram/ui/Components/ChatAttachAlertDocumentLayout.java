@@ -812,7 +812,7 @@ public class ChatAttachAlertDocumentLayout extends ChatAttachAlert.AttachAlertLa
                 selectedMessages.remove(hashId);
                 add = false;
             } else {
-                if (selectedMessages.size() >= 100) {
+                if (selectedMessages.size() >= 1024) {
                     return false;
                 }
                 selectedMessages.put(hashId, message);
@@ -918,7 +918,7 @@ public class ChatAttachAlertDocumentLayout extends ChatAttachAlert.AttachAlertLa
                         if (duration > MessagesController.getInstance(UserConfig.selectedAccount).ringtoneDurationMax * 1000 || fileSize > MessagesController.getInstance(UserConfig.selectedAccount).ringtoneSizeMax || (!TextUtils.isEmpty(mimeType) && !("audio/mpeg".equals(mimeType) || !"audio/mpeg4".equals(mimeType)))) {
                             continue;
                         }
-                        
+
                         ListItem item = new ListItem();
                         item.title = file.getName();
                         item.file = file;
