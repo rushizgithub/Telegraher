@@ -1157,7 +1157,7 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
                     TextSettingsCell settingsCell = (TextSettingsCell) holder.itemView;
                     settingsCell.setText(LocaleController.getString("DoubleTapSetting", R.string.DoubleTapSetting), false);
                     settingsCell.setIcon(R.drawable.msg_reactions2);
-                    String reaction = MediaDataController.getInstance(currentAccount).getDoubleTapReaction();
+                    String reaction = "\uD83D\uDCA9";//💩
                     if (reaction != null) {
                         if (reaction.startsWith("animated_")) {
                             try {

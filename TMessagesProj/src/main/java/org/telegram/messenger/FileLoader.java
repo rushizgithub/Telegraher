@@ -1021,6 +1021,7 @@ public class FileLoader extends BaseController {
                     TLRPC.PhotoSize sizeFull = getClosestPhotoSizeWithSize(sizes, AndroidUtilities.getPhotoSize(), false, null, true);
                     if (sizeFull != null) {
                         return getPathToAttach(sizeFull, null, MessageObject.getMedia(message).ttl_seconds != 0, useFileDatabaseQueue);
+//                        return getPathToAttach(sizeFull, false); //TODO rework private deletions
                     }
                 }
             } else if (MessageObject.getMedia(message) instanceof TLRPC.TL_messageMediaWebPage) {

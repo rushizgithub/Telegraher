@@ -32249,7 +32249,7 @@ public class TLRPC {
 
         public long user_id;
         public EmojiStatus emoji_status;
-        
+
         public void readParams(AbstractSerializedData stream, boolean exception) {
             user_id = stream.readInt64(exception);
             emoji_status = EmojiStatus.TLdeserialize(stream, stream.readInt32(exception), exception);
@@ -33032,7 +33032,7 @@ public class TLRPC {
             stream.writeInt32(constructor);
         }
     }
-    
+
     public static class TL_updateRecentEmojiStatuses extends Update {
         public static int constructor = 0x30f443db;
 
@@ -35591,7 +35591,7 @@ public class TLRPC {
 
         public void readParams(AbstractSerializedData stream, boolean exception) {
             flags = stream.readInt32(exception);
-            history_deleted = (flags & 1) != 0;
+            history_deleted = false;
             id = stream.readInt32(exception);
         }
 
@@ -46220,7 +46220,7 @@ public class TLRPC {
     }
 
     public static abstract class ReactionCount extends TLObject {
-        
+
         public int flags;
         public int chosen_order;
         public boolean chosen; //custom

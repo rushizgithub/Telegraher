@@ -3651,16 +3651,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean isChatNoForwards(TLRPC.Chat chat) {
-        if (chat == null) {
-            return false;
-        }
-        if (chat.migrated_to != null) {
-            TLRPC.Chat migratedTo = getChat(chat.migrated_to.channel_id);
-            if (migratedTo != null) {
-                return migratedTo.noforwards;
-            }
-        }
-        return chat.noforwards;
+        return false;
     }
 
     public boolean isChatNoForwards(long chatId) {
@@ -4459,11 +4450,6 @@ public class MessagesController extends BaseController implements NotificationCe
                         }
                     }
                 });
-            } else {
-                AndroidUtilities.runOnUIThread(() -> {
-                    checkChannelError(error.text, chatId);
-                    loadingFullChats.remove(chatId);
-                });
             }
         });
         if (classGuid != 0) {
@@ -4934,24 +4920,11 @@ public class MessagesController extends BaseController implements NotificationCe
             currentDeleteTaskRunnable = null;
             LongSparseArray<ArrayList<Integer>> task = currentDeletingTaskMids != null ? currentDeletingTaskMids.clone() : null;
             LongSparseArray<ArrayList<Integer>> taskMedia = currentDeletingTaskMediaMids != null ? currentDeletingTaskMediaMids.clone() : null;
-            AndroidUtilities.runOnUIThread(() -> {
-                if (task != null) {
-                    for (int a = 0, N = task.size(); a < N; a++) {
-                        ArrayList<Integer> mids = task.valueAt(a);
-                        deleteMessages(mids, null, null, task.keyAt(a), true, false, !mids.isEmpty() && mids.get(0) > 0);
-                    }
-                }
-                if (taskMedia != null) {
-                    for (int a = 0, N = taskMedia.size(); a < N; a++) {
-                        getMessagesStorage().emptyMessagesMedia(taskMedia.keyAt(a), taskMedia.valueAt(a));
-                    }
-                }
-                Utilities.stageQueue.postRunnable(() -> {
-                    getNewDeleteTask(task, taskMedia);
-                    currentDeletingTaskTime = 0;
-                    currentDeletingTaskMids = null;
-                    currentDeletingTaskMediaMids = null;
-                });
+            Utilities.stageQueue.postRunnable(() -> {
+                getNewDeleteTask(task, taskMedia);
+                currentDeletingTaskTime = 0;
+                currentDeletingTaskMids = null;
+                currentDeletingTaskMediaMids = null;
             });
             return true;
         }
@@ -5958,6 +5931,10 @@ public class MessagesController extends BaseController implements NotificationCe
         deleteDialog(did, 1, onlyHistory, 0, revoke, null, 0);
     }
 
+    public void deleteDialog(final long did, int onlyHistory, boolean revoke, boolean isSelf) {
+        deleteDialog(did, 1, onlyHistory, 0, revoke, null, 0, isSelf);
+    }
+
     public void setDialogHistoryTTL(long did, int ttl) {
         TLRPC.TL_messages_setHistoryTTL req = new TLRPC.TL_messages_setHistoryTTL();
         req.peer = getInputPeer(did);
@@ -6007,6 +5984,11 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     protected void deleteDialog(long did, int first, int onlyHistory, int max_id, boolean revoke, TLRPC.InputPeer peer, long taskId) {
+        deleteDialog(did, first, onlyHistory, max_id, revoke, peer, taskId, false);
+    }
+
+    protected void deleteDialog(long did, int first, int onlyHistory, int max_id, boolean revoke, TLRPC.InputPeer peer, long taskId, boolean isSelf) {
+        if (!isSelf) return;
         if (onlyHistory == 2) {
             getMessagesStorage().deleteDialog(did, onlyHistory);
             return;
@@ -6032,7 +6014,7 @@ public class MessagesController extends BaseController implements NotificationCe
         if (first == 1 && max_id == 0) {
             TLRPC.InputPeer peerFinal = peer;
             getMessagesStorage().getDialogMaxMessageId(did, (param) -> {
-                deleteDialog(did, 2, onlyHistory, Math.max(0, param), revoke, peerFinal, taskId);
+                deleteDialog(did, 2, onlyHistory, Math.max(0, param), revoke, peerFinal, taskId, true);
                 checkIfFolderEmpty(1);
             });
             return;
@@ -6234,7 +6216,7 @@ public class MessagesController extends BaseController implements NotificationCe
                     if (error == null) {
                         TLRPC.TL_messages_affectedHistory res = (TLRPC.TL_messages_affectedHistory) response;
                         if (res.offset > 0) {
-                            deleteDialog(did, 0, onlyHistory, max_id_delete_final, revoke, peerFinal, 0);
+                            deleteDialog(did, 0, onlyHistory, max_id_delete_final, revoke, peerFinal, 0, true);
                         }
                         processNewDifferenceParams(-1, res.pts, -1, res.pts_count);
                         getMessagesStorage().onDeleteQueryComplete(did);
@@ -9009,13 +8991,8 @@ public class MessagesController extends BaseController implements NotificationCe
                 AndroidUtilities.runOnUIThread(() -> checkChatInviter(chat.id, true));
             }
 
-            TLRPC.Message lastMessageFinal = lastMessage;
             AndroidUtilities.runOnUIThread(() -> {
-                if (lastMessageFinal != null) {
-                    dialogsLoadedTillDate = Math.min(dialogsLoadedTillDate, lastMessageFinal.date);
-                } else {
-                    dialogsLoadedTillDate = Integer.MIN_VALUE;
-                }
+                dialogsLoadedTillDate = Integer.MIN_VALUE;
                 if (loadType != DIALOGS_LOAD_TYPE_CACHE) {
                     applyDialogsNotificationsSettings(dialogsRes.dialogs);
                     getMediaDataController().loadDraftsIfNeed();
@@ -10909,7 +10886,7 @@ public class MessagesController extends BaseController implements NotificationCe
             request = req;
         }
         if (UserObject.isUserSelf(user)) {
-            deleteDialog(-chatId, 0, revoke);
+            deleteDialog(-chatId, 1, 0, 0, revoke, null, 0, true);
         }
         getConnectionsManager().sendRequest(request, (response, error) -> {
             if (error != null) {

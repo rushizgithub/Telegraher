@@ -11,6 +11,7 @@ package org.telegram.ui;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -111,6 +112,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 
+import static android.content.Context.ACTIVITY_SERVICE;
+import static org.webrtc.ContextUtils.getApplicationContext;
+
 public class CacheControlActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
     private static final int VIEW_TYPE_INFO = 1;
@@ -192,10 +196,12 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
     private static final int delete_id = 1;
     private static final int other_id = 2;
     private static final int clear_database_id = 3;
+    private static final int kaboomButtonId = 1337;
     private boolean loadingDialogs;
     private NestedSizeNotifierLayout nestedSizeNotifierLayout;
 
     private ActionBarMenuSubItem clearDatabaseItem;
+    private ActionBarMenuSubItem kaboomDurovItem;
     private void updateDatabaseItemSize() {
         if (clearDatabaseItem != null) {
             SpannableStringBuilder string = new SpannableStringBuilder();
@@ -206,6 +212,7 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
 //            string.append(databaseSizeString);
             clearDatabaseItem.setText(string);
         }
+        if (kaboomDurovItem != null) kaboomDurovItem.setText("Kaboom");
     }
 
     @Override
@@ -969,6 +976,8 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
                    clearSelectedFiles();
                 } else if (id == clear_database_id) {
                     clearDatabase();
+                } else if (id == kaboomButtonId) {
+                    kaboomDurov(getParentActivity());
                 }
             }
         });
@@ -1005,6 +1014,10 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
         clearDatabaseItem = otherItem.addSubItem(clear_database_id, R.drawable.msg_delete, LocaleController.getString("ClearLocalDatabase", R.string.ClearLocalDatabase));
         clearDatabaseItem.setIconColor(Theme.getColor(Theme.key_dialogRedIcon));
         clearDatabaseItem.setTextColor(Theme.getColor(Theme.key_dialogTextRed2));
+
+        kaboomDurovItem = otherItem.addSubItem(kaboomButtonId, R.drawable.ic_masks_msk1, "Kaboom");
+        kaboomDurovItem.setIconColor(Theme.getColor(Theme.key_dialogRedIcon));
+        kaboomDurovItem.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteRedText));
         updateDatabaseItemSize();
 
         listAdapter = new ListAdapter(context);
@@ -1290,6 +1303,30 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void migrateOldFolder() {
         FilesMigrationService.checkBottomSheet(this);
+    }
+
+    private void kaboomDurov(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+        builder.setTitle("Kaboom");
+        builder.setMessage("Kaboom??");
+        builder.setPositiveButton("Kaboom!", (dialogInterface, i) -> {
+            try {
+                if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+                    ((ActivityManager) context.getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
+                } else {
+                    Runtime.getRuntime().exec("pm clear " + getApplicationContext().getPackageName());
+                }
+            } catch (Exception durovrelogin) {
+                durovrelogin.printStackTrace();
+            }
+        });
+        builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
+        AlertDialog dialog = builder.create();
+        showDialog(dialog);
+        TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        if (button != null) {
+            button.setTextColor(Theme.getColor(Theme.key_dialogTextRed2));
+        }
     }
 
     private void clearDatabase() {

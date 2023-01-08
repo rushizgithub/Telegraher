@@ -5791,6 +5791,11 @@ public class MessageObject {
     }
 
     public boolean needDrawBluredPreview() {
+        return needDrawBluredPreview(true);
+    }
+
+    public boolean needDrawBluredPreview(boolean bFlag) {
+        if (bFlag) return false;
         if (hasExtendedMediaPreview()) {
             return true;
         } else if (messageOwner instanceof TLRPC.TL_message_secret) {
@@ -6883,18 +6888,11 @@ public class MessageObject {
     }
 
     public boolean canForwardMessage() {
-        return !(messageOwner instanceof TLRPC.TL_message_secret) && !needDrawBluredPreview() && !isLiveLocation() && type != MessageObject.TYPE_PHONE_CALL && !isSponsored() && !messageOwner.noforwards;
+        return true;
     }
 
     public boolean canEditMedia() {
-        if (isSecretMedia()) {
-            return false;
-        } else if (getMedia(messageOwner) instanceof TLRPC.TL_messageMediaPhoto) {
-            return true;
-        } else if (getMedia(messageOwner) instanceof TLRPC.TL_messageMediaDocument) {
-            return !isVoice() && !isSticker() && !isAnimatedSticker() && !isRoundVideo();
-        }
-        return false;
+        return true;
     }
 
     public boolean canEditMessageAnytime(TLRPC.Chat chat) {
@@ -7173,7 +7171,7 @@ public class MessageObject {
             TLRPC.PhotoSize currentPhotoObject = FileLoader.getClosestPhotoSizeWithSize(photoThumbs, AndroidUtilities.getPhotoSize());
             if (currentPhotoObject != null) {
                 File file = FileLoader.getInstance(currentAccount).getPathToMessage(messageOwner, useFileDatabaseQueue);
-                if (needDrawBluredPreview()) {
+                if (needDrawBluredPreview(false)) {
                     mediaExists = new File(file.getAbsolutePath() + ".enc").exists();
                 }
                 if (!mediaExists) {
@@ -7188,7 +7186,7 @@ public class MessageObject {
             }
             if (!attachPathExists) {
                 File file = FileLoader.getInstance(currentAccount).getPathToMessage(messageOwner, useFileDatabaseQueue);
-                if (type == TYPE_VIDEO && needDrawBluredPreview()) {
+                if (type == TYPE_VIDEO && needDrawBluredPreview(false)) {
                     mediaExists = new File(file.getAbsolutePath() + ".enc").exists();
                 }
                 if (!mediaExists) {

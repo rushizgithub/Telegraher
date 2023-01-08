@@ -4022,25 +4022,9 @@ public class AndroidUtilities {
         return flagSecureFragment != null;
     }
 
+    @Deprecated
     public static void setFlagSecure(BaseFragment parentFragment, boolean set) {
-        if (parentFragment == null || parentFragment.getParentActivity() == null) {
-            return;
-        }
-        if (set) {
-            try {
-                parentFragment.getParentActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-                flagSecureFragment = new WeakReference<>(parentFragment);
-            } catch (Exception ignore) {
-
-            }
-        } else if (flagSecureFragment != null && flagSecureFragment.get() == parentFragment) {
-            try {
-                parentFragment.getParentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
-            } catch (Exception ignore) {
-
-            }
-            flagSecureFragment = null;
-        }
+        //yep
     }
 
     private static final HashMap<Window, ArrayList<Long>> flagSecureReasons = new HashMap<>();
@@ -4071,11 +4055,7 @@ public class AndroidUtilities {
             }
             final boolean value = flagSecureReasons.containsKey(window) && flagSecureReasons.get(window).size() > 0;
             try {
-                if (value) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-                } else {
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
-                }
+                window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
             } catch (Exception ignore) {
             }
         }

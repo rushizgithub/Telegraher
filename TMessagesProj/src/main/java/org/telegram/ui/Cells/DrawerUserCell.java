@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 
+import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ContactsController;
 import org.telegram.messenger.Emoji;
@@ -39,6 +40,7 @@ import org.telegram.ui.Components.Premium.PremiumGradient;
 public class DrawerUserCell extends FrameLayout implements NotificationCenter.NotificationCenterDelegate {
 
     private SimpleTextView textView;
+    private SimpleTextView phoneTextView;
     private BackupImageView imageView;
     private AvatarDrawable avatarDrawable;
     private GroupCreateCheckBox checkBox;
@@ -69,6 +71,14 @@ public class DrawerUserCell extends FrameLayout implements NotificationCenter.No
 
         status = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(textView, AndroidUtilities.dp(20));
         textView.setRightDrawable(status);
+
+        phoneTextView = new SimpleTextView(context);
+        phoneTextView.setTextColor(Theme.getColor(Theme.key_chats_menuItemText));
+        phoneTextView.setTextSize(15);
+        phoneTextView.setMaxLines(1);
+        phoneTextView.setGravity(Gravity.LEFT);
+        addView(phoneTextView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.BOTTOM, 72, 0, 60, 0));
+
 
         checkBox = new GroupCreateCheckBox(context);
         checkBox.setChecked(true, false);
@@ -140,6 +150,7 @@ public class DrawerUserCell extends FrameLayout implements NotificationCenter.No
             text = Emoji.replaceEmoji(text, textView.getPaint().getFontMetricsInt(), AndroidUtilities.dp(20), false);
         } catch (Exception ignore) {}
         textView.setText(text);
+        phoneTextView.setText(PhoneFormat.getInstance().format("+" + user.phone));
         if (user.emoji_status instanceof TLRPC.TL_emojiStatusUntil && ((TLRPC.TL_emojiStatusUntil) user.emoji_status).until > (int) (System.currentTimeMillis() / 1000)) {
             textView.setDrawablePadding(AndroidUtilities.dp(4));
             status.set(((TLRPC.TL_emojiStatusUntil) user.emoji_status).document_id, true);
