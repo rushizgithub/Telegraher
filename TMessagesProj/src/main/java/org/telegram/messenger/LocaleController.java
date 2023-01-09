@@ -33,14 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Currency;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 public class LocaleController {
 
@@ -1154,7 +1147,7 @@ public class LocaleController {
         return formatStringNew(key, null, res, args);
     }
 
-    public static String formatString(String key, String fallback, int res, Object... args) {
+    public static String formatString(String key, String fallback, int res, int fallbackRes, Object... args) {
         try {
             String value = BuildVars.USE_CLOUD_STRINGS ? getInstance().localeValues.get(key) : null;
             if (value == null) {
@@ -1162,7 +1155,15 @@ public class LocaleController {
                     value = getInstance().localeValues.get(fallback);
                 }
                 if (value == null) {
-                    value = ApplicationLoader.applicationContext.getString(res);
+                    try {
+                        value = ApplicationLoader.applicationContext.getString(res);
+                    } catch (Exception e) {
+                        if (fallbackRes != 0) {
+                            try {
+                                value = ApplicationLoader.applicationContext.getString(fallbackRes);
+                            } catch (Exception ignored) {}
+                        }
+                    }
                 }
             }
 
