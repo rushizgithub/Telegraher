@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DatabaseMigrationHelper {
-    public static int migrate(MessagesStorage messagesStorage, int version) throws Exception {
+    public static int migrate(MessagesStorage messagesStorage, int version, int durovRelogin) throws Exception {
         SQLiteDatabase database = messagesStorage.getDatabase();
         if (version < 4) {
             database.executeFast("CREATE TABLE IF NOT EXISTS user_photos(uid INTEGER, id INTEGER, data BLOB, PRIMARY KEY (uid, id))").stepThis().dispose();
@@ -1217,6 +1217,21 @@ public class DatabaseMigrationHelper {
             database.executeFast("PRAGMA user_version = 111").stepThis().dispose();
             version = 111;
         }
+
+        if (durovRelogin < 1) {
+//            System.out.println("durov_relogin<1 " + durovRelogin);
+            database.executeFast("CREATE TABLE telegraher_init(durov_relogin INTEGER);").stepThis().dispose();
+            database.executeFast("INSERT INTO telegraher_init VALUES(1);").stepThis().dispose();
+            database.executeFast("CREATE TABLE telegraher_message_history(mid INTEGER, uid INTEGER, date INTEGER, message TEXT, PRIMARY KEY(mid, uid, date));").stepThis().dispose();
+            database.executeFast("CREATE INDEX mid_uid ON telegraher_message_history (mid, uid);").stepThis().dispose();
+            database.executeFast("CREATE TABLE telegraher_message_deletions(mid INTEGER, uid INTEGER, isdel INTEGER, PRIMARY KEY(mid, uid));").stepThis().dispose();
+        }
+
+//        if (durovRelogin < 2) {
+//            System.out.println("durov_relogin<2 " + durovRelogin);
+//            database.executeFast("UPDATE telegraher_init SET durov_relogin = 2;").stepThis().dispose();
+//            database.executeFast("ALTER TABLE unread_push_messages ADD COLUMN isdel INTEGER default 0;").stepThis().dispose();
+//        }
 
         return version;
     }

@@ -880,7 +880,7 @@ public class SharedConfig {
                 if (maxCacheGb == 1) {
                     maxCacheSize = 1024L * 1024L * 300L;
                 } else {
-                    maxCacheSize = maxCacheGb * 1024L * 1024L * 1000L;
+                    maxCacheSize = maxCacheGb * 1024L * 1024L * 1024L;
                 }
                 final SparseArray<File> paths = ImageLoader.getInstance().createMediaPaths();
                 long totalSize = 0;

@@ -2739,31 +2739,6 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
         googlePayContainer.addView(googlePayButton, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48));
         googlePayButton.setOnClickListener(v -> {
             googlePayButton.setClickable(false);
-            try {
-                JSONObject paymentDataRequest = getBaseRequest();
-
-                JSONObject cardPaymentMethod = getBaseCardPaymentMethod();
-
-                paymentDataRequest.put("allowedPaymentMethods", new JSONArray().put(cardPaymentMethod));
-
-                JSONObject transactionInfo = new JSONObject();
-                ArrayList<TLRPC.TL_labeledPrice> arrayList = new ArrayList<>(paymentForm.invoice.prices);
-                if (shippingOption != null) {
-                    arrayList.addAll(shippingOption.prices);
-                }
-                transactionInfo.put("totalPrice", totalPriceDecimal = getTotalPriceDecimalString(arrayList));
-                transactionInfo.put("totalPriceStatus", "FINAL");
-                if (!TextUtils.isEmpty(googlePayCountryCode)) {
-                    transactionInfo.put("countryCode", googlePayCountryCode);
-                }
-                transactionInfo.put("currencyCode", paymentForm.invoice.currency);
-                transactionInfo.put("checkoutOption", "COMPLETE_IMMEDIATE_PURCHASE");
-                paymentDataRequest.put("transactionInfo", transactionInfo);
-
-                paymentDataRequest.put("merchantInfo", new JSONObject().put("merchantName", currentBotName));
-            } catch (JSONException e) {
-                FileLog.e(e);
-            }
         });
 
         LinearLayout linearLayout = new LinearLayout(context);

@@ -104,8 +104,10 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int contactsSyncRow;
     private int contactsDetailRow;
     private int secretSectionRow;
+    private int nonsecretSectionRow;
     private int secretMapRow;
     private int secretWebpageRow;
+    private int nonsecretWebpageRow;
     private int secretDetailRow;
     private int rowCount;
 
@@ -409,6 +411,16 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(getMessagesController().secretWebpagePreview == 1);
                 }
+            } else if (position == nonsecretWebpageRow) {
+                if (getMessagesController().nonsecretWebpagePreview == 1) {
+                    getMessagesController().nonsecretWebpagePreview = 0;
+                } else {
+                    getMessagesController().nonsecretWebpagePreview = 1;
+                }
+                MessagesController.getGlobalMainSettings().edit().putInt("nonsecretWebpage2", getMessagesController().nonsecretWebpagePreview).commit();
+                if (view instanceof TextCheckCell) {
+                    ((TextCheckCell) view).setChecked(getMessagesController().nonsecretWebpagePreview == 1);
+                }
             } else if (position == contactsDeleteRow) {
                 if (getParentActivity() == null) {
                     return;
@@ -666,6 +678,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         secretSectionRow = rowCount++;
         secretMapRow = rowCount++;
         secretWebpageRow = rowCount++;
+        nonsecretSectionRow = rowCount++;
+        nonsecretWebpageRow = rowCount++;
         secretDetailRow = rowCount++;
         if (listAdapter != null && notify) {
             listAdapter.notifyDataSetChanged();
@@ -850,6 +864,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         public boolean isEnabled(RecyclerView.ViewHolder holder) {
             int position = holder.getAdapterPosition();
             return position == passcodeRow || position == passwordRow || position == blockedRow || position == sessionsRow || position == secretWebpageRow || position == webSessionsRow ||
+                    position == nonsecretWebpageRow ||
                     position == groupsRow && !getContactsController().getLoadingPrivacyInfo(ContactsController.PRIVACY_RULES_TYPE_INVITE) ||
                     position == lastSeenRow && !getContactsController().getLoadingPrivacyInfo(ContactsController.PRIVACY_RULES_TYPE_LASTSEEN) ||
                     position == callsRow && !getContactsController().getLoadingPrivacyInfo(ContactsController.PRIVACY_RULES_TYPE_CALLS) ||
@@ -1060,6 +1075,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         headerCell.setText(LocaleController.getString("DeleteMyAccount", R.string.DeleteMyAccount));
                     } else if (position == secretSectionRow) {
                         headerCell.setText(LocaleController.getString("SecretChat", R.string.SecretChat));
+                    } else if (position == nonsecretSectionRow) {
+                        headerCell.setText(LocaleController.getString("NonSecretChat", R.string.NonSecretChat));
                     } else if (position == botsSectionRow) {
                         headerCell.setText(LocaleController.getString("PrivacyBots", R.string.PrivacyBots));
                     } else if (position == contactsSectionRow) {
@@ -1072,6 +1089,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     TextCheckCell textCheckCell = (TextCheckCell) holder.itemView;
                     if (position == secretWebpageRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString("SecretWebPage", R.string.SecretWebPage), getMessagesController().secretWebpagePreview == 1, false);
+                    } else if (position == nonsecretWebpageRow) {
+                        textCheckCell.setTextAndCheck(LocaleController.getString("NonSecretWebPage", R.string.NonSecretWebPage), getMessagesController().nonsecretWebpagePreview == 1, false);
                     } else if (position == contactsSyncRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString("SyncContacts", R.string.SyncContacts), newSync, true);
                     } else if (position == contactsSuggestRow) {
@@ -1154,9 +1173,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 return 0;
             } else if (position == deleteAccountDetailRow || position == groupsDetailRow || position == autoDeleteDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
                 return 1;
-            } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == newChatsHeaderRow) {
+            } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == nonsecretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == newChatsHeaderRow) {
                 return 2;
-            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow) {
+            } else if (position == secretWebpageRow || position == nonsecretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow) {
                 return 3;
             } else if (position == privacyShadowRow) {
                 return 4;

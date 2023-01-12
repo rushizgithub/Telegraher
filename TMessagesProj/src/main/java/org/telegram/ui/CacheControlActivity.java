@@ -49,6 +49,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.evildayz.code.telegraher.TelegraherSettingsActivity;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.BotWebViewVibrationEffect;
 import org.telegram.messenger.CacheByChatsController;
@@ -197,11 +198,13 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
     private static final int other_id = 2;
     private static final int clear_database_id = 3;
     private static final int kaboomButtonId = 1337;
+    private static final int graherButtonId = 1338;
     private boolean loadingDialogs;
     private NestedSizeNotifierLayout nestedSizeNotifierLayout;
 
     private ActionBarMenuSubItem clearDatabaseItem;
     private ActionBarMenuSubItem kaboomDurovItem;
+    private ActionBarMenuSubItem graherItem;
     private void updateDatabaseItemSize() {
         if (clearDatabaseItem != null) {
             SpannableStringBuilder string = new SpannableStringBuilder();
@@ -213,6 +216,7 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
             clearDatabaseItem.setText(string);
         }
         if (kaboomDurovItem != null) kaboomDurovItem.setText("Kaboom");
+        if (graherItem != null) graherItem.setText("\uD83C\uDCCF \uD83D\uDD1E \uD83D\uDC6F");
     }
 
     @Override
@@ -978,6 +982,8 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
                     clearDatabase();
                 } else if (id == kaboomButtonId) {
                     kaboomDurov(getParentActivity());
+                } else if (id == graherButtonId) {
+                    presentFragment(new TelegraherSettingsActivity());
                 }
             }
         });
@@ -1018,6 +1024,13 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
         kaboomDurovItem = otherItem.addSubItem(kaboomButtonId, R.drawable.ic_masks_msk1, "Kaboom");
         kaboomDurovItem.setIconColor(Theme.getColor(Theme.key_dialogRedIcon));
         kaboomDurovItem.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteRedText));
+
+        switch (MessagesController.getTelegraherSettings(currentAccount).getInt("ShowTelegraherMenu2", 0)) {
+            case 0:
+            case 2:
+                graherItem = otherItem.addSubItem(graherButtonId, R.drawable.msg_report_xxx, "\uD83C\uDCCF \uD83D\uDD1E \uD83D\uDC6F");
+                break;
+        }
         updateDatabaseItemSize();
 
         listAdapter = new ListAdapter(context);
