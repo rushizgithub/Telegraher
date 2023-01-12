@@ -332,7 +332,7 @@ public class LNavigation extends FrameLayout implements INavigationLayout, Float
                                 ripple.setState(shouldBeEnabled ? new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled} : new int[]{});
                                 if (shouldBeEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                                     try {
-                                        button.performHapticFeedback(HapticFeedbackConstants.TEXT_HANDLE_MOVE, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) button.performHapticFeedback(HapticFeedbackConstants.TEXT_HANDLE_MOVE, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
                                     } catch (Exception ignore) {}
                                 }
                             }
@@ -1813,7 +1813,7 @@ public class LNavigation extends FrameLayout implements INavigationLayout, Float
         }
 
         try {
-            performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         } catch (Exception ignored) {}
 
         BaseFragment fragment = getLastFragment();

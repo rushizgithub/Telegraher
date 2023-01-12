@@ -804,7 +804,7 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
                         text = AndroidUtilities.replaceTags(LocaleController.formatPluralString("ChannelTopicsForbidden", getMessagesController().forumUpgradeParticipantsMin));
                     }
                     BulletinFactory.of(this).createSimpleBulletin(R.raw.topics, text).show();
-                    frameLayout.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                    if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) frameLayout.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                     return;
                 }
                 forum = !forum;

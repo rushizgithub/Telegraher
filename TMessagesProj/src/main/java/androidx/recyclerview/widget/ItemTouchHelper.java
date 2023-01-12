@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.MessagesController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -691,7 +692,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             mSelectedStartY = selected.itemView.getTop();
             mSelected = selected;
 
-            if (actionState == ACTION_STATE_DRAG) {
+            if (actionState == ACTION_STATE_DRAG && !MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) {
                 mSelected.itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
         }

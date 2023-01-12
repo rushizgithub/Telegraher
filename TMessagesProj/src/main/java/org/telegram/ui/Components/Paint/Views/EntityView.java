@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.MessagesController;
 import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.Point;
 import org.telegram.ui.Components.Rect;
@@ -87,7 +88,7 @@ public class EntityView extends FrameLayout {
 
                 recognizedLongPress = true;
                 if (delegate != null) {
-                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                     delegate.onEntityLongClicked(EntityView.this);
                 }
             }
@@ -286,7 +287,7 @@ public class EntityView extends FrameLayout {
                 if (Math.abs(position.x - parent.getMeasuredWidth() / 2f) <= AndroidUtilities.dp(STICKY_TRIGGER_DP)) {
                     hasStickyX = true;
                     try {
-                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                     } catch (Exception ignored) {}
                     if (getParent() instanceof EntitiesContainerView) {
                         ((EntitiesContainerView) getParent()).invalidate();
@@ -319,7 +320,7 @@ public class EntityView extends FrameLayout {
                 if (Math.abs(position.y - parent.getMeasuredHeight() / 2f) <= AndroidUtilities.dp(STICKY_TRIGGER_DP)) {
                     hasStickyY = true;
                     try {
-                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                     } catch (Exception ignored) {}
                     if (getParent() instanceof EntitiesContainerView) {
                         ((EntitiesContainerView) getParent()).invalidate();
@@ -398,7 +399,7 @@ public class EntityView extends FrameLayout {
                     currentStickyAngle = stickyAngle;
                     hasStickyAngle = true;
                     try {
-                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                     } catch (Exception ignored) {}
 
                     if (angleAnimator != null) {

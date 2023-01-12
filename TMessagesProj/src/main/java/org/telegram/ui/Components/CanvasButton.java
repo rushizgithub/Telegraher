@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.MessagesController;
 import org.telegram.ui.ActionBar.Theme;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class CanvasButton {
         @Override
         public void run() {
             checkTouchEvent(MotionEvent.obtain(0, 0, MotionEvent.ACTION_CANCEL, 0, 0, 0));
-            parent.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) parent.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             if (longPressRunnable != null) {
                 longPressRunnable.run();
             }

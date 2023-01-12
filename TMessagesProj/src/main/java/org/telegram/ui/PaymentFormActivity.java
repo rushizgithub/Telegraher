@@ -2218,7 +2218,7 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
                     if (paymentForm.invoice.recurring && !recurrentAccepted) {
                         AndroidUtilities.shakeViewSpring(recurrentAcceptCell.getTextView(), 4.5f);
                         try {
-                            recurrentAcceptCell.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                            if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) recurrentAcceptCell.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                         } catch (Exception ignored) {}
                         return;
                     }
@@ -3234,7 +3234,7 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
                 parentLayout.presentFragment(new PremiumPreviewFragment(null).setForcePremium(), !isFinishing());
                 if (parentActivity instanceof LaunchActivity) {
                     try {
-                        fragmentView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) fragmentView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                     } catch (Exception ignored) {
                     }
                     ((LaunchActivity) parentActivity).getFireworksOverlay().start();
@@ -3789,7 +3789,7 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
 
     private void shakeView(View view) {
         try {
-            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         } catch (Exception ignored) {}
         AndroidUtilities.shakeView(view);
     }
@@ -3823,7 +3823,7 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
         }
         if (inputFields[FIELD_SAVEDPASSWORD].length() == 0) {
             try {
-                inputFields[FIELD_SAVEDPASSWORD].performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) inputFields[FIELD_SAVEDPASSWORD].performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
             } catch (Exception ignored) {}
             AndroidUtilities.shakeView(inputFields[FIELD_SAVEDPASSWORD]);
             return;
@@ -3868,7 +3868,7 @@ public class PaymentFormActivity extends BaseFragment implements NotificationCen
                             } else {
                                 if (error1.text.equals("PASSWORD_HASH_INVALID")) {
                                     try {
-                                        inputFields[FIELD_SAVEDPASSWORD].performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) inputFields[FIELD_SAVEDPASSWORD].performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                                     } catch (Exception ignored) {}
                                     AndroidUtilities.shakeView(inputFields[FIELD_SAVEDPASSWORD]);
                                     inputFields[FIELD_SAVEDPASSWORD].setText("");
