@@ -145,9 +145,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         uiSystemFontBoldItalicRow = -1;
         uiSystemFontMonoRow = -1;
 
-        voiceLabelRow = rowCount++;
-        voiceHDRow = rowCount++;
-        voiceBadmanRow = rowCount++;
+        voiceLabelRow = -1;
+        voiceHDRow = -1;
+        voiceBadmanRow = -1;
 
         voipLabelRow = rowCount++;
         voipDisableStartBeep = rowCount++;
