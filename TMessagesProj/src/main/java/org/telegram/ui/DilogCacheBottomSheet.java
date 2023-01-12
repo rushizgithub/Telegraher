@@ -187,12 +187,6 @@ public class DilogCacheBottomSheet extends BottomSheetWithRecyclerListView {
                     }
                     CheckBoxCell cell = (CheckBoxCell) v;
                     int num = (Integer) cell.getTag();
-//                    if (enabledCount == 1 && clearViewData[num].clear) {
-//                        BotWebViewVibrationEffect.APP_ERROR.vibrate();
-//                        AndroidUtilities.shakeViewSpring(((CheckBoxCell) v).getCheckBoxView(), -3);
-//                        return;
-//                    }
-
                     clearViewData[num].setClear(!clearViewData[num].clear);
                     cell.setChecked(clearViewData[num].clear, true);
                     cacheModel.allFilesSelcetedByType(num, clearViewData[num].clear);

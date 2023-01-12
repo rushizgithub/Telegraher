@@ -1122,7 +1122,7 @@ public class ArticleViewer implements NotificationCenter.NotificationCenterDeleg
                         textSelectionHelper.trySelect(pressedLinkOwnerView);
                     }
                     if (textSelectionHelper.isSelectionMode()) {
-                        windowView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) windowView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
                     }
                 } else if (pressedLinkOwnerLayout != null && pressedLinkOwnerView != null) {
                     if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) windowView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);;

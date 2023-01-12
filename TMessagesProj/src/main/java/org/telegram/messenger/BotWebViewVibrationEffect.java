@@ -42,6 +42,7 @@ public enum BotWebViewVibrationEffect {
     }
 
     public void vibrate() {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             AndroidUtilities.getVibrator().vibrate(getVibrationEffectForOreo());
         } else {

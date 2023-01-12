@@ -207,7 +207,7 @@ public class TopicCreateFragment extends BaseFragment {
                     if (TextUtils.isEmpty(topicName)) {
                         Vibrator v = (Vibrator) getParentActivity().getSystemService(Context.VIBRATOR_SERVICE);
                         if (v != null) {
-                            v.vibrate(200);
+                            if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HardwareDisableVibro", false)) v.vibrate(200);
                         }
                         AndroidUtilities.shakeView(editTextBoldCursor);
                         return;
