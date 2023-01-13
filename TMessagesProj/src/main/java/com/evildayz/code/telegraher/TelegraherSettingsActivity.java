@@ -121,6 +121,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int graheriumLabelRow;
     private int graheriumSpeedUp;
     private int graheriumAnimateEveryAvatar;
+    private int graheriumAnimatedStickerOverlays;
+    private int graheriumStarrLabelRow;
+    private int graheriumStarrMark;
 
     private int deviceSpoofingLabelRow;
     private int deviceSpoofingBrand;
@@ -178,6 +181,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         graheriumLabelRow = rowCount++;
         graheriumSpeedUp = rowCount++;
         graheriumAnimateEveryAvatar = rowCount++;
+        graheriumAnimatedStickerOverlays = rowCount++;
+        graheriumStarrLabelRow = rowCount++;
+        graheriumStarrMark = rowCount++;
 
         gifLabelHDRow = rowCount++;
         gifHDRow = rowCount++;
@@ -502,6 +508,10 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         headerCell.setText(LocaleController.getString(R.string.THVideoLabelRoundSizeRow));
                     } else if (position == accountLabelRow) {
                         headerCell.setText(LocaleController.getString(R.string.THAccountLabelRow));
+                    } else if (position == graheriumLabelRow) {
+                        headerCell.setText(LocaleController.getString(R.string.THDGraheriumLabelRow));
+                    } else if (position == graheriumStarrLabelRow) {
+                        headerCell.setText(LocaleController.getString(R.string.THGraheriumStarrLabel));
                     } else if (position == deviceSpoofingLabelRow) {
                         headerCell.setText(LocaleController.getString(R.string.THDeviceSpoofingLabelRow));
                     } else if (position == deviceSpoofingResetDefaultLabelRow) {
@@ -695,6 +705,18 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                                 editor.apply();
                             }
                         });
+                    } else if (position == graheriumStarrMark) {
+                        String[] strings = new String[]{LocaleController.getString(R.string.THGraheriumStarrNoone), LocaleController.getString(R.string.THGraheriumStarrEveryone), LocaleController.getString(R.string.THGraheriumStarrPeperemiumOnly)};
+                        slideChooseView.setOptions(MessagesController.getGlobalTelegraherSettings().getInt("GraheriumStarrMark", 0), strings);
+                        slideChooseView.setCallback(new SlideChooseView.Callback() {
+                            @Override
+                            public void onOptionSelected(int index) {
+                                SharedPreferences globalTh = MessagesController.getGlobalTelegraherSettings();
+                                SharedPreferences.Editor editor = globalTh.edit();
+                                editor.putInt("GraheriumStarrMark", index);
+                                editor.apply();
+                            }
+                        });
                     }
                     break;
                 }
@@ -722,21 +744,23 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         @Override
         public int getItemViewType(int position) {
             if (
-                position == showLabelTelegraherMenuRow
-                    || position == uiLabelRow
-                    || position == uiAppNotificationIconRow
-                    || position == voiceLabelRow || position == voipLabelRow
-                    || position == profileLabelRow
-                    || position == hardwareLabelRow
-                    || position == hardwareProximitySensorModeLabelRow
-                    || position == chatLabelRow
-                    || position == gifLabelHDRow
-                    || position == accountLabelRow
-                    || position == deviceSpoofingLabelRow
-                    || position == deviceSpoofingResetDefaultLabelRow
-                    || position == videoLabelMaxResolutionRow
-                    || position == videoLabelRoundBitrateRow
-                    || position == videoLabelRoundSizeRow
+                    position == showLabelTelegraherMenuRow
+                            || position == uiLabelRow
+                            || position == uiAppNotificationIconRow
+                            || position == voiceLabelRow || position == voipLabelRow
+                            || position == profileLabelRow
+                            || position == hardwareLabelRow
+                            || position == hardwareProximitySensorModeLabelRow
+                            || position == chatLabelRow
+                            || position == gifLabelHDRow
+                            || position == accountLabelRow
+                            || position == graheriumLabelRow
+                            || position == graheriumStarrLabelRow
+                            || position == deviceSpoofingLabelRow
+                            || position == deviceSpoofingResetDefaultLabelRow
+                            || position == videoLabelMaxResolutionRow
+                            || position == videoLabelRoundBitrateRow
+                            || position == videoLabelRoundSizeRow
             ) {
                 return 0;
             } else if (
@@ -754,11 +778,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
             ) {
                 return 5;
             } else if (
-                position == showTelegraherMenuRow
-                    || position == videoRoundBitrateMultRow || position == videoRoundSizeMultRow
-                    || position == videoMaxResolutionRow
-                    || position == hardwareProximitySensorModeRow
-                    || position == uiAppNotificationIconSelectorRow
+                    position == showTelegraherMenuRow
+                            || position == videoRoundBitrateMultRow || position == videoRoundSizeMultRow
+                            || position == videoMaxResolutionRow
+                            || position == hardwareProximitySensorModeRow
+                            || position == uiAppNotificationIconSelectorRow
+                            || position == graheriumStarrMark
             ) {
                 return 6;
             } else if (position == deviceSpoofingBrand || position == deviceSpoofingModel || position == deviceSpoofingSDK) {

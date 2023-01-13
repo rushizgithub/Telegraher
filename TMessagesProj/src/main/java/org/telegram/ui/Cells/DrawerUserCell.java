@@ -10,13 +10,13 @@ package org.telegram.ui.Cells;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 
+import com.evildayz.code.telegraher.ThePenisMightierThanTheSword;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ContactsController;
@@ -159,7 +159,7 @@ public class DrawerUserCell extends FrameLayout implements NotificationCenter.No
             textView.setDrawablePadding(AndroidUtilities.dp(4));
             status.set(((TLRPC.TL_emojiStatus) user.emoji_status).document_id, true);
             textView.setRightDrawableOutside(true);
-        } else if (MessagesController.getInstance(account).isPremiumUser(user)) {
+        } else if (ThePenisMightierThanTheSword.starrMark(MessagesController.getInstance(account).isPremiumUser(user))) {
             textView.setDrawablePadding(AndroidUtilities.dp(6));
             status.set(PremiumGradient.getInstance().premiumStarDrawableMini, true);
             textView.setRightDrawableOutside(true);

@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.evildayz.code.telegraher.ThePenisMightierThanTheSword;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ChatObject;
@@ -308,7 +309,7 @@ public class ProfileSearchCell extends BaseCell implements NotificationCenter.No
                 }
                 nameLockTop = AndroidUtilities.dp(21);
                 drawCheck = user.verified;
-                drawPremium = !user.self && MessagesController.getInstance(currentAccount).isPremiumUser(user);
+                drawPremium = !user.self && ThePenisMightierThanTheSword.starrMark(MessagesController.getInstance(currentAccount).isPremiumUser(user));
                 updateStatus(drawCheck, user, false);
             } else if (contact != null) {
                 if (!LocaleController.isRTL) {

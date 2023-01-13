@@ -7411,7 +7411,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         rightIconIsPremium = false;
                         rightIcon = getEmojiStatusDrawable(user.emoji_status, false, false, a);
                         nameTextViewRightDrawableContentDescription = LocaleController.getString("AccDescrPremium", R.string.AccDescrPremium);
-                    } else if (getMessagesController().isPremiumUser(user)) {
+                    } else if (ThePenisMightierThanTheSword.starrMark(getMessagesController().isPremiumUser(user))) {
                         rightIconIsStatus = false;
                         rightIconIsPremium = true;
                         rightIcon = getEmojiStatusDrawable(null, false, false, a);
@@ -7432,7 +7432,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         rightIconIsStatus = true;
                         rightIconIsPremium = false;
                         rightIcon = getEmojiStatusDrawable(user.emoji_status, true, true, a);
-                    } else if (getMessagesController().isPremiumUser(user)) {
+                    } else if (ThePenisMightierThanTheSword.starrMark(getMessagesController().isPremiumUser(user))) {
                         rightIconIsStatus = false;
                         rightIconIsPremium = true;
                         rightIcon = getEmojiStatusDrawable(null, true, true, a);
@@ -7449,7 +7449,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         showStatusSelect();
                     });
                 }
-                if (!user.self && getMessagesController().isPremiumUser(user)) {
+                if (!user.self && ThePenisMightierThanTheSword.starrMark(getMessagesController().isPremiumUser(user))) {
                     final SimpleTextView textView = nameTextView[a];
                     nameTextView[a].setRightDrawableOnClick(v -> {
                         PremiumPreviewBottomSheet premiumPreviewBottomSheet = new PremiumPreviewBottomSheet(ProfileActivity.this, currentAccount, user, resourcesProvider);
