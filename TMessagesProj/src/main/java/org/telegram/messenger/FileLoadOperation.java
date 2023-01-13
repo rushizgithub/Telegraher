@@ -208,7 +208,8 @@ public class FileLoadOperation {
     }
 
     private void updateParams() {
-        if (MessagesController.getInstance(currentAccount).getfileExperimentalParams && !forceSmallChunk) {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("EnableGraheriumSpeedUpDownload", false)
+                || MessagesController.getInstance(currentAccount).getfileExperimentalParams) {
             downloadChunkSizeBig = 1024 * 512;
             maxDownloadRequests = 8;
             maxDownloadRequestsBig = 8;
