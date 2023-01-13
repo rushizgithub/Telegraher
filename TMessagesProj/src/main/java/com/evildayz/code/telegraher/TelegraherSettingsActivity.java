@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,19 +36,10 @@ import androidx.recyclerview.widget.RecyclerView;
 //import com.evildayz.code.telegraher.devicespoofing.DSMainActivity;
 //import com.evildayz.code.telegraher.ui.UIFontActivity;
 
-import com.evildayz.code.telegraher.ui.ThMessageHistory;
-import com.evildayz.code.telegraher.ui.ThSessionManager;
-import com.evildayz.code.telegraher.ui.ThShadowbanManager;
-import org.telegram.messenger.LocaleController;
-import org.telegram.messenger.MessagesController;
-import org.telegram.messenger.NotificationCenter;
-import org.telegram.messenger.R;
-import org.telegram.messenger.UserConfig;
-import org.telegram.ui.ActionBar.ActionBar;
-import org.telegram.ui.ActionBar.AlertDialog;
-import org.telegram.ui.ActionBar.BaseFragment;
-import org.telegram.ui.ActionBar.Theme;
-import org.telegram.ui.ActionBar.ThemeDescription;
+import com.evildayz.code.telegraher.session.THDeviceSpoofingEditActivity;
+import com.evildayz.code.telegraher.session.ThSessionManagerActivity;
+import org.telegram.messenger.*;
+import org.telegram.ui.ActionBar.*;
 import org.telegram.ui.Cells.HeaderCell;
 import org.telegram.ui.Cells.NotificationsCheckCell;
 import org.telegram.ui.Cells.ShadowSectionCell;
@@ -63,7 +55,7 @@ import org.telegram.ui.QrActivity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class TelegraherSettingsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
     private RecyclerListView listView;
@@ -129,8 +121,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int deviceSpoofingLabelRow;
     private int deviceSpoofingBrand;
     private int deviceSpoofingModel;
-    private int deviceSpoofingOS;
-    private int deviceSpoofingResetGlobalLabelRow;
+    private int deviceSpoofingSDK;
+    private int deviceSpoofingResetDefaultLabelRow;
 
     private int killMeLabelRow;
 
@@ -191,11 +183,11 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         videoRoundSizeMultRow = rowCount++;
         videoRoundUseMainCameraRow = rowCount++;
 
-        deviceSpoofingLabelRow = -1;
-        deviceSpoofingBrand = -1;
-        deviceSpoofingModel = -1;
-        deviceSpoofingOS = -1;
-        deviceSpoofingResetGlobalLabelRow = -1;
+        deviceSpoofingLabelRow = rowCount++;
+        deviceSpoofingBrand = rowCount++;
+        deviceSpoofingModel = rowCount++;
+        deviceSpoofingSDK = rowCount++;
+        deviceSpoofingResetDefaultLabelRow = rowCount++;
 
         killMeLabelRow = rowCount++;
 
@@ -348,9 +340,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
             } else if (position == killMeLabelRow) {
                 killThatApp();
             } else if (position == chatSBManagerRow) {
-                presentFragment(new ThShadowbanManager());
+                presentFragment(new ThShadowbanManagerActivity());
             } else if (position == accountSessionManagerRow) {
-                presentFragment(new ThSessionManager());
+                presentFragment(new ThSessionManagerActivity());
 //            } else if (position == uiSystemFontRegularRow) {
 //                presentFragment(new UIFontActivity("fonts/rmedium.ttf", "regular"));
 //            } else if (position == uiSystemFontBoldRow) {
@@ -361,14 +353,14 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
 //                presentFragment(new UIFontActivity("fonts/rmediumitalic.ttf", "rmediumitalic"));
 //            } else if (position == uiSystemFontMonoRow) {
 //                presentFragment(new UIFontActivity("fonts/rmono.ttf", "rmono"));
-//            } else if (position == deviceSpoofingBrand) {
-//                showDSAlert(0);
-//            } else if (position == deviceSpoofingModel) {
-//                showDSAlert(1);
-//            } else if (position == deviceSpoofingOS) {
-//                showDSAlert(2);
-//            } else if (position == deviceSpoofingResetGlobalLabelRow) {
-//                showDSResetGlobalAlert();
+            } else if (position == deviceSpoofingBrand) {
+                presentFragment(new THDeviceSpoofingEditActivity(0, -1));
+            } else if (position == deviceSpoofingModel) {
+                presentFragment(new THDeviceSpoofingEditActivity(1, -1));
+            } else if (position == deviceSpoofingSDK) {
+                presentFragment(new THDeviceSpoofingEditActivity(2, -1));
+            } else if (position == deviceSpoofingResetDefaultLabelRow) {
+                showDSResetGlobalAlert();
             }
             if (view instanceof TextCheckCell) {
                 ((TextCheckCell) view).setChecked(!enabled);
@@ -407,7 +399,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         public boolean isEnabled(RecyclerView.ViewHolder holder) {
             int position = holder.getAdapterPosition();
             return !(
-                    position == voiceLabelRow || position == voipLabelRow);
+                position == voiceLabelRow || position == voipLabelRow);
         }
 
         @Override
@@ -493,8 +485,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         headerCell.setText(LocaleController.getString(R.string.THAccountLabelRow));
                     } else if (position == deviceSpoofingLabelRow) {
                         headerCell.setText(LocaleController.getString(R.string.THDeviceSpoofingLabelRow));
-//                    } else if (position == deviceSpoofingResetGlobalLabelRow) {
-//                        headerCell.setText(LocaleController.getString(R.string.THDeviceSpoofingResetGlobalLabelRow));
+                    } else if (position == deviceSpoofingResetDefaultLabelRow) {
+                        headerCell.setText(LocaleController.getString(R.string.THDeviceSpoofingResetDefaultLabelRow));
                     } else if (position == showLabelTelegraherMenuRow) {
                         headerCell.setText(LocaleController.getString(R.string.THShowLabelTelegraherMenuRow));
                     }
@@ -554,7 +546,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         textSettingsCell.setText(LocaleController.getString(R.string.THChatSBManager), false);
                     } else if (position == accountSessionManagerRow) {
                         textSettingsCell.setCanDisable(false);
-                        textSettingsCell.setText(LocaleController.getString(R.string.THAccountSessionManager), false);
+                        int activeAccountsNumber = SharedConfig.activeAccounts == null ? 0 : SharedConfig.activeAccounts.size();
+                        int offlineAccountsNumber = SharedConfig.thAccounts == null ? 0 : (SharedConfig.thAccounts.size() - activeAccountsNumber - 1);
+                        textSettingsCell.setText(String.format(LocaleController.getString(R.string.THAccountSessionManager)
+                            , activeAccountsNumber
+                            , offlineAccountsNumber
+                        ), false);
                     } else if (position == uiSystemFontRegularRow) {
                         textSettingsCell.setCanDisable(false);
                         textSettingsCell.setText(LocaleController.getString(R.string.THUIUseCustomFontRegular), false);
@@ -595,8 +592,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                                 MessagesController.getInstance(currentAccount).roundVideoBitrate = MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000);
                                 MessagesController.getInstance(currentAccount).roundAudioBitrate = MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64);
                                 System.out.printf("HEY %d %d %d%n", MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384)
-                                        , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
-                                        , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
+                                    , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
+                                    , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
                             }
                         });
                     } else if (position == videoRoundSizeMultRow) {
@@ -615,8 +612,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                                 editor.apply();
                                 MessagesController.getInstance(currentAccount).roundVideoSize = MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384);
                                 System.out.printf("HEY %d %d %d%n", MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384)
-                                        , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
-                                        , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
+                                    , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
+                                    , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
                             }
                         });
                     } else if (position == showTelegraherMenuRow) {
@@ -645,9 +642,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         });
                     } else if (position == hardwareProximitySensorModeRow) {
                         String[] strings = new String[]{
-                                LocaleController.getString(R.string.THHardwareProximitySensorModeRow0),
-                                LocaleController.getString(R.string.THHardwareProximitySensorModeRow1),
-                                LocaleController.getString(R.string.THHardwareProximitySensorModeRow2)
+                            LocaleController.getString(R.string.THHardwareProximitySensorModeRow0),
+                            LocaleController.getString(R.string.THHardwareProximitySensorModeRow1),
+                            LocaleController.getString(R.string.THHardwareProximitySensorModeRow2)
                         };
                         slideChooseView.setOptions(MessagesController.getGlobalTelegraherSettings().getInt("HardwareProximitySensorMode", 0), strings);
                         slideChooseView.setCallback(new SlideChooseView.Callback() {
@@ -661,9 +658,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         });
                     } else if (position == uiAppNotificationIconSelectorRow) {
                         String[] strings = new String[]{
-                                LocaleController.getString(R.string.THUIAppNotificationIconRow0),
-                                LocaleController.getString(R.string.THUIAppNotificationIconRow1),
-                                LocaleController.getString(R.string.THUIAppNotificationIconRow2)
+                            LocaleController.getString(R.string.THUIAppNotificationIconRow0),
+                            LocaleController.getString(R.string.THUIAppNotificationIconRow1),
+                            LocaleController.getString(R.string.THUIAppNotificationIconRow2)
                         };
                         slideChooseView.setOptions(MessagesController.getGlobalTelegraherSettings().getInt("UIAppNotificationIconSelector", 0), strings);
                         slideChooseView.setCallback(new SlideChooseView.Callback() {
@@ -680,20 +677,20 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 }
                 case 7: {
                     TextDetailCell textDetailCell = (TextDetailCell) holder.itemView;
-//                    if (false) {
-//                        //durov relogin!
-//                    } else if (position == deviceSpoofingBrand) {
-//                        textDetailCell.setContentDescriptionValueFirst(true);
-//                        textDetailCell.setTextAndValue(UserConfig.hmGetBrand(-1), String.format(LocaleController.getString(R.string.THDSBrandCurrentText), UserConfig.hmGetBrand(currentAccount)), false);
-//                    } else if (position == deviceSpoofingModel) {
-//                        textDetailCell.setContentDescriptionValueFirst(true);
-//                        textDetailCell.setImageClickListener(TelegraherSettingsActivity.this::onTextDetailCellImageClicked);
-//                        textDetailCell.setTextAndValue(UserConfig.hmGetModel(-1), String.format(LocaleController.getString(R.string.THDSModelCurrentText), UserConfig.hmGetModel(currentAccount)), false);
-//                    } else if (position == deviceSpoofingOS) {
-//                        textDetailCell.setContentDescriptionValueFirst(true);
-//                        textDetailCell.setImageClickListener(TelegraherSettingsActivity.this::onTextDetailCellImageClicked);
-//                        textDetailCell.setTextAndValue(UserConfig.hmGetOS(-1), String.format(LocaleController.getString(R.string.THDSOSCurrentText), UserConfig.hmGetOS(currentAccount)), false);
-//                    }
+                    if (false) {
+                        //durov relogin!
+                    } else if (position == deviceSpoofingBrand) {
+                        textDetailCell.setContentDescriptionValueFirst(true);
+                        textDetailCell.setTextAndValue(SharedConfig.thDeviceSpoofing.get(-1).get("deviceBrand").toString(), String.format(LocaleController.getString(R.string.THDSBrandCurrentText), SharedConfig.thDeviceSpoofing.containsKey(currentAccount) ? SharedConfig.thDeviceSpoofing.get(currentAccount).get("deviceBrand").toString() : "-"), false);
+                    } else if (position == deviceSpoofingModel) {
+                        textDetailCell.setContentDescriptionValueFirst(true);
+                        textDetailCell.setImageClickListener(TelegraherSettingsActivity.this::onTextDetailCellImageClicked);
+                        textDetailCell.setTextAndValue(SharedConfig.thDeviceSpoofing.get(-1).get("deviceModel").toString(), String.format(LocaleController.getString(R.string.THDSModelCurrentText), SharedConfig.thDeviceSpoofing.containsKey(currentAccount) ? SharedConfig.thDeviceSpoofing.get(currentAccount).get("deviceModel").toString() : "-"), false);
+                    } else if (position == deviceSpoofingSDK) {
+                        textDetailCell.setContentDescriptionValueFirst(true);
+                        textDetailCell.setImageClickListener(TelegraherSettingsActivity.this::onTextDetailCellImageClicked);
+                        textDetailCell.setTextAndValue(SharedConfig.thDeviceSpoofing.get(-1).get("deviceSDK").toString(), String.format(LocaleController.getString(R.string.THDSSDKCurrentText), SharedConfig.thDeviceSpoofing.containsKey(currentAccount) ? SharedConfig.thDeviceSpoofing.get(currentAccount).get("deviceSDK").toString() : "-"), false);
+                    }
                     break;
                 }
             }
@@ -702,45 +699,45 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         @Override
         public int getItemViewType(int position) {
             if (
-                    position == showLabelTelegraherMenuRow
-                            || position == uiLabelRow
-                            || position == uiAppNotificationIconRow
-                            || position == voiceLabelRow || position == voipLabelRow
-                            || position == profileLabelRow
-                            || position == hardwareLabelRow
-                            || position == hardwareProximitySensorModeLabelRow
-                            || position == chatLabelRow
-                            || position == gifLabelHDRow
-                            || position == accountLabelRow
-                            || position == deviceSpoofingLabelRow
-                            || position == deviceSpoofingResetGlobalLabelRow
-                            || position == videoLabelMaxResolutionRow
-                            || position == videoLabelRoundBitrateRow
-                            || position == videoLabelRoundSizeRow
+                position == showLabelTelegraherMenuRow
+                    || position == uiLabelRow
+                    || position == uiAppNotificationIconRow
+                    || position == voiceLabelRow || position == voipLabelRow
+                    || position == profileLabelRow
+                    || position == hardwareLabelRow
+                    || position == hardwareProximitySensorModeLabelRow
+                    || position == chatLabelRow
+                    || position == gifLabelHDRow
+                    || position == accountLabelRow
+                    || position == deviceSpoofingLabelRow
+                    || position == deviceSpoofingResetDefaultLabelRow
+                    || position == videoLabelMaxResolutionRow
+                    || position == videoLabelRoundBitrateRow
+                    || position == videoLabelRoundSizeRow
             ) {
                 return 0;
             } else if (
-                    position == voiceHDRow || position == voiceBadmanRow
-                            || position == voipHDRow || position == voipDisableStartBeep || position == voipDisableEndBeep
-                            || position == profileUIDRow || position == profileDCIDRow || position == profileSBRow
-                            || position == hardwareDisableVibroRow
-                            || position == chatDeleteMarkRow || position == accountExtendVanillaRow || position == chatSBFullRow || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow
-                            || position == gifHDRow || position == videoRoundUseMainCameraRow
+                position == voiceHDRow || position == voiceBadmanRow
+                    || position == voipHDRow || position == voipDisableStartBeep || position == voipDisableEndBeep
+                    || position == profileUIDRow || position == profileDCIDRow || position == profileSBRow
+                    || position == hardwareDisableVibroRow
+                    || position == chatDeleteMarkRow || position == accountExtendVanillaRow || position == chatSBFullRow || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow
+                    || position == gifHDRow || position == videoRoundUseMainCameraRow
             ) {
                 return 1;
             } else if (position == killMeLabelRow || position == chatSBManagerRow || position == accountSessionManagerRow
-                    || position == uiSystemFontRegularRow || position == uiSystemFontBoldRow || position == uiSystemFontItalicRow || position == uiSystemFontBoldItalicRow || position == uiSystemFontMonoRow
+                || position == uiSystemFontRegularRow || position == uiSystemFontBoldRow || position == uiSystemFontItalicRow || position == uiSystemFontBoldItalicRow || position == uiSystemFontMonoRow
             ) {
                 return 5;
             } else if (
-                    position == showTelegraherMenuRow
-                            || position == videoRoundBitrateMultRow || position == videoRoundSizeMultRow
-                            || position == videoMaxResolutionRow
-                            || position == hardwareProximitySensorModeRow
-                            || position == uiAppNotificationIconSelectorRow
+                position == showTelegraherMenuRow
+                    || position == videoRoundBitrateMultRow || position == videoRoundSizeMultRow
+                    || position == videoMaxResolutionRow
+                    || position == hardwareProximitySensorModeRow
+                    || position == uiAppNotificationIconSelectorRow
             ) {
                 return 6;
-            } else if (position == deviceSpoofingBrand || position == deviceSpoofingModel || position == deviceSpoofingOS) {
+            } else if (position == deviceSpoofingBrand || position == deviceSpoofingModel || position == deviceSpoofingSDK) {
                 return 7;
             } else
                 return 1337;
@@ -809,27 +806,30 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
 //        return fonts;
 //    }
 
-//    private void showDSResetGlobalAlert() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-//        builder.setTitle(LocaleController.getString(R.string.THDSLabel));
-//        builder.setMessage(LocaleController.getString(R.string.THDSResetAlert));
-//        builder.setPositiveButton(LocaleController.getString(R.string.THYesYesYes), (dialogInterface, i) -> {
-//            try {
-//                UserConfig.resetHmDevices();
-//                UserConfig.syncHmDevices();
-//                MessagesController.refreshGlobalTelegraherSettings();
-//            } catch (Exception durovrelogin) {
-//                durovrelogin.printStackTrace();
-//            }
-//        });
-//        builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
-//        AlertDialog dialog = builder.create();
-//        showDialog(dialog);
-//        TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-//        if (button != null) {
-//            button.setTextColor(Theme.getColor(Theme.key_dialogTextRed2));
-//        }
-//    }
+    private void showDSResetGlobalAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+        builder.setTitle(LocaleController.getString(R.string.THDSLabel));
+        builder.setMessage(LocaleController.getString(R.string.THDSResetAlert));
+        builder.setPositiveButton(LocaleController.getString(R.string.THYesYesYes), (dialogInterface, i) -> {
+            try {
+                SharedConfig.thDeviceSpoofing.put(-1,
+                    new HashMap<String, Object>() {{
+                        put("deviceBrand", Build.MANUFACTURER);
+                        put("deviceModel", Build.MODEL);
+                        put("deviceSDK", Integer.valueOf(Build.VERSION.SDK_INT).toString());
+                    }});
+            } catch (Exception durovrelogin) {
+                durovrelogin.printStackTrace();
+            }
+        });
+        builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
+        AlertDialog dialog = builder.create();
+        showDialog(dialog);
+        TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        if (button != null) {
+            button.setTextColor(Theme.getColor(Theme.key_dialogTextRed2));
+        }
+    }
 
     @Override
     public ArrayList<ThemeDescription> getThemeDescriptions() {

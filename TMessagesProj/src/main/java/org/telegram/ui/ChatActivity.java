@@ -111,7 +111,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.evildayz.code.telegraher.ui.ThMessageHistory;
+import com.evildayz.code.telegraher.ThMessageHistoryActivity;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.zxing.common.detector.MathUtils;
 
@@ -24415,7 +24415,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         switch (option) {
             case 420_001: {
 //                presentFragment(new ThMessageHistory(getAccountInstance().getMessagesStorage().loadThHistory(selectedObject.messageOwner.dialog_id, selectedObject.messageOwner.id)));
-                presentFragment(new ThMessageHistory(selectedObject));
+                presentFragment(new ThMessageHistoryActivity(selectedObject));
 //                Log.d("420_001",getAccountInstance().getMessagesStorage().loadThHistory(selectedObject.messageOwner.dialog_id, selectedObject.messageOwner.id).toString());
                 break;
             }

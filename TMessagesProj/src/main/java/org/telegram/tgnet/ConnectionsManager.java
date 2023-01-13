@@ -183,16 +183,20 @@ public class ConnectionsManager extends BaseController {
         boolean enablePushConnection = isPushConnectionEnabled();
         getUserConfig().loadConfig();
         try {
+            int id = -1;
+            if (SharedConfig.thDeviceSpoofing != null && !SharedConfig.thDeviceSpoofing.isEmpty()) {
+                id = SharedConfig.thDeviceSpoofing.containsKey(instance) ? instance : -1;
+            }
             systemLangCode = LocaleController.getSystemLocaleStringIso639().toLowerCase();
             langCode = LocaleController.getLocaleStringIso639().toLowerCase();
-            deviceModel = Build.MANUFACTURER + Build.MODEL;
+            deviceModel = SharedConfig.thDeviceSpoofing.get(id).get("deviceBrand").toString() + SharedConfig.thDeviceSpoofing.get(id).get("deviceModel").toString();
             appVersion = BuildVars.BUILD_VERSION_STRING + " (" + BuildVars.BUILD_VERSION_FULL + ")";
             if (BuildVars.DEBUG_PRIVATE_VERSION) {
                 appVersion += " pbeta";
             } else if (BuildVars.DEBUG_VERSION) {
                 appVersion += " beta";
             }
-            systemVersion = "SDK " + Build.VERSION.SDK_INT;
+            systemVersion = "SDK " + SharedConfig.thDeviceSpoofing.get(id).get("deviceSDK");
         } catch (Exception e) {
             systemLangCode = "en";
             langCode = "";
