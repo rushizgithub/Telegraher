@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">Telegraher</string>
-    <string name="AppNameBeta">Telegraher DEBUG</string>
+    <string name="AppNameBeta">تصحيح Telegraher</string>
     <string name="LanguageName">العربية</string>
-    <string name="English">الإنجليزية</string>
+    <string name="English">English</string>
     <string name="LanguageNameInEnglish">Arabic</string>
     <string name="LanguageCode">ar</string>
     <string name="ContinueOnThisLanguage">الاستمرار باللغة العربية</string>
