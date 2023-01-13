@@ -194,8 +194,8 @@ public class SharedConfig {
     public static LiteMode liteMode;
 
     public static CopyOnWriteArraySet<Integer> activeAccounts;
-    public static Map<Integer, Map<String, Object>> thAccounts;
-    public static Map<Integer, Map<String, Object>> thDeviceSpoofing;
+    public static Map<Integer, Map<String, String>> thAccounts;
+    public static Map<Integer, Map<String, String>> thDeviceSpoofing;
     public static int loginingAccount = -1;
 
     public static HashMap<Long, String> shadowBannedHM;
@@ -363,14 +363,23 @@ public class SharedConfig {
 
         for (int a : arr) {
             if (!thAccounts.containsKey(a)) {
-                thAccounts.put(a, new HashMap<String, Object>() {{
-                    put("userId", UserConfig.getInstance(a).clientUserId);
+                thAccounts.put(a, new HashMap<String, String>() {{
+                    put("userId", String.valueOf(UserConfig.getInstance(a).clientUserId));
                     put("userPhone", PhoneFormat.getInstance().format("+" + UserConfig.getInstance(a).getUserConfig().getCurrentUser().phone));
                     put("userFName", ofNullable(UserConfig.getInstance(a).getUserConfig().getCurrentUser().first_name).orElse(""));
                     put("userLName", ofNullable(UserConfig.getInstance(a).getUserConfig().getCurrentUser().last_name).orElse(""));
                     put("userName", ofNullable(UserConfig.getInstance(a).getUserConfig().getCurrentUser().username).orElse("\uD83E\uDD21"));
                 }});
             }
+        }
+
+        if (!thAccounts.containsKey(-1)) {
+            thAccounts.put(-1, new HashMap<String, String>() {{
+                put("nextAccountId", String.valueOf(ThePenisMightierThanTheSword.getMaxInternalAccountId(thAccounts) + 1));
+                put("thAccountVersion", "1");
+            }});
+        } else {
+            ThePenisMightierThanTheSword.getMaxInternalAccountId(thAccounts);
         }
 
         ApplicationLoader.applicationContext.getSharedPreferences("telegraher", Context.MODE_PRIVATE).edit()
@@ -385,7 +394,7 @@ public class SharedConfig {
 
     public static void saveTHDeviceSpoofing(boolean reset) {
         if (thDeviceSpoofing == null || thDeviceSpoofing.isEmpty()) {
-            Type thmhm = new TypeToken<Map<Integer, Map<String, Object>>>() {
+            Type thmhm = new TypeToken<Map<Integer, Map<String, String>>>() {
             }.getType();
             thDeviceSpoofing = new Gson().fromJson(ApplicationLoader.applicationContext.getSharedPreferences("telegraher", Activity.MODE_PRIVATE).getString("thDeviceSpoofing", "{}"), thmhm);
         }
@@ -394,7 +403,7 @@ public class SharedConfig {
 
         if (!thDeviceSpoofing.containsKey(-1)) {
             thDeviceSpoofing.put(-1,
-                    new HashMap<String, Object>() {{
+                    new HashMap<String, String>() {{
                         put("deviceBrand", Build.MANUFACTURER);
                         put("deviceModel", Build.MODEL);
                         put("deviceSDK", Integer.valueOf(Build.VERSION.SDK_INT).toString());
@@ -406,7 +415,7 @@ public class SharedConfig {
 
         for (int a : ids) {
             if (!thDeviceSpoofing.containsKey(a)) {
-                thDeviceSpoofing.put(a, new HashMap<String, Object>() {{
+                thDeviceSpoofing.put(a, new HashMap<String, String>() {{
                     putAll(thDeviceSpoofing.get(-1));
                 }});
             }
@@ -583,7 +592,7 @@ public class SharedConfig {
             preferences = ApplicationLoader.applicationContext.getSharedPreferences("telegraher", Context.MODE_PRIVATE);
             Type lhm = new TypeToken<HashMap<Long, String>>() {}.getType();
             shadowBannedHM = new Gson().fromJson(preferences.getString("shadowBannedHM", "{}"), lhm);
-            Type thmhm = new TypeToken<Map<Integer, Map<String, Object>>>() {}.getType();
+            Type thmhm = new TypeToken<Map<Integer, Map<String, String>>>() {}.getType();
             thAccounts=new Gson().fromJson(preferences.getString("thAccounts","{}"),thmhm);
             thDeviceSpoofing=new Gson().fromJson(preferences.getString("thDeviceSpoofing","{}"),thmhm);
 

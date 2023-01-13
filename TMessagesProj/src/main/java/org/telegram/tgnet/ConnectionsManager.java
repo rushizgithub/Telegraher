@@ -189,7 +189,7 @@ public class ConnectionsManager extends BaseController {
             }
             systemLangCode = LocaleController.getSystemLocaleStringIso639().toLowerCase();
             langCode = LocaleController.getLocaleStringIso639().toLowerCase();
-            deviceModel = SharedConfig.thDeviceSpoofing.get(id).get("deviceBrand").toString() + SharedConfig.thDeviceSpoofing.get(id).get("deviceModel").toString();
+            deviceModel = SharedConfig.thDeviceSpoofing.get(id).get("deviceBrand") + SharedConfig.thDeviceSpoofing.get(id).get("deviceModel");
             appVersion = BuildVars.BUILD_VERSION_STRING + " (" + BuildVars.BUILD_VERSION_FULL + ")";
             if (BuildVars.DEBUG_PRIVATE_VERSION) {
                 appVersion += " pbeta";

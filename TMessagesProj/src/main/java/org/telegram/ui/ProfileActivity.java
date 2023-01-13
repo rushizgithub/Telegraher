@@ -451,6 +451,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int filtersRow;
 
     private int telegraherRow;
+    private int killMeLabelRow;
     private int stickersRow;
     private int devicesRow;
     private int devicesSectionRow;
@@ -3224,6 +3225,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 presentFragment(new ThemeActivity(ThemeActivity.THEME_TYPE_BASIC));
             } else if (position == telegraherRow) {
                 presentFragment(new TelegraherSettingsActivity());
+            } else if (position == killMeLabelRow) {
+                killThatApp();
             } else if (position == filtersRow) {
                 presentFragment(new FiltersSetupActivity());
             } else if (position == stickersRow) {
@@ -4396,6 +4399,15 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
     public TLRPC.UserFull getUserInfo() {
         return userInfo;
+    }
+
+    private void killThatApp() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            getParentActivity().finishAndRemoveTask();
+        } else if (Build.VERSION.SDK_INT >= 16) {
+            getParentActivity().finishAffinity();
+        }
+        System.exit(0);
     }
 
     @Override
@@ -6851,6 +6863,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         dataRow = -1;
         chatRow = -1;
         telegraherRow = -1;
+        killMeLabelRow = -1;
         filtersRow = -1;
         stickersRow = -1;
         devicesRow = -1;
@@ -6968,6 +6981,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     case 0:
                     case 1:
                         telegraherRow = rowCount++;
+                        killMeLabelRow = rowCount++;
                         break;
                 }
                 languageRow = rowCount++;
@@ -9091,6 +9105,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         textCell.setTextAndIcon(LocaleController.getString("ChatSettings", R.string.ChatSettings), R.drawable.msg_msgbubble3, true);
                     } else if (position == telegraherRow) {
                         textCell.setTextAndIcon("\uD83C\uDCCF \uD83D\uDD1E \uD83D\uDC6F", R.drawable.msg_report_xxx, true);
+                    } else if (position == killMeLabelRow) {
+                        textCell.setTextAndIcon(LocaleController.getString(R.string.THKillTheAPP), R.drawable.msg_report_drugs, true);
                     } else if (position == filtersRow) {
                         textCell.setTextAndIcon(LocaleController.getString("Filters", R.string.Filters), R.drawable.msg_folders, true);
                     } else if (position == stickersRow) {
@@ -9331,7 +9347,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         position == shadowBanRow ||
                         position == languageRow || position == setUsernameRow || position == bioRow ||
                         position == versionRow || position == dataRow || position == chatRow ||
-                        position == telegraherRow ||
+                        position == telegraherRow ||position == killMeLabelRow ||
                         position == questionRow || position == devicesRow || position == filtersRow || position == stickersRow ||
                         position == faqRow || position == policyRow || position == sendLogsRow || position == sendLastLogsRow ||
                         position == clearLogsRow || position == switchBackendRow || position == setAvatarRow || position == addToGroupButtonRow || position == premiumRow;
@@ -9373,7 +9389,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     position == addMemberRow || position == joinRow || position == unblockRow ||
                     position == sendMessageRow || position == notificationRow || position == privacyRow ||
                     position == languageRow || position == dataRow || position == chatRow ||
-                    position == telegraherRow ||
+                    position == telegraherRow ||position == killMeLabelRow ||
                     position == questionRow || position == devicesRow || position == filtersRow || position == stickersRow ||
                     position == faqRow || position == policyRow || position == sendLogsRow || position == sendLastLogsRow ||
                     position == clearLogsRow || position == switchBackendRow || position == setAvatarRow || position == addToGroupButtonRow ||
@@ -9550,7 +9566,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 new SearchResult(500, LocaleController.getString("EditName", R.string.EditName), 0, () -> presentFragment(new ChangeNameActivity(resourcesProvider))),
                 new SearchResult(501, LocaleController.getString("ChangePhoneNumber", R.string.ChangePhoneNumber), 0, () -> presentFragment(new ActionIntroActivity(ActionIntroActivity.ACTION_TYPE_CHANGE_PHONE_NUMBER))),
                 new SearchResult(502, LocaleController.getString("AddAnotherAccount", R.string.AddAnotherAccount), 0, () -> {
-                    int freeAccount = ThePenisMightierThanTheSword.getMaxInternalAccountId(SharedConfig.thAccounts) + 1;
+                    int freeAccount = ThePenisMightierThanTheSword.getMaxInternalAccountId(SharedConfig.thAccounts);
                     if (freeAccount >= 0) {
                         presentFragment(new LoginActivity(freeAccount));
                     }
@@ -9986,7 +10002,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                         if (stringBuilder != null && i == searchArgs.length - 1) {
                             if (result.guid == 502) {
-                                int freeAccount = ThePenisMightierThanTheSword.getMaxInternalAccountId(SharedConfig.thAccounts) + 1;
+                                int freeAccount = ThePenisMightierThanTheSword.getMaxInternalAccountId(SharedConfig.thAccounts);
                                 if (freeAccount < 0) {
                                     continue;
                                 }
@@ -10446,6 +10462,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             put(++pointer, stickersRow, sparseIntArray);
             put(++pointer, devicesRow, sparseIntArray);
             put(++pointer, telegraherRow, sparseIntArray);
+            put(++pointer, killMeLabelRow, sparseIntArray);
             put(++pointer, devicesSectionRow, sparseIntArray);
             put(++pointer, helpHeaderRow, sparseIntArray);
             put(++pointer, questionRow, sparseIntArray);

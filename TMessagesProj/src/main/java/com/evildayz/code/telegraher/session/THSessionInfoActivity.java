@@ -32,15 +32,16 @@ import com.evildayz.code.telegraher.ui.ThTextDetailCell;
 import org.telegram.messenger.*;
 import org.telegram.ui.ActionBar.*;
 import org.telegram.ui.Cells.*;
+import org.telegram.ui.Components.BulletinFactory;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.Components.SlideChooseView;
 import org.telegram.ui.QrActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
+
+import static org.telegram.messenger.MessagesController.wipeTheFolder;
 
 public class THSessionInfoActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
     private RecyclerListView listView;
@@ -56,7 +57,7 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
         //brand
         //device
         //sdk
-        rowCount = 4;
+        rowCount = 6;
         this.accountId = accountId;
     }
 
@@ -120,7 +121,7 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                     ((ThTextDetailCell) view).setChecked(!((ThTextDetailCell) view).isChecked());
                     ((ThTextDetailCell) view).setText(String.format("%s %s ",
                             ((ThTextDetailCell) view).isChecked() ? EMOJIS[1] : EMOJIS[0],
-                            SharedConfig.thAccounts.get(accountId).get("userPhone").toString()));
+                            SharedConfig.thAccounts.get(accountId).get("userPhone")));
                     break;
                 }
                 case 1: {
@@ -144,6 +145,13 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                 return enabled;
             }
             switch (position) {
+                case 0: {
+                    BulletinFactory.of(this).createCopyBulletin(LocaleController.getString("PhoneCopied", R.string.PhoneCopied), parentLayout.getLastFragment().getResourceProvider()).show();
+                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("thSessionUserPhone", SharedConfig.thAccounts.get(accountId).get("userPhone"));
+                    clipboard.setPrimaryClip(clip);
+                    break;
+                }
                 case 1: {
                     presentFragment(new THDeviceSpoofingEditActivity(position - 1, -1));
                     break;
@@ -154,6 +162,25 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                 }
                 case 3: {
                     presentFragment(new THDeviceSpoofingEditActivity(position - 1, -1));
+                    break;
+                }
+                case 4: {
+                    presentFragment(new THDeviceSpoofingEditActivity(position - 2, -1));
+                    break;
+                }
+                case 5: {
+                    if (SharedConfig.activeAccounts.contains(accountId)) {
+                        BulletinFactory.of(this).createCopyBulletin(LocaleController.getString(R.string.THAccountSessionDeleteError1), parentLayout.getLastFragment().getResourceProvider()).show();
+                    } else {
+                        if (UserConfig.getInstance(accountId).getClientUserId() != 0L) {
+                            BulletinFactory.of(this).createCopyBulletin(LocaleController.getString(R.string.THAccountSessionDeleteError2), parentLayout.getLastFragment().getResourceProvider()).show();
+                        } else {
+                            if (SharedConfig.thAccounts != null) SharedConfig.thAccounts.remove(accountId);
+                            if (SharedConfig.thDeviceSpoofing != null) SharedConfig.thDeviceSpoofing.remove(accountId);
+                            wipeTheFolder(accountId);
+                            BulletinFactory.of(this).createCopyBulletin(LocaleController.getString(R.string.THAccountSessionDeleteSuccessful), parentLayout.getLastFragment().getResourceProvider()).show();
+                        }
+                    }
                     break;
                 }
             }
@@ -293,21 +320,35 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                         case 1: {
                             thTextDetailCell.setTextAndValue(
                                     LocaleController.getString(R.string.THDSBrandLabel)
-                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceBrand").toString()
+                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceBrand")
                                     , false);
                             break;
                         }
                         case 2: {
                             thTextDetailCell.setTextAndValue(
                                     LocaleController.getString(R.string.THDSModelLabel)
-                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceModel").toString()
+                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceModel")
                                     , false);
                             break;
                         }
                         case 3: {
                             thTextDetailCell.setTextAndValue(
                                     LocaleController.getString(R.string.THDSSDKLabel)
-                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceSDK").toString()
+                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceSDK")
+                                    , false);
+                            break;
+                        }
+                        case 4: {
+                            thTextDetailCell.setTextAndValue(
+                                LocaleController.getString(R.string.THDSSDKLabel)
+                                , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceSDK")
+                                , false);
+                            break;
+                        }
+                        case 5: {
+                            thTextDetailCell.setTextAndValue(
+                                    LocaleController.getString(R.string.THDeleteThatBitch)
+                                    , LocaleController.getString(R.string.THAccountSessionDeleteDescription)
                                     , false);
                             break;
                         }
