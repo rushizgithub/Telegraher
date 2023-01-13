@@ -98,6 +98,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
 
     private int chatLabelRow;
     private int chatDeleteMarkRow;
+    private int chatEnableMessageHistoryRow;
     private int chatSBFullRow;
     private int chatSBManagerRow;
     private int chatSwapToNextChannelRow;
@@ -172,6 +173,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
 
         chatLabelRow = rowCount++;
         chatDeleteMarkRow = rowCount++;
+        chatEnableMessageHistoryRow = rowCount++;
         chatSBFullRow = rowCount++;
         chatSBManagerRow = rowCount++;
         chatSwapToNextChannelRow = rowCount++;
@@ -309,6 +311,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 SharedPreferences.Editor editor = preferences.edit();
                 enabled = preferences.getBoolean("EnableChatDeleteMark", true);
                 editor.putBoolean("EnableChatDeleteMark", !enabled);
+                editor.apply();
+            } else if (position == chatEnableMessageHistoryRow) {
+                SharedPreferences preferences = MessagesController.getTelegraherSettings(currentAccount);
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("EnableMessageHistory", true);
+                editor.putBoolean("EnableMessageHistory", !enabled);
                 editor.apply();
             } else if (position == chatSBFullRow) {
                 SharedPreferences preferences = MessagesController.getTelegraherSettings(currentAccount);
@@ -555,6 +563,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THEnableProfileSB), localPreps.getBoolean("EnableProfileSB", true), true);
                     } else if (position == chatDeleteMarkRow) {
                         checkCell.setTextAndCheck(String.format(LocaleController.getString(R.string.THEnableChatDeleteMark), LocaleController.getString("DeletedMessage", R.string.DeletedMessage)), localPreps.getBoolean("EnableChatDeleteMark", true), true);
+                    } else if (position == chatEnableMessageHistoryRow) {
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THEnableMessageHistory), localPreps.getBoolean("EnableMessageHistory", true), true);
                     } else if (position == accountExtendVanillaRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THEnableAccountExtendVanilla), globalPreps.getBoolean("EnableAccountExtendVanilla", false), true);
                     } else if (position == graheriumSpeedUp) {
@@ -781,7 +791,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                             || position == voipHDRow || position == voipDisableStartBeep || position == voipDisableEndBeep
                             || position == profileUIDRow || position == profileDCIDRow || position == profileSBRow
                             || position == hardwareDisableVibroRow
-                            || position == chatDeleteMarkRow || position == accountExtendVanillaRow || position == chatSBFullRow || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow
+                            || position == chatDeleteMarkRow || position == chatEnableMessageHistoryRow || position == accountExtendVanillaRow || position == chatSBFullRow || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow
                             || position == graheriumSpeedUp || position == graheriumAnimateEveryAvatar
                             || position == gifHDRow || position == videoRoundUseMainCameraRow
                             || position == uiAppHidePhoneNumberOnLeftPanelRow
