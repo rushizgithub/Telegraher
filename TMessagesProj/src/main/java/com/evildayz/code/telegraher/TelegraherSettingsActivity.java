@@ -540,7 +540,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                     } else if (position == accountExtendVanillaRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THEnableAccountExtendVanilla), globalPreps.getBoolean("EnableAccountExtendVanilla", false), true);
                     } else if (position == graheriumSpeedUp) {
-                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THDGraheriumSpeedUp), globalPreps.getBoolean("EnableGraheriumSpeedUp", false), true);
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THDGraheriumSpeedUpUpload), globalPreps.getBoolean("EnableGraheriumSpeedUp", false), true);
                     } else if (position == graheriumAnimateEveryAvatar) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumAnimateEveryAvatar), globalPreps.getBoolean("EnableGraheriumAnimateEveryAvatar", false), true);
                     } else if (position == chatSBFullRow) {
