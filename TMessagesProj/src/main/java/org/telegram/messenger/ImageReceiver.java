@@ -386,7 +386,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
             if (user.photo != null) {
                 strippedBitmap = user.photo.strippedBitmap;
                 hasStripped = user.photo.stripped_thumb != null;
-                if (animationEnabled && MessagesController.getInstance(currentAccount).isPremiumUser(user) && user.photo.has_video && !SharedConfig.getLiteMode().enabled()) {
+                if (animationEnabled && user.photo.has_video && MessagesController.getGlobalTelegraherSettings().getBoolean("EnableGraheriumAnimateEveryAvatar", false) && !SharedConfig.getLiteMode().enabled()) {
                     final TLRPC.UserFull userFull = MessagesController.getInstance(currentAccount).getUserFull(user.id);
                     if (userFull == null) {
                         MessagesController.getInstance(currentAccount).loadFullUser(user, currentGuid, false);
@@ -1650,7 +1650,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
 //            lottieDrawable.updateCurrentFrame();
 //        }
     }
-    
+
     protected boolean customDraw(
         Canvas canvas,
         AnimatedFileDrawable animation,
@@ -1741,7 +1741,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
                 overrideAlpha = this.overrideAlpha;
                 animationNotReady = animation != null && !animation.hasBitmap() || lottieDrawable != null && !lottieDrawable.hasBitmap();
             }
-            
+
             if (customDraw(
                 canvas,
                 animation, lottieDrawable,
