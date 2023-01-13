@@ -11,11 +11,7 @@ import android.os.Build;
 import com.google.android.exoplayer2.util.Log;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.BuildVars;
-import org.telegram.messenger.FileLog;
-import org.telegram.messenger.MediaController;
-import org.telegram.messenger.Utilities;
-import org.telegram.messenger.VideoEditedInfo;
+import org.telegram.messenger.*;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -37,8 +33,8 @@ public class MediaCodecVideoConvertor {
     private final static int PROCESSOR_TYPE_SEC = 4;
     private final static int PROCESSOR_TYPE_TI = 5;
 
-    private static final int MEDIACODEC_TIMEOUT_DEFAULT = 2500;
-    private static final int MEDIACODEC_TIMEOUT_INCREASED = 22000;
+    private static final int MEDIACODEC_TIMEOUT_DEFAULT = 5000;
+    private static final int MEDIACODEC_TIMEOUT_INCREASED = 44000;
 
     public boolean convertVideo(String videoPath, File cacheFile,
                                 int rotationValue, boolean isSecret,
@@ -83,6 +79,7 @@ public class MediaCodecVideoConvertor {
         boolean error = false;
         boolean repeatWithIncreasedTimeout = false;
         int videoTrackIndex = -5;
+        boolean enableGifHD = MessagesController.getGlobalTelegraherSettings().getBoolean("EnableGifHD", false);
 
         try {
             MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
@@ -319,7 +316,7 @@ public class MediaCodecVideoConvertor {
                     AudioRecoder audioRecoder = null;
                     ByteBuffer audioBuffer = null;
                     boolean copyAudioBuffer = true;
-                    long lastFramePts = -1;
+//                    long lastFramePts = -1; //fuckoff
 
                     if (videoIndex >= 0) {
                         MediaCodec decoder = null;
@@ -356,7 +353,7 @@ public class MediaCodecVideoConvertor {
                                 //this encoder work with bitrate better, prevent case when result video max 2MB
                                 encoderName = "OMX.google.h264.encoder";
                             } else if (bitrate <= 0) {
-                                bitrate = 921600;
+                                bitrate = enableGifHD ? MediaController.makeVideoBitrate(originalHeight, originalWidth, originalBitrate, resultHeight, resultWidth) : 921600;
                             }
                             if (originalBitrate > 0) {
                                 bitrate = Math.min(originalBitrate, bitrate);
@@ -399,9 +396,9 @@ public class MediaCodecVideoConvertor {
                             outputFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2);
 
                             if (Build.VERSION.SDK_INT < 23 && Math.min(h, w) <= 480) {
-                                if (bitrate > 921600) {
-                                    bitrate = 921600;
-                                }
+//                                if (bitrate > 921600) {
+//                                    bitrate = 921600;
+//                                }
                                 outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitrate);
                             }
 
@@ -704,9 +701,9 @@ public class MediaCodecVideoConvertor {
                                                 decoder.flush();
                                                 flushed = true;
                                             }
-                                            if (lastFramePts > 0 && info.presentationTimeUs - lastFramePts < frameDeltaFroSkipFrames && (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) == 0) {
-                                                doRender = false;
-                                            }
+//                                            if (lastFramePts > 0 && info.presentationTimeUs - lastFramePts < frameDelta && (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) == 0) { //fuckoff
+//                                                doRender = false;
+//                                            }
                                             trueStartTime = avatarStartTime >= 0 ? avatarStartTime : startTime;
                                             if (trueStartTime > 0 && videoTime == -1) {
                                                 if (originalPresentationTime < trueStartTime) {
@@ -730,7 +727,7 @@ public class MediaCodecVideoConvertor {
                                                 decoder.releaseOutputBuffer(decoderStatus, doRender);
                                             }
                                             if (doRender) {
-                                                lastFramePts = info.presentationTimeUs;
+//                                                lastFramePts = info.presentationTimeUs; //fuckoff
                                                 if (avatarStartTime >= 0) {
                                                     minPresentationTime = Math.max(minPresentationTime, info.presentationTimeUs);
                                                 }
