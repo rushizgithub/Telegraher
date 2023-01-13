@@ -53,7 +53,8 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
     private int accountId;
 
     public THSessionInfoActivity(int accountId) {
-        //status - name surname username
+        //status
+        //username name surname
         //brand
         //device
         //sdk
@@ -120,20 +121,20 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                     SharedConfig.saveAccounts();
                     ((ThTextDetailCell) view).setChecked(!((ThTextDetailCell) view).isChecked());
                     ((ThTextDetailCell) view).setText(String.format("%s %s ",
-                            ((ThTextDetailCell) view).isChecked() ? EMOJIS[1] : EMOJIS[0],
-                            SharedConfig.thAccounts.get(accountId).get("userPhone")));
-                    break;
-                }
-                case 1: {
-                    presentFragment(new THDeviceSpoofingEditActivity(position - 1, accountId));
+                        ((ThTextDetailCell) view).isChecked() ? EMOJIS[1] : EMOJIS[0],
+                        SharedConfig.thAccounts.get(accountId).get("userPhone")));
                     break;
                 }
                 case 2: {
-                    presentFragment(new THDeviceSpoofingEditActivity(position - 1, accountId));
+                    presentFragment(new THDeviceSpoofingEditActivity(position - 2, accountId));
                     break;
                 }
                 case 3: {
-                    presentFragment(new THDeviceSpoofingEditActivity(position - 1, accountId));
+                    presentFragment(new THDeviceSpoofingEditActivity(position - 2, accountId));
+                    break;
+                }
+                case 4: {
+                    presentFragment(new THDeviceSpoofingEditActivity(position - 2, accountId));
                     break;
                 }
             }
@@ -153,15 +154,18 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                     break;
                 }
                 case 1: {
-                    presentFragment(new THDeviceSpoofingEditActivity(position - 1, -1));
+                    BulletinFactory.of(this).createCopyBulletin(LocaleController.getString("UsernameCopied", R.string.UsernameCopied), parentLayout.getLastFragment().getResourceProvider()).show();
+                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("thSessionUserName", "@" + SharedConfig.thAccounts.get(accountId).get("userName"));
+                    clipboard.setPrimaryClip(clip);
                     break;
                 }
                 case 2: {
-                    presentFragment(new THDeviceSpoofingEditActivity(position - 1, -1));
+                    presentFragment(new THDeviceSpoofingEditActivity(position - 2, -1));
                     break;
                 }
                 case 3: {
-                    presentFragment(new THDeviceSpoofingEditActivity(position - 1, -1));
+                    presentFragment(new THDeviceSpoofingEditActivity(position - 2, -1));
                     break;
                 }
                 case 4: {
@@ -305,37 +309,37 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                     switch (position) {
                         case 0: {
                             thTextDetailCell.setTextAndValue(
-                                    String.format("%s %s ",
-                                            thTextDetailCell.isChecked() ? EMOJIS[1] : EMOJIS[0],
-                                            SharedConfig.thAccounts.get(accountId).get("userPhone").toString())
-                                    ,
-                                    String.format(Locale.US, "%s %s(@%s)"
-                                            , SharedConfig.thAccounts.get(accountId).get("userFName")
-                                            , SharedConfig.thAccounts.get(accountId).get("userLName")
-                                            , SharedConfig.thAccounts.get(accountId).get("userName")
-                                    )
-                                    , false);
+                                String.format("%s %s ",
+                                    thTextDetailCell.isChecked() ? EMOJIS[1] : EMOJIS[0],
+                                    SharedConfig.thAccounts.get(accountId).get("userPhone").toString())
+                                ,
+                                null
+                                , false);
                             break;
                         }
                         case 1: {
                             thTextDetailCell.setTextAndValue(
-                                    LocaleController.getString(R.string.THDSBrandLabel)
-                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceBrand")
-                                    , false);
+                                String.format("@%s", SharedConfig.thAccounts.get(accountId).get("userName"))
+                                ,
+                                String.format(Locale.US, "%s %s"
+                                    , SharedConfig.thAccounts.get(accountId).get("userFName")
+                                    , SharedConfig.thAccounts.get(accountId).get("userLName")
+                                )
+                                , false);
                             break;
                         }
                         case 2: {
                             thTextDetailCell.setTextAndValue(
-                                    LocaleController.getString(R.string.THDSModelLabel)
-                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceModel")
-                                    , false);
+                                LocaleController.getString(R.string.THDSBrandLabel)
+                                , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceBrand")
+                                , false);
                             break;
                         }
                         case 3: {
                             thTextDetailCell.setTextAndValue(
-                                    LocaleController.getString(R.string.THDSSDKLabel)
-                                    , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceSDK")
-                                    , false);
+                                LocaleController.getString(R.string.THDSModelLabel)
+                                , SharedConfig.thDeviceSpoofing.get(accountId).get("deviceModel")
+                                , false);
                             break;
                         }
                         case 4: {
@@ -347,9 +351,9 @@ public class THSessionInfoActivity extends BaseFragment implements NotificationC
                         }
                         case 5: {
                             thTextDetailCell.setTextAndValue(
-                                    LocaleController.getString(R.string.THDeleteThatBitch)
-                                    , LocaleController.getString(R.string.THAccountSessionDeleteDescription)
-                                    , false);
+                                LocaleController.getString(R.string.THDeleteThatBitch)
+                                , LocaleController.getString(R.string.THAccountSessionDeleteDescription)
+                                , false);
                             break;
                         }
                     }
