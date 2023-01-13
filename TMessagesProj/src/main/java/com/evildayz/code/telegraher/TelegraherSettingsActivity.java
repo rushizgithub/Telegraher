@@ -703,9 +703,10 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         });
                     } else if (position == uiAppNotificationIconSelectorRow) {
                         String[] strings = new String[]{
-                            LocaleController.getString(R.string.THUIAppNotificationIconRow0),
-                            LocaleController.getString(R.string.THUIAppNotificationIconRow1),
-                            LocaleController.getString(R.string.THUIAppNotificationIconRow2)
+                                LocaleController.getString(R.string.THUIAppNotificationIconRow0),
+                                LocaleController.getString(R.string.THUIAppNotificationIconRow1),
+                                LocaleController.getString(R.string.THUIAppNotificationIconRow2),
+                                LocaleController.getString(R.string.THUIAppNotificationIconRow3)
                         };
                         slideChooseView.setOptions(MessagesController.getGlobalTelegraherSettings().getInt("UIAppNotificationIconSelector", 0), strings);
                         slideChooseView.setCallback(new SlideChooseView.Callback() {
