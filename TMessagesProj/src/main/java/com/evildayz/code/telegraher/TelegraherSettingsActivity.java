@@ -53,7 +53,6 @@ import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.Components.SlideChooseView;
 import org.telegram.ui.QrActivity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,6 +78,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int uiLabelRow;
     private int uiAppNotificationIconRow;
     private int uiAppNotificationIconSelectorRow;
+    private int uiStickerSizeLabelRow;
+    private int uiStickerSizeRow;
     private int uiAppHidePhoneNumberOnLeftPanelRow;
     private int uiSystemFontRegularRow;
     private int uiSystemFontBoldRow;
@@ -108,6 +109,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int chatTabsOnForwardRow;
     private int chatDisableSpoilersRow;
     private int chatRealForwardedMessageTimeRow;
+    private int chatHideStickersRow;
 
     private int videoLabelRoundBitrateRow;
     private int videoRoundBitrateMultRow;
@@ -129,6 +131,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int graheriumSpeedUpUpload;
     private int graheriumSpeedUpDownload;
     private int graheriumAnimateEveryAvatar;
+    private int graheriumVanillaStickerFlow;
     private int graheriumAnimatedStickerOverlays;
     private int graheriumStarrLabelRow;
     private int graheriumStarrMark;
@@ -153,6 +156,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         uiLabelRow = rowCount++;
         uiAppNotificationIconRow = rowCount++;
         uiAppNotificationIconSelectorRow = rowCount++;
+        uiStickerSizeLabelRow = -1;
+        uiStickerSizeRow = -1;
         uiAppHidePhoneNumberOnLeftPanelRow = rowCount++;
         uiSystemFontRegularRow = -1;//TODO WTF need the fuck make it work
         uiSystemFontBoldRow = -1;
@@ -191,6 +196,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         chatTabsOnForwardRow = rowCount++;
         chatDisableSpoilersRow = rowCount++;
         chatRealForwardedMessageTimeRow = rowCount++;
+        chatHideStickersRow = -1;
 
         accountLabelRow = rowCount++;
         accountSessionManagerRow = rowCount++;
@@ -199,6 +205,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         graheriumSpeedUpUpload = rowCount++;
         graheriumSpeedUpDownload = rowCount++;
         graheriumAnimateEveryAvatar = rowCount++;
+        graheriumVanillaStickerFlow = -1;
         graheriumAnimatedStickerOverlays = rowCount++;
         graheriumStarrLabelRow = rowCount++;
         graheriumStarrMark = rowCount++;
@@ -370,6 +377,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 enabled = preferences.getBoolean("RealForwardedMessageTime", true);
                 editor.putBoolean("RealForwardedMessageTime", !enabled);
                 editor.apply();
+            } else if (position == chatHideStickersRow) {
+                SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("HideStickers", false);
+                editor.putBoolean("HideStickers", !enabled);
+                editor.apply();
             } else if (position == accountExtendVanillaRow) {
                 SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
                 SharedPreferences.Editor editor = preferences.edit();
@@ -393,6 +406,20 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 SharedPreferences.Editor editor = preferences.edit();
                 enabled = preferences.getBoolean("EnableGraheriumAnimateEveryAvatar", false);
                 editor.putBoolean("EnableGraheriumAnimateEveryAvatar", !enabled);
+                editor.apply();
+            } else if (position == graheriumAnimatedStickerOverlays) {
+                SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("EnableGraheriumAnimatedStickerOverlays", false);
+                if (preferences.getBoolean("EnableGraheriumVanillaStickerFlow", true)) enabled = true;
+                editor.putBoolean("EnableGraheriumAnimatedStickerOverlays", !preferences.getBoolean("EnableGraheriumVanillaStickerFlow", true) && !enabled);
+                editor.apply();
+            } else if (position == graheriumVanillaStickerFlow) {
+                SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("EnableGraheriumVanillaStickerFlow", true);
+                if (!enabled) editor.putBoolean("EnableGraheriumAnimatedStickerOverlays", false);
+                editor.putBoolean("EnableGraheriumVanillaStickerFlow", !enabled);
                 editor.apply();
             } else if (position == gifHDRow) {
                 SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
@@ -542,6 +569,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         headerCell.setText(LocaleController.getString(R.string.THUILabelRow));
                     } else if (position == uiAppNotificationIconRow) {
                         headerCell.setText(LocaleController.getString(R.string.THUIAppNotificationIconRow));
+                    } else if (position == uiStickerSizeLabelRow) {
+                        headerCell.setText(LocaleController.getString(R.string.THUIStickerSize));
                     } else if (position == voiceLabelRow) {
                         headerCell.setText(LocaleController.getString(R.string.THVoiceLabelRow));
                     } else if (position == voipLabelRow) {
@@ -621,6 +650,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumAnimateEveryAvatar), globalPreps.getBoolean("EnableGraheriumAnimateEveryAvatar", false), true);
                     } else if (position == graheriumAnimatedStickerOverlays) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumAnimatedStickerOverlays), globalPreps.getBoolean("EnableGraheriumAnimatedStickerOverlays", false), true);
+                    } else if (position == graheriumVanillaStickerFlow) {
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumVanillaStickerFlow), globalPreps.getBoolean("EnableGraheriumVanillaStickerFlow", true), true);
                     } else if (position == uiAppHidePhoneNumberOnLeftPanelRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THHidePhoneNumberOnLeftPanel), globalPreps.getBoolean("HidePhoneNumberOnLeftPanel", false), true);
                     } else if (position == chatSBFullRow) {
@@ -633,6 +664,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THDisableSpoilers), globalPreps.getBoolean("DisableSpoilers", false), true);
                     } else if (position == chatRealForwardedMessageTimeRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THChatRealForwardedMessageTime), globalPreps.getBoolean("RealForwardedMessageTime", true), true);
+                    } else if (position == chatHideStickersRow) {
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THChatHideStickers), globalPreps.getBoolean("HideStickers", false), true);
                     } else if (position == gifHDRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THEnableGifHD), globalPreps.getBoolean("EnableGifHD", false), true);
                     } else if (position == videoRoundUseMainCameraRow) {
@@ -765,10 +798,10 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         });
                     } else if (position == uiAppNotificationIconSelectorRow) {
                         String[] strings = new String[]{
-                                LocaleController.getString(R.string.THUIAppNotificationIconRow0),
-                                LocaleController.getString(R.string.THUIAppNotificationIconRow1),
-                                LocaleController.getString(R.string.THUIAppNotificationIconRow2),
-                                LocaleController.getString(R.string.THUIAppNotificationIconRow3)
+                            LocaleController.getString(R.string.THUIAppNotificationIconRow0),
+                            LocaleController.getString(R.string.THUIAppNotificationIconRow1),
+                            LocaleController.getString(R.string.THUIAppNotificationIconRow2),
+                            LocaleController.getString(R.string.THUIAppNotificationIconRow3)
                         };
                         slideChooseView.setOptions(MessagesController.getGlobalTelegraherSettings().getInt("UIAppNotificationIconSelector", 0), strings);
                         slideChooseView.setCallback(new SlideChooseView.Callback() {
@@ -777,6 +810,23 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                                 SharedPreferences globalTh = MessagesController.getGlobalTelegraherSettings();
                                 SharedPreferences.Editor editor = globalTh.edit();
                                 editor.putInt("UIAppNotificationIconSelector", index);
+                                editor.apply();
+                            }
+                        });
+                    } else if (position == uiStickerSizeRow) {
+                        String[] strings = new String[]{
+                            "x0.25",
+                            "x0.5",
+                            "x1",
+                            "x2",
+                        };
+                        slideChooseView.setOptions(MessagesController.getGlobalTelegraherSettings().getInt("UIStickerSize", 2), strings);
+                        slideChooseView.setCallback(new SlideChooseView.Callback() {
+                            @Override
+                            public void onOptionSelected(int index) {
+                                SharedPreferences globalTh = MessagesController.getGlobalTelegraherSettings();
+                                SharedPreferences.Editor editor = globalTh.edit();
+                                editor.putInt("UIStickerSize", index);
                                 editor.apply();
                             }
                         });
@@ -831,37 +881,40 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         @Override
         public int getItemViewType(int position) {
             if (
-                    position == showLabelTelegraherMenuRow
-                            || position == uiLabelRow
-                            || position == uiAppNotificationIconRow
-                            || position == voiceLabelRow || position == voipLabelRow
-                            || position == privacyLabelRow
-                            || position == profileLabelRow
-                            || position == hardwareLabelRow
-                            || position == hardwareProximitySensorModeLabelRow
-                            || position == chatLabelRow
-                            || position == gifLabelHDRow
-                            || position == accountLabelRow
-                            || position == graheriumLabelRow
-                            || position == graheriumStarrLabelRow
-                            || position == graheriumOverrideConnectionSpeedLabelRow
-                            || position == deviceSpoofingLabelRow
-                            || position == deviceSpoofingResetDefaultLabelRow
-                            || position == videoLabelMaxResolutionRow
-                            || position == videoLabelRoundBitrateRow
-                            || position == videoLabelRoundSizeRow
+                position == showLabelTelegraherMenuRow
+                    || position == uiLabelRow
+                    || position == uiAppNotificationIconRow
+                    || position == uiStickerSizeLabelRow
+                    || position == voiceLabelRow || position == voipLabelRow
+                    || position == privacyLabelRow
+                    || position == profileLabelRow
+                    || position == hardwareLabelRow
+                    || position == hardwareProximitySensorModeLabelRow
+                    || position == chatLabelRow
+                    || position == gifLabelHDRow
+                    || position == accountLabelRow
+                    || position == graheriumLabelRow
+                    || position == graheriumStarrLabelRow
+                    || position == graheriumOverrideConnectionSpeedLabelRow
+                    || position == deviceSpoofingLabelRow
+                    || position == deviceSpoofingResetDefaultLabelRow
+                    || position == videoLabelMaxResolutionRow
+                    || position == videoLabelRoundBitrateRow
+                    || position == videoLabelRoundSizeRow
             ) {
                 return 0;
             } else if (
-                    position == voiceHDRow || position == voiceBadmanRow
-                            || position == voipHDRow || position == voipDisableStartBeep || position == voipDisableEndBeep
-                            || position == privacyDontCallAppleRow
-                            || position == profileUIDRow || position == profileDCIDRow || position == profileSBRow
-                            || position == hardwareDisableVibroRow
-                            || position == chatDeleteMarkRow || position == chatEnableMessageHistoryRow || position == accountExtendVanillaRow || position == chatSBFullRow || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow || position == chatDisableSpoilersRow|| position == chatRealForwardedMessageTimeRow
-                            || position == graheriumSpeedUpUpload || position == graheriumSpeedUpDownload || position == graheriumAnimateEveryAvatar || position == graheriumAnimatedStickerOverlays //|| position == graheriumVanillaStickerFlow
-                            || position == gifHDRow || position == videoRoundUseMainCameraRow
-                            || position == uiAppHidePhoneNumberOnLeftPanelRow
+                position == voiceHDRow || position == voiceBadmanRow
+                    || position == voipHDRow || position == voipDisableStartBeep || position == voipDisableEndBeep
+                    || position == privacyDontCallAppleRow
+                    || position == profileUIDRow || position == profileDCIDRow || position == profileSBRow
+                    || position == hardwareDisableVibroRow
+                    || position == chatDeleteMarkRow || position == chatEnableMessageHistoryRow || position == accountExtendVanillaRow || position == chatSBFullRow
+                    || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow || position == chatDisableSpoilersRow || position == chatRealForwardedMessageTimeRow
+                    || position == chatHideStickersRow
+                    || position == graheriumSpeedUpUpload || position == graheriumSpeedUpDownload || position == graheriumAnimateEveryAvatar || position == graheriumAnimatedStickerOverlays || position == graheriumVanillaStickerFlow
+                    || position == gifHDRow || position == videoRoundUseMainCameraRow
+                    || position == uiAppHidePhoneNumberOnLeftPanelRow
             ) {
                 return 1;
             } else if (position == killMeLabelRow || position == chatSBManagerRow || position == accountSessionManagerRow
@@ -869,13 +922,14 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
             ) {
                 return 5;
             } else if (
-                    position == showTelegraherMenuRow
-                            || position == videoRoundBitrateMultRow || position == videoRoundSizeMultRow
-                            || position == videoMaxResolutionRow
-                            || position == hardwareProximitySensorModeRow
-                            || position == uiAppNotificationIconSelectorRow
-                            || position == graheriumStarrMark
-                            || position == graheriumOverrideConnectionSpeed
+                position == showTelegraherMenuRow
+                    || position == videoRoundBitrateMultRow || position == videoRoundSizeMultRow
+                    || position == videoMaxResolutionRow
+                    || position == hardwareProximitySensorModeRow
+                    || position == uiAppNotificationIconSelectorRow
+                    || position == uiStickerSizeRow
+                    || position == graheriumStarrMark
+                    || position == graheriumOverrideConnectionSpeed
             ) {
                 return 6;
             } else if (position == deviceSpoofingBrand || position == deviceSpoofingModel || position == deviceSpoofingSDK) {
@@ -954,11 +1008,11 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         builder.setPositiveButton(LocaleController.getString(R.string.THYesYesYes), (dialogInterface, i) -> {
             try {
                 SharedConfig.thDeviceSpoofing.put(-1,
-                        new HashMap<String, String>() {{
-                            put("deviceBrand", Build.MANUFACTURER);
-                            put("deviceModel", Build.MODEL);
-                            put("deviceSDK", Integer.valueOf(Build.VERSION.SDK_INT).toString());
-                        }});
+                    new HashMap<String, String>() {{
+                        put("deviceBrand", Build.MANUFACTURER);
+                        put("deviceModel", Build.MODEL);
+                        put("deviceSDK", Integer.valueOf(Build.VERSION.SDK_INT).toString());
+                    }});
             } catch (Exception durovrelogin) {
                 durovrelogin.printStackTrace();
             }
