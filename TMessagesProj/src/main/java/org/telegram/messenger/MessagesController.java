@@ -70,6 +70,8 @@ import org.telegram.ui.ProfileActivity;
 import org.telegram.ui.TopicsFragment;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;

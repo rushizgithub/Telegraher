@@ -35,7 +35,7 @@ public class NotificationsService extends Service {
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setShowWhen(false)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.notification)
+                .setSmallIcon(R.drawable.msg_report_xxx)
                 .setContentText("To let you receive push notifications w/o GApps").build();
             startForeground(9999,notification);
         }
