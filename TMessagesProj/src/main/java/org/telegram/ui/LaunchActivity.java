@@ -79,6 +79,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.evildayz.code.telegraher.ThePenisMightierThanTheSword;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
@@ -481,13 +482,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                 switchToAccount(((DrawerUserCell) view).getAccountNumber(), true);
                 drawerLayoutContainer.closeDrawer(false);
             } else if (view instanceof DrawerAddCell) {
-                int freeAccount;
-                for (int account = 0; ; account++) {
-                    if (!SharedConfig.activeAccounts.contains(account)) {
-                        freeAccount = account;
-                        break;
-                    }
-                }
+                int freeAccount = ThePenisMightierThanTheSword.getMaxInternalAccountId(SharedConfig.thAccounts) + 1; //session manager purposes
                 if (freeAccount > 0) {
                     presentFragment(new LoginActivity(freeAccount));
                 }

@@ -23131,7 +23131,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     && ((message.messageOwner.flags & TLRPC.MESSAGE_FLAG_EDITED) != 0 || message.isEditing())
                     && message.messageOwner.from_id != null
                     && message.messageOwner.from_id.user_id != getAccountInstance().getUserConfig().getClientUserId()) {
-                items.add("History");
+                items.add(LocaleController.getString(R.string.THHistory));
                 options.add(420_001);
                 icons.add(R.drawable.msg_log);
             }
