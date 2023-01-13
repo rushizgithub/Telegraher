@@ -8,6 +8,7 @@
 
 package org.telegram.ui;
 
+import static java.util.Optional.ofNullable;
 import static org.telegram.messenger.ContactsController.PRIVACY_RULES_TYPE_ADDED_BY_PHONE;
 
 import android.Manifest;
@@ -214,16 +215,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
@@ -486,6 +478,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int userIdRow;
     private int userDcRow;
     private int notificationsRow;
+    private int shadowBanRow;
     private int notificationsSimpleRow;
     private int infoSectionRow;
     private int sendMessageRow;
@@ -3138,6 +3131,29 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     y += v.getY() + v.getPaddingTop();
                 }
                 chatNotificationsPopupWrapper.showAsOptions(ProfileActivity.this, view, x, y);
+            } else if (position == shadowBanRow) {
+                String shadowName = null;
+                if (userId != 0) {
+                    TLRPC.User user = getMessagesController().getUser(userId);
+                    shadowName = String.format("%s %s(@%s)", ofNullable(user.last_name).orElse(""), ofNullable(user.first_name).orElse(""), ofNullable(user.username).orElse("--unknown"));
+                } else if (chatId != 0) {
+                    TLRPC.Chat chat = getMessagesController().getChat(chatId);
+                    shadowName = String.format("[c]:%s(@%s)", ofNullable(chat.title).orElse("--unknown"), ofNullable(chat.username).orElse("--unknown"));
+                }
+                if (shadowName != null) {
+                    NotificationsCheckCell checkCell = (NotificationsCheckCell) view;
+                    boolean checked = !checkCell.isChecked();
+                    checkCell.setChecked(checked);
+                    if (checked) {
+                        SharedConfig.addShadowBanned(did, shadowName);
+                    } else {
+                        SharedConfig.delShadowBanned(did);
+                    }
+                    RecyclerListView.Holder holder = (RecyclerListView.Holder) listView.findViewHolderForPosition(shadowBanRow);
+                    if (holder != null) {
+                        listAdapter.onBindViewHolder(holder, shadowBanRow);
+                    }
+                }
             } else if (position == unblockRow) {
                 getMessagesController().unblockPeer(userId);
                 if (BulletinFactory.canShowBulletin(ProfileActivity.this)) {
@@ -6865,6 +6881,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         reportDividerRow = -1;
         notificationsRow = -1;
         infoSectionRow = -1;
+        shadowBanRow = -1;
         secretSettingsSectionRow = -1;
         bottomPaddingRow = -1;
         addToGroupButtonRow = -1;
@@ -6993,6 +7010,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (userId != getUserConfig().getClientUserId()) {
                     notificationsRow = rowCount++;
+                    shadowBanRow = rowCount++;
                 }
                 infoSectionRow = rowCount++;
 
@@ -7068,6 +7086,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 notificationsDividerRow = rowCount++;
             }
             notificationsRow = rowCount++;
+            shadowBanRow = rowCount++;
             infoSectionRow = rowCount++;
 
             if (ChatObject.isChannel(currentChat) && !currentChat.megagroup) {
@@ -9164,6 +9183,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                         checkCell.setAnimationsEnabled(fragmentOpened);
                         checkCell.setTextAndValueAndCheck(LocaleController.getString("Notifications", R.string.Notifications), val, enabled, false);
+                    } else if (position == shadowBanRow) {
+//                        System.out.printf("d `%s`|u `%d`|c `%d`%n", dialogId, userId, chatId);
+                        boolean enabled = SharedConfig.isShadowBanned(dialogId != 0L ? dialogId : userId != 0L ? userId : chatId != 0 ? chatId : 0L);
+                        checkCell.setTextAndValueAndCheck("ShadowBan", enabled ? LocaleController.getString("NotificationsOn", R.string.NotificationsOn) : LocaleController.getString("NotificationsOff", R.string.NotificationsOff), enabled, false);
                     }
                     break;
                 case VIEW_TYPE_SHADOW:
@@ -9297,9 +9320,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
         @Override
         public boolean isEnabled(RecyclerView.ViewHolder holder) {
-            if (notificationRow != -1) {
+            if (notificationRow != -1 || shadowBanRow != -1) {
                 int position = holder.getAdapterPosition();
                 return position == notificationRow || position == numberRow || position == privacyRow ||
+                        position == shadowBanRow ||
                         position == languageRow || position == setUsernameRow || position == bioRow ||
                         position == versionRow || position == dataRow || position == chatRow ||
                         position == telegraherRow ||
@@ -9352,7 +9376,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 return VIEW_TYPE_TEXT;
             } else if (position == notificationsDividerRow) {
                 return VIEW_TYPE_DIVIDER;
-            } else if (position == notificationsRow) {
+            } else if (position == notificationsRow || position == shadowBanRow) {
                 return VIEW_TYPE_NOTIFICATIONS_CHECK;
             } else if (position == notificationsSimpleRow) {
                 return VIEW_TYPE_NOTIFICATIONS_CHECK_SIMPLE;
@@ -10454,6 +10478,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             put(++pointer, notificationsDividerRow, sparseIntArray);
             put(++pointer, reportDividerRow, sparseIntArray);
             put(++pointer, notificationsRow, sparseIntArray);
+            put(++pointer, shadowBanRow, sparseIntArray);
             put(++pointer, infoSectionRow, sparseIntArray);
             put(++pointer, sendMessageRow, sparseIntArray);
             put(++pointer, reportRow, sparseIntArray);

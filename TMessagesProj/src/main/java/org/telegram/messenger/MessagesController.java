@@ -13424,6 +13424,9 @@ public class MessagesController extends BaseController implements NotificationCe
                 if (newMessageCallback != null && newMessageCallback.onMessageReceived(message)) {
                     newMessageCallback = null;
                 }
+
+                if (SharedConfig.isShadowBanned(message)) continue;
+
                 TLRPC.Chat chat = null;
                 long chatId = 0;
                 long userId = 0;

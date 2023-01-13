@@ -7360,6 +7360,7 @@ public class MessagesStorage extends BaseController {
                         if (message.ttl == 0) {
                             message.ttl = cursor.intValue(6);
                         }
+                        if (getMessagesController().getTelegraherSettings(currentAccount).getBoolean("EnableChatSBFull", false) && SharedConfig.isShadowBanned(message)) continue;
                         res.messages.add(message);
 
                         addUsersAndChatsFromMessage(message, usersToLoad, chatsToLoad, animatedEmojiToLoad);
@@ -7983,6 +7984,7 @@ public class MessagesStorage extends BaseController {
                                 MessageCustomParamsHelper.readLocalParams(message, customParams);
                                 customParams.reuse();
                             }
+                            if (getMessagesController().getTelegraherSettings(currentAccount).getBoolean("EnableChatSBFull", false) && SharedConfig.isShadowBanned(message)) continue;
                             res.messages.add(message);
 
                             addUsersAndChatsFromMessage(message, usersToLoad, chatsToLoad, animatedEmojiToLoad);
