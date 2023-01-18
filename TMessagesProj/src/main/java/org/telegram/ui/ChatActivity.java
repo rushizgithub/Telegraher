@@ -13958,7 +13958,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             }
                         }
                         if (canSave) {
-                            sendSecretMessageRead(messageObject, true);
                             if (messageObject.getDocument() != null && !messageObject.isMusic()) {
                                 String mime = messageObject.getDocument().mime_type;
                                 if (mime != null) {
@@ -23143,6 +23142,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 icons.add(R.drawable.msg_delete_filled);
             }
 
+            if (message != null && message.messageOwner.ttl > 0) {
+                items.add(String.format(LocaleController.getString(R.string.THDMessageTTL), message.messageOwner.ttl));
+                options.add(420_003);
+                icons.add(R.drawable.flame_small);
+            }
+
             if (!(options.contains(4) || options.contains(7))
                 && (selectedObject.isSecretMedia() || selectedObject.isGif() || selectedObject.isNewGif() || selectedObject.isPhoto() || selectedObject.isRoundVideo() || selectedObject.isVideo())) {
                 items.add(LocaleController.getString("SaveToGallery", R.string.SaveToGallery));
@@ -24446,6 +24451,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (messageCell != null) {
                     messageCell.updateButtonState(false, true, false);
                 }
+                break;
+            }
+            case 420_003:{
+                sendSecretMessageRead(selectedObject, true);
                 break;
             }
             case OPTION_RETRY: {
@@ -26498,10 +26507,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 }
             }
         }
-        if (message.isVideo()) {
-            sendSecretMessageRead(message, true);
-        }
-        if (isSecretChat() && (message.isPhoto() || message.isGif() || message.isNewGif())) {
+        if (isSecretChat() && (message.isPhoto() || message.isVideo() || message.isGif() || message.isNewGif())) {
             sendSecretMessageRead(message, true);
         }
         PhotoViewer.getInstance().setParentActivity(this, themeDelegate);
