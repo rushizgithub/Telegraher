@@ -3300,7 +3300,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 SharedConfig.inappCamera ? LocaleController.getString("DebugMenuDisableCamera", R.string.DebugMenuDisableCamera) : LocaleController.getString("DebugMenuEnableCamera", R.string.DebugMenuEnableCamera),
                                 LocaleController.getString("DebugMenuClearMediaCache", R.string.DebugMenuClearMediaCache),
                                 LocaleController.getString("DebugMenuCallSettings", R.string.DebugMenuCallSettings),
-                                null,
+                                "Toggle 16:9 camera",
                                 BuildVars.DEBUG_PRIVATE_VERSION || BuildVars.isStandaloneApp() ? LocaleController.getString("DebugMenuCheckAppUpdate", R.string.DebugMenuCheckAppUpdate) : null,
                                 LocaleController.getString("DebugMenuReadAllDialogs", R.string.DebugMenuReadAllDialogs),
                                 SharedConfig.pauseMusicOnRecord ? LocaleController.getString("DebugMenuDisablePauseMusic", R.string.DebugMenuDisablePauseMusic) : LocaleController.getString("DebugMenuEnablePauseMusic", R.string.DebugMenuEnablePauseMusic),
@@ -3315,8 +3315,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 SharedConfig.forceDisableTabletMode ? "Enable tablet mode" : "Disable tablet mode",
                                 LocaleController.getString(SharedConfig.useLNavigation ? R.string.AltNavigationDisable : R.string.AltNavigationEnable),
                                 LocaleController.getString(SharedConfig.isFloatingDebugActive ? R.string.FloatingDebugDisable : R.string.FloatingDebugEnable),
-                                LocaleController.getString(R.string.DebugMenuClearWebViewCache) ,
-                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? LocaleController.getString(SharedConfig.debugWebView ? R.string.DebugMenuDisableWebViewDebug : R.string.DebugMenuEnableWebViewDebug) : null,
                                 "SYNC session manager & RESET device spoofing",
                                 "WIPE message history data"
                         };
