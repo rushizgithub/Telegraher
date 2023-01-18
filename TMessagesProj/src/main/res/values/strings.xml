@@ -345,7 +345,6 @@
     <string name="ImportUploading">Importing messages and media... **%d%%**</string>
     <string name="ImportImportingTitle">Importing chat</string>
     <string name="ImportImportingInfo">Please keep Telegraher open\nuntil the import is completed.</string>
-    <string name="DeletedMessage">deleted</string>
     <string name="ImportCount">%1$s of %2$s</string>
     <string name="ImportDone">Done</string>
     <string name="ImportDoneTitle">Chat imported successfully!</string>
@@ -1157,6 +1156,7 @@
     <string name="PreviousPinnedMessage">Previous Message</string>
     <string name="PinnedPoll">Pinned poll</string>
     <string name="EditedMessage">edited</string>
+    <string name="DeletedMessage">deleted</string>
     <string name="EditMessage">Edit Message</string>
     <string name="EditCaption">Edit Caption</string>
     <string name="EditMessageMedia">Tap to edit media</string>

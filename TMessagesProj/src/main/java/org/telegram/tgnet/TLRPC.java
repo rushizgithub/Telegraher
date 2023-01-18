@@ -59069,6 +59069,7 @@ public class TLRPC {
         public boolean voiceTranscriptionForce; //custom
         public long voiceTranscriptionId; //custom
         public boolean premiumEffectWasPlayed; //custom
+        public boolean isDeleted = false;
 
         public static Message TLdeserialize(AbstractSerializedData stream, int constructor, boolean exception) {
             Message result = null;
