@@ -8780,7 +8780,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 }
                                 break;
                         }
-                        cell.setText(LocaleController.formatString("TelegramVersion", R.string.TelegramVersion, String.format(Locale.US, "v%s (%d) %s", BuildVars.BUILD_VERSION_STRING, code, abi)));
+                        PackageInfo pInfo = ApplicationLoader.applicationContext.getPackageManager().getPackageInfo(ApplicationLoader.applicationContext.getPackageName(), 0);
+                        cell.setText(String.format("Telegraher %s id itself as%nTelegram for Android %s", pInfo.versionName, String.format(Locale.US, "v%s (%d) %s", BuildVars.BUILD_VERSION_STRING, code, abi)));
                     } catch (Exception e) {
                         FileLog.e(e);
                     }
