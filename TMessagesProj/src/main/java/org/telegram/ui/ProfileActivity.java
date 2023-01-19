@@ -3316,7 +3316,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 LocaleController.getString(SharedConfig.useLNavigation ? R.string.AltNavigationDisable : R.string.AltNavigationEnable),
                                 LocaleController.getString(SharedConfig.isFloatingDebugActive ? R.string.FloatingDebugDisable : R.string.FloatingDebugEnable),
                                 "SYNC session manager & RESET device spoofing",
-                                "WIPE message history data"
+                                "WIPE message history data",
+                                String.format("%s WAL mode", MessagesController.getGlobalTelegraherSettings().getBoolean("EnableWALMode", false) ? "Disable" : "Enable")
                         };
 
                         builder.setItems(items, (dialog, which) -> {
@@ -3416,6 +3417,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 SharedConfig.saveTHAccounts(true);
                             } else if (which == 24) {
                                 getAccountInstance().getMessagesStorage().wipeThHistory();
+                            } else if (which == 25) {
+                                MessagesController.getGlobalTelegraherSettings().edit().putBoolean("EnableWALMode", !MessagesController.getGlobalTelegraherSettings().getBoolean("EnableWALMode", false)).apply();
                             }
                         });
                         builder.setNegativeButton(LocaleController.getString("Cancel", R.string.Cancel), null);
