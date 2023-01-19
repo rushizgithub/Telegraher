@@ -6419,7 +6419,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     if (!(drawTopic && (currentMessageObject != null && currentMessageObject.replyMessageObject != null || forwardedNameLayout != null && forwardedNameLayout[0] != null))) {
                         additionHeight -= AndroidUtilities.dp(17);
                     }
-                } else if (messageObject.isAnyKindOfSticker()) {
+                } else if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HideStickers", false) && messageObject.isAnyKindOfSticker()) {
 
                     drawBackground = false;
                     boolean isWebpSticker = messageObject.type == MessageObject.TYPE_STICKER;
@@ -6576,7 +6576,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     if (photoImage.getBitmap() != null && !photoImage.getBitmap().isRecycled() && currentMessageObject.hasMediaSpoilers() && !currentMessageObject.isMediaSpoilersRevealed) {
                         blurredPhotoImage.setImageBitmap(Utilities.stackBlurBitmapMax(photoImage.getBitmap()));
                     }
-                } else {
+                } else if (!messageObject.isAnyKindOfSticker()) {
                     currentPhotoObject = FileLoader.getClosestPhotoSizeWithSize(messageObject.photoThumbs, AndroidUtilities.getPhotoSize());
                     photoParentObject = messageObject.photoThumbsObject;
                     boolean useFullWidth = false;
