@@ -25,19 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.Bitmaps;
-import org.telegram.messenger.BuildVars;
-import org.telegram.messenger.DispatchQueue;
-import org.telegram.messenger.FileLoader;
-import org.telegram.messenger.FileLog;
-import org.telegram.messenger.LocaleController;
-import org.telegram.messenger.MediaController;
-import org.telegram.messenger.MessageObject;
-import org.telegram.messenger.R;
-import org.telegram.messenger.UserConfig;
-import org.telegram.messenger.Utilities;
-import org.telegram.messenger.VideoEditedInfo;
+import org.telegram.messenger.*;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarPopupWindow;
@@ -417,10 +405,10 @@ public class PhotoPaintView extends FrameLayout implements IPhotoPaintView, Enti
         float height = bitmapToEdit.getHeight();
 
         Size size = new Size(width, height);
-        size.width = 1280;
+        size.width = (float) MessagesController.getGlobalTelegraherSettings().getInt("photoSizeMax", 1280);
         size.height = (float) Math.floor(size.width * height / width);
-        if (size.height > 1280) {
-            size.height = 1280;
+        if (size.height > size.width) {
+            size.height = size.width;
             size.width = (float) Math.floor(size.height * width / height);
         }
         paintingSize = size;

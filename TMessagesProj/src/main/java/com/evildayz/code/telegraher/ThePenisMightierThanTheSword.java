@@ -82,6 +82,19 @@ public class ThePenisMightierThanTheSword {
         }
     }
 
+    public static int getPhotoSizeMax(int id) {
+        switch (id) {
+            case 0:
+                return 1280;
+            case 1:
+                return 2560;
+            case 2:
+                return 3840;
+            default:
+                return 1280;
+        }
+    }
+
     public static Typeface getFont(String font) {
         switch (font) {
             case "fonts/rmedium.ttf"://bold
@@ -139,8 +152,8 @@ public class ThePenisMightierThanTheSword {
             nextId = ids[ids.length - 1] + 1;
             map.get(-1).put("nextAccountId", nextId.toString());
             ApplicationLoader.applicationContext.getSharedPreferences("telegraher", Context.MODE_PRIVATE).edit()
-                    .putString("thAccounts", ThePenisMightierThanTheSword.toJsonNestedMaps(map))
-                    .apply();
+                .putString("thAccounts", ThePenisMightierThanTheSword.toJsonNestedMaps(map))
+                .apply();
         }
         return nextId;
     }

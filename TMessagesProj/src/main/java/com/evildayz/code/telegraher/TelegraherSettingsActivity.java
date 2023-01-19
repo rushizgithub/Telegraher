@@ -116,6 +116,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int videoLabelRoundSizeRow;
     private int videoRoundSizeMultRow;
     private int videoRoundUseMainCameraRow;
+    private int photoSizeMaxRow;
 
     private int videoLabelMaxResolutionRow;
     private int videoMaxResolutionRow;
@@ -222,6 +223,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         videoLabelRoundSizeRow = rowCount++;
         videoRoundSizeMultRow = rowCount++;
         videoRoundUseMainCameraRow = rowCount++;
+        photoSizeMaxRow = rowCount++;
 
         deviceSpoofingLabelRow = rowCount++;
         deviceSpoofingBrand = rowCount++;
@@ -731,9 +733,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                                 editor.apply();
                                 MessagesController.getInstance(currentAccount).roundVideoBitrate = MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000);
                                 MessagesController.getInstance(currentAccount).roundAudioBitrate = MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64);
-                                System.out.printf("HEY %d %d %d%n", MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384)
-                                    , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
-                                    , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
+//                                System.out.printf("HEY %d %d %d%n", MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384)
+//                                    , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
+//                                    , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
                             }
                         });
                     } else if (position == videoRoundSizeMultRow) {
@@ -751,9 +753,22 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                                 editor.putInt("roundVideoSize", ThePenisMightierThanTheSword.getVideoRoundSize(index));
                                 editor.apply();
                                 MessagesController.getInstance(currentAccount).roundVideoSize = MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384);
-                                System.out.printf("HEY %d %d %d%n", MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384)
-                                    , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
-                                    , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
+//                                System.out.printf("HEY %d %d %d%n", MessagesController.getMainSettings(currentAccount).getInt("roundVideoSize", 384)
+//                                    , MessagesController.getMainSettings(currentAccount).getInt("roundVideoBitrate", 1000)
+//                                    , MessagesController.getMainSettings(currentAccount).getInt("roundAudioBitrate", 64));
+                            }
+                        });
+                    } else if (position == photoSizeMaxRow) {
+                        String[] strings = new String[]{"1280", "2560", "3840"};
+                        slideChooseView.setOptions(MessagesController.getGlobalTelegraherSettings().getInt("photoSizeMaxIndex", 0), strings);
+                        slideChooseView.setCallback(new SlideChooseView.Callback() {
+                            @Override
+                            public void onOptionSelected(int index) {
+                                SharedPreferences localTh = MessagesController.getGlobalTelegraherSettings();
+                                SharedPreferences.Editor editor = localTh.edit();
+                                editor.putInt("photoSizeMaxIndex", index);
+                                editor.putInt("photoSizeMax", ThePenisMightierThanTheSword.getPhotoSizeMax(index));
+                                editor.apply();
                             }
                         });
                     } else if (position == showTelegraherMenuRow) {
@@ -924,6 +939,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
             } else if (
                 position == showTelegraherMenuRow
                     || position == videoRoundBitrateMultRow || position == videoRoundSizeMultRow
+                    || position == photoSizeMaxRow
                     || position == videoMaxResolutionRow
                     || position == hardwareProximitySensorModeRow
                     || position == uiAppNotificationIconSelectorRow

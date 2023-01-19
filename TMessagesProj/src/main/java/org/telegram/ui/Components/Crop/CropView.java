@@ -18,15 +18,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.BuildVars;
-import org.telegram.messenger.FileLoader;
-import org.telegram.messenger.FileLog;
-import org.telegram.messenger.LocaleController;
-import org.telegram.messenger.MediaController;
-import org.telegram.messenger.R;
-import org.telegram.messenger.SharedConfig;
-import org.telegram.messenger.VideoEditedInfo;
+import org.telegram.messenger.*;
 import org.telegram.ui.ActionBar.AlertDialog;
 import org.telegram.ui.BubbleActivity;
 import org.telegram.ui.Components.Paint.Swatch;
@@ -41,7 +33,7 @@ import java.util.ArrayList;
 
 public class CropView extends FrameLayout implements CropAreaView.AreaViewListener, CropGestureDetector.CropGestureListener {
     private static final float EPSILON = 0.00001f;
-    private static final int RESULT_SIDE = 1280;
+    public static final int RESULT_SIDE = MessagesController.getGlobalTelegraherSettings().getInt("photoSizeMax", 1280);
     private static final float MAX_SCALE = 30.0f;
 
     public CropAreaView areaView;

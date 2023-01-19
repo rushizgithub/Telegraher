@@ -2111,7 +2111,7 @@ public class AndroidUtilities {
 
     public static int getPhotoSize() {
         if (photoSize == null) {
-            photoSize = 1280;
+            photoSize = MessagesController.getGlobalTelegraherSettings().getInt("photoSizeMax", 1280);
         }
         return photoSize;
     }
