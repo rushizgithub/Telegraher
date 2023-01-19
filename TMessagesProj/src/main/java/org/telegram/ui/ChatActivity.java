@@ -12971,11 +12971,19 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     updateReactionsMentionButton(true);
                 }
                 getDownloadController().checkUnviewedDownloads(messageCell.getId(), dialog_id);
-                boolean allowPlayEffect =  ((messageObject.messageOwner.media != null && !messageObject.messageOwner.media.nopremium) || (messageObject.isAnimatedEmojiStickerSingle() && dialog_id > 0));
-                if ((chatListItemAnimator == null || !chatListItemAnimator.isRunning()) && (!messageObject.isOutOwner() || messageObject.forcePlayEffect) && allowPlayEffect && !messageObject.messageOwner.premiumEffectWasPlayed && (messageObject.isPremiumSticker() || messageObject.isAnimatedEmojiStickerSingle()) && emojiAnimationsOverlay.isIdle() && emojiAnimationsOverlay.checkPosition(messageCell, chatListViewPaddingTop, chatListView.getMeasuredHeight() - blurredViewBottomOffset)) {
-                    emojiAnimationsOverlay.onTapItem(messageCell, ChatActivity.this, false);
-                } else if (messageObject.isAnimatedAnimatedEmoji()) {
-                    emojiAnimationsOverlay.preloadAnimation(messageCell);
+
+                if (MessagesController.getGlobalTelegraherSettings().getBoolean("EnableGraheriumVanillaStickerFlow", true)) {
+                    boolean allowPlayEffect =  ((messageObject.messageOwner.media != null && !messageObject.messageOwner.media.nopremium) || (messageObject.isAnimatedEmojiStickerSingle() && dialog_id > 0));
+                    if ((chatListItemAnimator == null || !chatListItemAnimator.isRunning()) && (!messageObject.isOutOwner() || messageObject.forcePlayEffect) && allowPlayEffect && !messageObject.messageOwner.premiumEffectWasPlayed && (messageObject.isPremiumSticker() || messageObject.isAnimatedEmojiStickerSingle()) && emojiAnimationsOverlay.isIdle() && emojiAnimationsOverlay.checkPosition(messageCell, chatListViewPaddingTop, chatListView.getMeasuredHeight() - blurredViewBottomOffset)) {
+                        emojiAnimationsOverlay.onTapItem(messageCell, ChatActivity.this, false);
+                    } else if (messageObject.isAnimatedAnimatedEmoji()) {
+                        emojiAnimationsOverlay.preloadAnimation(messageCell);
+                    }
+                } else {
+                    if ((chatListItemAnimator == null || !chatListItemAnimator.isRunning()) && (!messageObject.isOutOwner() || messageObject.forcePlayEffect) && MessagesController.getGlobalTelegraherSettings().getBoolean("EnableGraheriumAnimatedStickerOverlays", false) && messageObject.messageOwner.media != null && true && !messageObject.messageOwner.premiumEffectWasPlayed && true && emojiAnimationsOverlay.isIdle() && emojiAnimationsOverlay.checkPosition(messageCell, chatListViewPaddingTop, chatListView.getMeasuredHeight() - blurredViewBottomOffset)) {
+                        emojiAnimationsOverlay.onTapItem(messageCell, ChatActivity.this, true);
+                        messageObject.messageOwner.premiumEffectWasPlayed = true;
+                    }
                 }
             } else if (view instanceof ChatActionCell) {
                 ChatActionCell cell = (ChatActionCell) view;
@@ -18561,9 +18569,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         }
                     }
                 }
-                if (messageObject.wasJustSent && (getUserConfig().isPremium() || messageObject.isAnimatedAnimatedEmoji())) {
+
+                if (MessagesController.getGlobalTelegraherSettings().getBoolean("EnableGraheriumVanillaStickerFlow", true)) {
+                    if (messageObject.wasJustSent && (getUserConfig().isPremium() || messageObject.isAnimatedAnimatedEmoji()))
+                        messageObject.forcePlayEffect = true;
+
+                } else if (messageObject.wasJustSent && MessagesController.getGlobalTelegraherSettings().getBoolean("EnableGraheriumAnimatedStickerOverlays", false))
                     messageObject.forcePlayEffect = true;
-                }
+
             }
             if (currentChat != null) {
                 if (messageObject.messageOwner.action instanceof TLRPC.TL_messageActionChatDeleteUser && messageObject.messageOwner.action.user_id == currentUserId ||

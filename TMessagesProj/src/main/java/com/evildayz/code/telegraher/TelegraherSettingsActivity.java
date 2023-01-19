@@ -156,8 +156,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         uiLabelRow = rowCount++;
         uiAppNotificationIconRow = rowCount++;
         uiAppNotificationIconSelectorRow = rowCount++;
-        uiStickerSizeLabelRow = -1;
-        uiStickerSizeRow = -1;
+        uiStickerSizeLabelRow = rowCount++;
+        uiStickerSizeRow = rowCount++;
         uiAppHidePhoneNumberOnLeftPanelRow = rowCount++;
         uiSystemFontRegularRow = -1;//TODO WTF need the fuck make it work
         uiSystemFontBoldRow = -1;
@@ -196,7 +196,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         chatTabsOnForwardRow = rowCount++;
         chatDisableSpoilersRow = rowCount++;
         chatRealForwardedMessageTimeRow = rowCount++;
-        chatHideStickersRow = -1;
+        chatHideStickersRow = rowCount++;
 
         accountLabelRow = rowCount++;
         accountSessionManagerRow = rowCount++;
@@ -205,7 +205,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         graheriumSpeedUpUpload = rowCount++;
         graheriumSpeedUpDownload = rowCount++;
         graheriumAnimateEveryAvatar = rowCount++;
-        graheriumVanillaStickerFlow = -1;
+        graheriumVanillaStickerFlow = rowCount++;
         graheriumAnimatedStickerOverlays = rowCount++;
         graheriumStarrLabelRow = rowCount++;
         graheriumStarrMark = rowCount++;
