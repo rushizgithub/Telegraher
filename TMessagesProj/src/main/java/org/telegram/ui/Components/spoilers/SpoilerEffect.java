@@ -525,7 +525,7 @@ public class SpoilerEffect extends Drawable {
         int w = textLayout.getWidth();
         int h = textLayout.getHeight();
 
-        if (w <= 0 || h <= 0)
+        if (w <= 0 || h <= 0 || w > 16384) //fix bitch
             return Collections.emptyList();
 
         Bitmap measureBitmap = Bitmap.createBitmap(Math.round(w), Math.round(h), Bitmap.Config.ARGB_4444); // We can use 4444 as we don't need accuracy here
@@ -536,6 +536,17 @@ public class SpoilerEffect extends Drawable {
         measureBitmap.getPixels(pixels, 0, measureBitmap.getWidth(), 0, 0, w, h);
 
         int sX = -1;
+
+        /*
+          телега говнокодеры
+          ебаныйнасос
+          не могут блять поймать баг, сука, я ебу, и еще на зарплате сидят
+          давай, блять 1048576 по ширине нахуй, и буфер под него!
+
+          это фикс косяка с буфером, а вам фиксить весь ваш flow
+        */
+//        Log.d("measureKeyPoints", String.format(Locale.getDefault(),"new ArrayList<>(pixels.length); bitch %d w:%d h:%d text:%s",pixels.length,w,h,textLayout.getText()));
+
         ArrayList<Long> keyPoints = new ArrayList<>(pixels.length);
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
