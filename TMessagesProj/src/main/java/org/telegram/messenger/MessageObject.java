@@ -346,7 +346,7 @@ public class MessageObject {
     }
 
     public boolean hasMediaSpoilers() {
-        return messageOwner.media != null && messageOwner.media.spoiler;
+        return !MessagesController.getGlobalTelegraherSettings().getBoolean("DisableSpoilers", false);
     }
 
     public boolean shouldDrawReactionsInLayout() {
