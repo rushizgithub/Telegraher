@@ -121,7 +121,7 @@ public class ApplicationLoader extends Application {
         } catch (Exception e) {
             FileLog.e(e);
         }
-        return new File("/data/data/com.evildayz.code.telegraher2_beta/files");
+        return new File("/data/data/com.evildayz.code.telegraher2/files");
     }
 
     public static String getAccountPath(int accountId) {
