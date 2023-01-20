@@ -331,9 +331,9 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
         @Override
         public void onClose() {
             resumeCameraPreview();
-            AndroidUtilities.runOnUIThread(()-> setCurrentSpoilerVisible(-1, true), 150);
+            AndroidUtilities.runOnUIThread(() -> setCurrentSpoilerVisible(-1, true), 150);
         }
-        
+
         @Override
         public PhotoViewer.PlaceProviderObject getPlaceForPhoto(MessageObject messageObject, TLRPC.FileLocation fileLocation, int index, boolean needPreview) {
             PhotoAttachPhotoCell cell = getCellForIndex(index);
