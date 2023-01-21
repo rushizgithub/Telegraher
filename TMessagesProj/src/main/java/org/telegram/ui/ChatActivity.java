@@ -21511,7 +21511,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         }
 
         int topChatPanelHeight;
-        if (showEmojiStatusReport != null) {
+        if (showEmojiStatusReport != null && !(MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisableEmojiStatus", false))) {
             emojiStatusSpamHint.setVisibility(View.VISIBLE);
             topViewSeparator1.setVisibility(View.VISIBLE);
             topViewSeparator2.setVisibility(View.VISIBLE);
