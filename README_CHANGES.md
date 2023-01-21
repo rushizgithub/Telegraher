@@ -1,6 +1,6 @@
 # Changes
 
-* 9.33.14
+* 9.33.15
     * moved on telegram 9.3.3 base
     * fixed spoilers for medias
     * fixed OutOfMemory vanilla crash
