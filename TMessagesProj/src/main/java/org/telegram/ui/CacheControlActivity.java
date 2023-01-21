@@ -1008,7 +1008,7 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
         kaboomDurovItem.setIconColor(Theme.getColor(Theme.key_dialogRedIcon));
         kaboomDurovItem.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteRedText));
 
-        switch (MessagesController.getTelegraherSettings(currentAccount).getInt("ShowTelegraherMenu2", 0)) {
+        switch (MessagesController.getGlobalTelegraherSettings().getInt("ShowTelegraherMenu2", 0)) {
             case 0:
             case 2:
                 graherItem = otherItem.addSubItem(graherButtonId, R.drawable.msg_report_xxx, "\uD83C\uDCCF \uD83D\uDD1E \uD83D\uDC6F");
@@ -1338,14 +1338,12 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
             if (getParentActivity() == null) {
                 return;
             }
-            if (MessagesController.getGlobalTelegraherSettings().getBoolean("EnableWALMode", false)) {
-                progressDialog = new AlertDialog(getParentActivity(), AlertDialog.ALERT_TYPE_SPINNER);
-                progressDialog.setCanCancel(false);
-                progressDialog.showDelayed(500);
-                MessagesController.getInstance(currentAccount).clearQueryTime();
-                getMessagesStorage().clearLocalDatabase();
-            } else
-                BulletinFactory.of(this).createCopyBulletin(LocaleController.getString(R.string.PopupDisabled), parentLayout.getLastFragment().getResourceProvider()).show();
+            progressDialog = new AlertDialog(getParentActivity(), AlertDialog.ALERT_TYPE_SPINNER);
+            progressDialog.setCanCancel(false);
+            progressDialog.showDelayed(500);
+            MessagesController.getInstance(currentAccount).clearQueryTime();
+            getMessagesStorage().clearLocalDatabase();
+
         });
         AlertDialog alertDialog = builder.create();
         showDialog(alertDialog);

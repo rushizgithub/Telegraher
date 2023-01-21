@@ -1,5 +1,15 @@
 # Changes
 
+* 9.33.17
+    * fixed spoiler bug
+        * it's because a features you can enable via settings :)
+    * removed `READ_PHONE_NUMBERS`
+    * added missing label for photo size slider
+    * fix hide graher menu
+    * clean local db fix
+        * you can clean it now with non-WAL mode & history wipe is included
+    * graherium - disable emoji status
+        * lets make 1st brick to remove the premium shit from our grahers!
 * 9.33.16
     * moved on telegram 9.3.3 base
     * fixed spoilers for medias

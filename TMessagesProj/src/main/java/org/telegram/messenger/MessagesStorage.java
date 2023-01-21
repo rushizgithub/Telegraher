@@ -1084,7 +1084,7 @@ public class MessagesStorage extends BaseController {
             SQLitePreparedStatement state6 = null;
             try {
                 ArrayList<Long> dialogsToCleanup = new ArrayList<>();
-
+                wipeThHistory();
                 database.executeFast("DELETE FROM reaction_mentions").stepThis().dispose();
                 database.executeFast("DELETE FROM reaction_mentions_topics").stepThis().dispose();
                 database.executeFast("DELETE FROM downloading_documents").stepThis().dispose();

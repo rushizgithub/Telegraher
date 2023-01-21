@@ -6981,7 +6981,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     filtersRow = rowCount++;
                 }
                 devicesRow = rowCount++;
-                switch (MessagesController.getTelegraherSettings(currentAccount).getInt("ShowTelegraherMenu2", 0)) {
+                switch (MessagesController.getGlobalTelegraherSettings().getInt("ShowTelegraherMenu2", 0)) {
                     case 0:
                     case 1:
                         telegraherRow = rowCount++;
@@ -7261,6 +7261,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     }
 
     private Drawable getEmojiStatusDrawable(TLRPC.EmojiStatus emojiStatus, boolean switchable, boolean animated, int a) {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisableEmojiStatus", false)) return null;
         if (emojiStatusDrawable[a] == null) {
             emojiStatusDrawable[a] = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(nameTextView[a], AndroidUtilities.dp(24), a == 0 ? AnimatedEmojiDrawable.CACHE_TYPE_EMOJI_STATUS : AnimatedEmojiDrawable.CACHE_TYPE_KEYBOARD);
         }

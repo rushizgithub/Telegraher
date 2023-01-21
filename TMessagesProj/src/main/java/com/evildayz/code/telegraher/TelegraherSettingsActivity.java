@@ -108,6 +108,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int chatSwapToNextChannelRow;
     private int chatTabsOnForwardRow;
     private int chatDisableSpoilersRow;
+    private int chatHideAllInSpoilersRow;
     private int chatRealForwardedMessageTimeRow;
     private int chatHideStickersRow;
 
@@ -116,6 +117,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int videoLabelRoundSizeRow;
     private int videoRoundSizeMultRow;
     private int videoRoundUseMainCameraRow;
+    private int photoSizeMaxLabelRow;
     private int photoSizeMaxRow;
 
     private int videoLabelMaxResolutionRow;
@@ -138,6 +140,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int graheriumStarrMark;
     private int graheriumOverrideConnectionSpeedLabelRow;
     private int graheriumOverrideConnectionSpeed;
+    private int graheriumDisableEmojiStatus;
 
     private int deviceSpoofingLabelRow;
     private int deviceSpoofingBrand;
@@ -196,6 +199,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         chatSwapToNextChannelRow = rowCount++;
         chatTabsOnForwardRow = rowCount++;
         chatDisableSpoilersRow = rowCount++;
+        chatHideAllInSpoilersRow = rowCount++;
         chatRealForwardedMessageTimeRow = rowCount++;
         chatHideStickersRow = rowCount++;
 
@@ -212,6 +216,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         graheriumStarrMark = rowCount++;
         graheriumOverrideConnectionSpeedLabelRow = rowCount++;
         graheriumOverrideConnectionSpeed = rowCount++;
+        graheriumDisableEmojiStatus = rowCount++;
 
         gifLabelHDRow = rowCount++;
         gifHDRow = rowCount++;
@@ -223,6 +228,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         videoLabelRoundSizeRow = rowCount++;
         videoRoundSizeMultRow = rowCount++;
         videoRoundUseMainCameraRow = rowCount++;
+        photoSizeMaxLabelRow = rowCount++;
         photoSizeMaxRow = rowCount++;
 
         deviceSpoofingLabelRow = rowCount++;
@@ -373,6 +379,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 enabled = preferences.getBoolean("DisableSpoilers", false);
                 editor.putBoolean("DisableSpoilers", !enabled);
                 editor.apply();
+            } else if (position == chatHideAllInSpoilersRow) {
+                SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("HideAllInSpoilers", false);
+                editor.putBoolean("HideAllInSpoilers", !enabled);
+                editor.apply();
             } else if (position == chatRealForwardedMessageTimeRow) {
                 SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
                 SharedPreferences.Editor editor = preferences.edit();
@@ -422,6 +434,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 enabled = preferences.getBoolean("EnableGraheriumVanillaStickerFlow", true);
                 if (!enabled) editor.putBoolean("EnableGraheriumAnimatedStickerOverlays", false);
                 editor.putBoolean("EnableGraheriumVanillaStickerFlow", !enabled);
+                editor.apply();
+            } else if (position == graheriumDisableEmojiStatus) {
+                SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("GraheriumDisableEmojiStatus", false);
+                editor.putBoolean("GraheriumDisableEmojiStatus", !enabled);
                 editor.apply();
             } else if (position == gifHDRow) {
                 SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
@@ -609,6 +627,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         headerCell.setText(LocaleController.getString(R.string.THDeviceSpoofingResetDefaultLabelRow));
                     } else if (position == showLabelTelegraherMenuRow) {
                         headerCell.setText(LocaleController.getString(R.string.THShowLabelTelegraherMenuRow));
+                    } else if (position == photoSizeMaxLabelRow) {
+                        headerCell.setText(LocaleController.getString(R.string.THPhotoMaxSize));
                     }
                     break;
                 }
@@ -654,6 +674,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumAnimatedStickerOverlays), globalPreps.getBoolean("EnableGraheriumAnimatedStickerOverlays", false), true);
                     } else if (position == graheriumVanillaStickerFlow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumVanillaStickerFlow), globalPreps.getBoolean("EnableGraheriumVanillaStickerFlow", true), true);
+                    } else if (position == graheriumDisableEmojiStatus) {
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumDisableEmojiStatus), globalPreps.getBoolean("GraheriumDisableEmojiStatus", false), true);
                     } else if (position == uiAppHidePhoneNumberOnLeftPanelRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THHidePhoneNumberOnLeftPanel), globalPreps.getBoolean("HidePhoneNumberOnLeftPanel", false), true);
                     } else if (position == chatSBFullRow) {
@@ -664,6 +686,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THEnableTabsOnForward), globalPreps.getBoolean("EnableTabsOnForward", false), true);
                     } else if (position == chatDisableSpoilersRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THDisableSpoilers), globalPreps.getBoolean("DisableSpoilers", false), true);
+                    } else if (position == chatHideAllInSpoilersRow) {
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THHideAllInSpoilers), globalPreps.getBoolean("HideAllInSpoilers", false), true);
                     } else if (position == chatRealForwardedMessageTimeRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THChatRealForwardedMessageTime), globalPreps.getBoolean("RealForwardedMessageTime", true), true);
                     } else if (position == chatHideStickersRow) {
@@ -916,6 +940,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                     || position == videoLabelMaxResolutionRow
                     || position == videoLabelRoundBitrateRow
                     || position == videoLabelRoundSizeRow
+                    || position == photoSizeMaxLabelRow
             ) {
                 return 0;
             } else if (
@@ -925,9 +950,9 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                     || position == profileUIDRow || position == profileDCIDRow || position == profileSBRow
                     || position == hardwareDisableVibroRow
                     || position == chatDeleteMarkRow || position == chatEnableMessageHistoryRow || position == accountExtendVanillaRow || position == chatSBFullRow
-                    || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow || position == chatDisableSpoilersRow || position == chatRealForwardedMessageTimeRow
+                    || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow || position == chatDisableSpoilersRow || position == chatHideAllInSpoilersRow || position == chatRealForwardedMessageTimeRow
                     || position == chatHideStickersRow
-                    || position == graheriumSpeedUpUpload || position == graheriumSpeedUpDownload || position == graheriumAnimateEveryAvatar || position == graheriumAnimatedStickerOverlays || position == graheriumVanillaStickerFlow
+                    || position == graheriumSpeedUpUpload || position == graheriumSpeedUpDownload || position == graheriumAnimateEveryAvatar || position == graheriumAnimatedStickerOverlays || position == graheriumVanillaStickerFlow || position == graheriumDisableEmojiStatus
                     || position == gifHDRow || position == videoRoundUseMainCameraRow
                     || position == uiAppHidePhoneNumberOnLeftPanelRow
             ) {
