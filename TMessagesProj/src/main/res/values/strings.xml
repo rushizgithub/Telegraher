@@ -6120,6 +6120,7 @@
     <string name="THEnableSwapToNextChannel">Next channel on swap</string>
     <string name="THEnableTabsOnForward">Tabs on forward</string>
     <string name="THDisableSpoilers">Disable spoilers</string>
+    <string name="THHideAllInSpoilers">Hide all in spoilers</string>
     <string name="ThIdCopied">ID copied to clipboard</string>
     <string name="ThDCCopied">DC copied to clipboard</string>
     <string name="THChatSBManager">Shadowban manager</string>
@@ -6156,4 +6157,5 @@
     <string name="THUIStickerSize">Sticker size</string>
     <string name="THChatRealForwardedMessageTime">Real forwarded message time</string>
     <string name="THChatHideStickers">Hide stickers in chats</string>
+    <string name="THPhotoMaxSize">Max photo size</string>
 </resources>

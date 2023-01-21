@@ -72,6 +72,7 @@
     <string name="THEnableSwapToNextChannel">Следующий канал при свайпе</string>
     <string name="THEnableTabsOnForward">Вкладки при пересылке</string>
     <string name="THDisableSpoilers">Выключить спойлеры</string>
+    <string name="THHideAllInSpoilers">Спрятать всё в спойлеры</string>
     <string name="ThIdCopied">ID скопирован в буфер</string>
     <string name="ThDCCopied">DC скопирован в буфер</string>
     <string name="THChatSBManager">Shadowban менеджер</string>
@@ -109,4 +110,5 @@
     <string name="THUIStickerSize">Размер стикеров</string>
     <string name="THChatRealForwardedMessageTime">Настоящее время пересланного сообщения</string>
     <string name="THChatHideStickers">Скрывать стикеры в чатах</string>
+    <string name="THPhotoMaxSize">Максимальный размер фото</string>
 </resources>
