@@ -1338,14 +1338,12 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
             if (getParentActivity() == null) {
                 return;
             }
-            if (MessagesController.getGlobalTelegraherSettings().getBoolean("EnableWALMode", false)) {
-                progressDialog = new AlertDialog(getParentActivity(), AlertDialog.ALERT_TYPE_SPINNER);
-                progressDialog.setCanCancel(false);
-                progressDialog.showDelayed(500);
-                MessagesController.getInstance(currentAccount).clearQueryTime();
-                getMessagesStorage().clearLocalDatabase();
-            } else
-                BulletinFactory.of(this).createCopyBulletin(LocaleController.getString(R.string.PopupDisabled), parentLayout.getLastFragment().getResourceProvider()).show();
+            progressDialog = new AlertDialog(getParentActivity(), AlertDialog.ALERT_TYPE_SPINNER);
+            progressDialog.setCanCancel(false);
+            progressDialog.showDelayed(500);
+            MessagesController.getInstance(currentAccount).clearQueryTime();
+            getMessagesStorage().clearLocalDatabase();
+
         });
         AlertDialog alertDialog = builder.create();
         showDialog(alertDialog);
