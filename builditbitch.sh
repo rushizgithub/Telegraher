@@ -1,8 +1,11 @@
 #!/bin/bash
 
 #preparing
-mkdir -p /home/source/TMessagesProj/build/outputs/apk && mkdir -p /home/source/TMessagesProj/build/outputs/native-debug-symbols && cp -R /home/source/. /home/gradle
+mkdir -p /home/source/TMessagesProj/build/outputs/apk && mkdir -p /home/source/TMessagesProj/build/outputs/native-debug-symbols
+mkdir -p /home/source/TMessagesProj_App/build/outputs/apk && mkdir -p /home/source/TMessagesProj_App/build/outputs/native-debug-symbols
+cp -R /home/source/. /home/gradle
 mkdir -p /home/gradle/TMessagesProj/build/outputs/bundle
+mkdir -p /home/gradle/TMessagesProj_App/build/outputs/bundle
 
 #comment this block to use default keys
 mv /home/gradle/TMessagesProj/config/release.keystore /home/gradle/TMessagesProj/config/release.keystore.old
@@ -24,6 +27,6 @@ mv /home/gradle/gradle.properties.old /home/gradle/gradle.properties
 #comment this block to use default keys
 
 #moving back
-cp -R /home/gradle/TMessagesProj_App/build/outputs/apk/. /home/source/TMessagesProj_App/build/outputs/apk && cp -R /home/gradle/TMessagesProj_App/build/outputs/native-debug-symbols/. /home/source/TMessagesProj_App/build/outputs/native-debug-symbols
+cp -R /home/gradle/TMessagesProj_App/build/outputs/apk/. /home/source/TMessagesProj_App/build/outputs/apk
 
 exit 0
