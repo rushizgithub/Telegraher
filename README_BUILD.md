@@ -2,6 +2,14 @@
 
 It's very simple
 
+* open `builditbitch.sh` and remove lines from 10 to 17 and from 22 to 27
+* run `docker build -t telegraher-bundle -f Dockerfile_bundle .`
+* run `docker run --rm -v "$PWD":/home/source telegraher-bundle`
+
+That will build graher bundle.
+
+## GUIDE BELOW IGNORE CAUSE DOCKER FILE AREN'T ADAPTED
+
 * download the repo `git clone https://github.com/nikitasius/Telegraher.git`
 * build it
     * you can use official guide `https://core.telegram.org/reproducible-builds`
