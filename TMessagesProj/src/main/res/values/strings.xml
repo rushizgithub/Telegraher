@@ -6158,4 +6158,5 @@
     <string name="THChatRealForwardedMessageTime">Real forwarded message time</string>
     <string name="THChatHideStickers">Hide stickers in chats</string>
     <string name="THPhotoMaxSize">Max photo size</string>
+    <string name="THGraheriumDisableEmojiStatus">Disable emoji status</string>
 </resources>

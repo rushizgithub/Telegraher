@@ -111,4 +111,5 @@
     <string name="THChatRealForwardedMessageTime">Настоящее время пересланного сообщения</string>
     <string name="THChatHideStickers">Скрывать стикеры в чатах</string>
     <string name="THPhotoMaxSize">Максимальный размер фото</string>
+    <string name="THGraheriumDisableEmojiStatus">Убрать emoji из статуса</string>
 </resources>

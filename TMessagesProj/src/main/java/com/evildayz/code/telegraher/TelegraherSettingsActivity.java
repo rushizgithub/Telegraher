@@ -140,6 +140,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int graheriumStarrMark;
     private int graheriumOverrideConnectionSpeedLabelRow;
     private int graheriumOverrideConnectionSpeed;
+    private int graheriumDisableEmojiStatus;
 
     private int deviceSpoofingLabelRow;
     private int deviceSpoofingBrand;
@@ -215,6 +216,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         graheriumStarrMark = rowCount++;
         graheriumOverrideConnectionSpeedLabelRow = rowCount++;
         graheriumOverrideConnectionSpeed = rowCount++;
+        graheriumDisableEmojiStatus = rowCount++;
 
         gifLabelHDRow = rowCount++;
         gifHDRow = rowCount++;
@@ -432,6 +434,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 enabled = preferences.getBoolean("EnableGraheriumVanillaStickerFlow", true);
                 if (!enabled) editor.putBoolean("EnableGraheriumAnimatedStickerOverlays", false);
                 editor.putBoolean("EnableGraheriumVanillaStickerFlow", !enabled);
+                editor.apply();
+            } else if (position == graheriumDisableEmojiStatus) {
+                SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("GraheriumDisableEmojiStatus", false);
+                editor.putBoolean("GraheriumDisableEmojiStatus", !enabled);
                 editor.apply();
             } else if (position == gifHDRow) {
                 SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
@@ -666,6 +674,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumAnimatedStickerOverlays), globalPreps.getBoolean("EnableGraheriumAnimatedStickerOverlays", false), true);
                     } else if (position == graheriumVanillaStickerFlow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumVanillaStickerFlow), globalPreps.getBoolean("EnableGraheriumVanillaStickerFlow", true), true);
+                    } else if (position == graheriumDisableEmojiStatus) {
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THGraheriumDisableEmojiStatus), globalPreps.getBoolean("GraheriumDisableEmojiStatus", false), true);
                     } else if (position == uiAppHidePhoneNumberOnLeftPanelRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THHidePhoneNumberOnLeftPanel), globalPreps.getBoolean("HidePhoneNumberOnLeftPanel", false), true);
                     } else if (position == chatSBFullRow) {
@@ -942,7 +952,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                     || position == chatDeleteMarkRow || position == chatEnableMessageHistoryRow || position == accountExtendVanillaRow || position == chatSBFullRow
                     || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow || position == chatDisableSpoilersRow || position == chatHideAllInSpoilersRow || position == chatRealForwardedMessageTimeRow
                     || position == chatHideStickersRow
-                    || position == graheriumSpeedUpUpload || position == graheriumSpeedUpDownload || position == graheriumAnimateEveryAvatar || position == graheriumAnimatedStickerOverlays || position == graheriumVanillaStickerFlow
+                    || position == graheriumSpeedUpUpload || position == graheriumSpeedUpDownload || position == graheriumAnimateEveryAvatar || position == graheriumAnimatedStickerOverlays || position == graheriumVanillaStickerFlow || position == graheriumDisableEmojiStatus
                     || position == gifHDRow || position == videoRoundUseMainCameraRow
                     || position == uiAppHidePhoneNumberOnLeftPanelRow
             ) {
