@@ -1,11 +1,12 @@
 # Changes
 
-* 9.33.15
+* 9.33.16
     * moved on telegram 9.3.3 base
     * fixed spoilers for medias
     * fixed OutOfMemory vanilla crash
     * photos can have x2 and x3 sizes (2560 & 3840 instead of only 1280)
     * graher features adapted for a new base
+    * ci/cd fix
 * 8.85.49
     * app use data from BuildVars everywhere
     * login flow looks now pretty legit for me
