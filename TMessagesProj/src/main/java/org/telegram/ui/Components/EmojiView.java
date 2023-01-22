@@ -5508,40 +5508,49 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
         }
     }
 
-    public void showStickerBanHint(boolean gif) {
+    public boolean showStickerBanHint(boolean gif) {
         if (mediaBanTooltip.getVisibility() == VISIBLE) {
-            return;
+            return false;
         }
         TLRPC.Chat chat = MessagesController.getInstance(currentAccount).getChat(currentChatId);
         if (chat == null) {
-            return;
+            return false;
         }
 
         String text;
-        if (!ChatObject.hasAdminRights(chat) && chat.default_banned_rights != null && chat.default_banned_rights.send_stickers) {
-            if (gif) {
+        boolean returnValue=true;
+        if (!ChatObject.hasAdminRights(chat) && chat.default_banned_rights != null) {
+            if (gif && chat.default_banned_rights.send_gifs) {
                 mediaBanTooltip.setText(LocaleController.getString("GlobalAttachGifRestricted", R.string.GlobalAttachGifRestricted));
-            } else {
+                returnValue=false;
+            } else if (!gif && chat.default_banned_rights.send_stickers) {
                 mediaBanTooltip.setText(LocaleController.getString("GlobalAttachStickersRestricted", R.string.GlobalAttachStickersRestricted));
+                returnValue=false;
             }
-        } else {
+        }
+        if(returnValue) {
             if (chat.banned_rights == null) {
-                return;
+                return true;
             }
             if (AndroidUtilities.isBannedForever(chat.banned_rights)) {
-                if (gif) {
+                if (gif && chat.banned_rights.send_gifs) {
                     mediaBanTooltip.setText(LocaleController.getString("AttachGifRestrictedForever", R.string.AttachGifRestrictedForever));
-                } else {
+                    returnValue=false;
+                } else if (!gif && chat.banned_rights.send_stickers) {
                     mediaBanTooltip.setText(LocaleController.getString("AttachStickersRestrictedForever", R.string.AttachStickersRestrictedForever));
+                    returnValue=false;
                 }
             } else {
-                if (gif) {
+                if (gif && chat.banned_rights.send_gifs) {
                     mediaBanTooltip.setText(LocaleController.formatString("AttachGifRestricted", R.string.AttachGifRestricted, LocaleController.formatDateForBan(chat.banned_rights.until_date)));
-                } else {
+                    returnValue=false;
+                } else if (!gif && chat.banned_rights.send_stickers) {
                     mediaBanTooltip.setText(LocaleController.formatString("AttachStickersRestricted", R.string.AttachStickersRestricted, LocaleController.formatDateForBan(chat.banned_rights.until_date)));
+                    returnValue=false;
                 }
             }
         }
+        if(returnValue) return true;
         mediaBanTooltip.setVisibility(View.VISIBLE);
         AnimatorSet AnimatorSet = new AnimatorSet();
         AnimatorSet.playTogether(
@@ -5573,6 +5582,7 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
         });
         AnimatorSet.setDuration(300);
         AnimatorSet.start();
+        return false;
     }
 
     private void updateVisibleTrendingSets() {
@@ -7146,10 +7156,7 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
 
         @Override
         public boolean canScrollToTab(int position) {
-            if ((position == 1 || position == 2) && currentChatId != 0) {
-                showStickerBanHint(position == 1);
-                return false;
-            }
+            if ((position == 1 || position == 2) && currentChatId != 0) return showStickerBanHint(position == 1);
             return true;
         }
 

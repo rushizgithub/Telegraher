@@ -7858,15 +7858,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 createAutoDeleteItem(context);
             }
             if (ChatObject.isChannel(chat)) {
-                if (isTopic) {
-                    if (ChatObject.canManageTopic(currentAccount, chat, topicId)) {
-                        editItemVisible = true;
-                    }
-                } else {
-                    if (ChatObject.hasAdminRights(chat) || chat.megagroup && ChatObject.canChangeChatInfo(chat)) {
-                        editItemVisible = true;
-                    }
-                }
+                editItemVisible = true;
                 if (chatInfo != null) {
                     if (ChatObject.canManageCalls(chat) && chatInfo.call == null) {
                         otherItem.addSubItem(call_item, R.drawable.msg_voicechat, chat.megagroup && !chat.gigagroup ? LocaleController.getString("StartVoipChat", R.string.StartVoipChat) : LocaleController.getString("StartVoipChannel", R.string.StartVoipChannel));
@@ -7909,9 +7901,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     ChatObject.Call call = getMessagesController().getGroupCall(chatId, false);
                     callItemVisible = call != null;
                 }
-                if (ChatObject.canChangeChatInfo(chat)) {
-                    editItemVisible = true;
-                }
+                editItemVisible = true;
                 if (!ChatObject.isKickedFromChat(chat) && !ChatObject.isLeftFromChat(chat)) {
                     if (chatInfo == null || !chatInfo.participants_hidden || ChatObject.hasAdminRights(chat)) {
                         canSearchMembers = true;

@@ -6159,4 +6159,8 @@
     <string name="THChatHideStickers">Hide stickers in chats</string>
     <string name="THPhotoMaxSize">Max photo size</string>
     <string name="THGraheriumDisableEmojiStatus">Disable emoji status</string>
+    <string name="THUserRestrictionsSendStickers">Send Stickers</string>
+    <string name="THUserRestrictionsSendGifs">Send GIFs</string>
+    <string name="THUserRestrictionsSendGames">Send Games</string>
+    <string name="THUserRestrictionsUseInlineBots">Use Inline Bots</string>
 </resources>

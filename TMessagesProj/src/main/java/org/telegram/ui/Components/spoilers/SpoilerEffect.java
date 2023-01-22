@@ -41,6 +41,7 @@ import androidx.core.math.MathUtils;
 import org.telegram.messenger.*;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.Easings;
+import org.telegram.ui.Components.ForegroundDetector;
 import org.telegram.ui.Components.TextStyleSpan;
 
 import java.util.ArrayList;
@@ -522,10 +523,12 @@ public class SpoilerEffect extends Drawable {
      * @return Measured key points
      */
     public static synchronized List<Long> measureKeyPoints(Layout textLayout) {
+        if (ForegroundDetector.getInstance().isPaused()) return Collections.emptyList();
+
         int w = textLayout.getWidth();
         int h = textLayout.getHeight();
 
-        if (w <= 0 || h <= 0 || w > 16384) //fix bitch
+        if (w <= 0 || h <= 0)
             return Collections.emptyList();
 
         Bitmap measureBitmap = Bitmap.createBitmap(Math.round(w), Math.round(h), Bitmap.Config.ARGB_4444); // We can use 4444 as we don't need accuracy here

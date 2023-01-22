@@ -112,4 +112,8 @@
     <string name="THChatHideStickers">Скрывать стикеры в чатах</string>
     <string name="THPhotoMaxSize">Максимальный размер фото</string>
     <string name="THGraheriumDisableEmojiStatus">Убрать emoji из статуса</string>
+    <string name="THUserRestrictionsSendStickers">Отправка Стикеров</string>
+    <string name="THUserRestrictionsSendGifs">Отправк Гифок</string>
+    <string name="THUserRestrictionsSendGames">Отправка Игр</string>
+    <string name="THUserRestrictionsUseInlineBots">Использование Инлайн-Ботов</string>
 </resources>
