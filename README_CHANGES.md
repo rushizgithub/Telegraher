@@ -1,5 +1,16 @@
 # Changes
 
+* 9.33.18
+    * new OutOfMemory crash fix via foreground service (modded)
+    * disable emoji status for chats also (but need to debug more)
+    * extended admin rights to restrict gifs, stickers, games or inline bots for users in chat
+        * the idea and main code from @arsLan and his Cherrygram
+    * custom error messages if you got resticted for gifs only or stickers only
+        * actually i track well strickers forbidden and let you to use gifs, but if gifs are forbidden (but stickers are
+          allowed) you can use both (but gifs will not pass). Thats somewhere in the vanilla code i need to debug later.
+    * channels and groups have edit icon now, so you can list all members (if not hidden) and admins.
+        * the code which display admin numbers is from @arsLan, but i adapted it for channels only.
+    * added english & russian translations for new options
 * 9.33.17
     * fixed spoiler bug
         * it's because a features you can enable via settings :)
