@@ -1,7 +1,7 @@
 # Changes
 
 * 9.33.26
-    * libs & gradle
+    * libs & gradle update
     * permissions update
     * some good code practice (refactor)
     * revisited notifications
