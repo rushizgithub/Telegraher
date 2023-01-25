@@ -2170,14 +2170,14 @@ public class LocaleController {
             if (BuildVars.LOGS_ENABLED) {
                 FileLog.d("save locale file to " + finalFile);
             }
-            BufferedWriter writer = new BufferedWriter(new FileWriter(finalFile));
-            writer.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-            writer.write("<resources>\n");
-            for (HashMap.Entry<String, String> entry : values.entrySet()) {
-                writer.write(String.format("<string name=\"%1$s\">%2$s</string>\n", entry.getKey(), entry.getValue()));
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(finalFile))) {
+                writer.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+                writer.write("<resources>\n");
+                for (HashMap.Entry<String, String> entry : values.entrySet()) {
+                    writer.write(String.format("<string name=\"%1$s\">%2$s</string>\n", entry.getKey(), entry.getValue()));
+                }
+                writer.write("</resources>");
             }
-            writer.write("</resources>");
-            writer.close();
             boolean hasBase = localeInfo.hasBaseLang();
             final HashMap<String, String> valuesToSet = getLocaleFileStrings(hasBase ? localeInfo.getPathToBaseFile() : localeInfo.getPathToFile());
             if (hasBase) {

@@ -2044,10 +2044,10 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                     }
                     Utilities.blurBitmap(lastBitmap, 7, 1, lastBitmap.getWidth(), lastBitmap.getHeight(), lastBitmap.getRowBytes());
                     File file = new File(ApplicationLoader.getFilesDirFixed(), "cthumb.jpg");
-                    FileOutputStream stream = new FileOutputStream(file);
-                    lastBitmap.compress(Bitmap.CompressFormat.JPEG, 87, stream);
+                    try(FileOutputStream stream = new FileOutputStream(file)){
+                        lastBitmap.compress(Bitmap.CompressFormat.JPEG, 87, stream);
+                    }
                     lastBitmap.recycle();
-                    stream.close();
                 }
             }
         } catch (Throwable ignore) {

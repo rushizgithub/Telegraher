@@ -3375,23 +3375,24 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 	}
 
 	public static String convertStreamToString(InputStream is) throws Exception {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder sb = new StringBuilder();
-		String line = null;
-		while ((line = reader.readLine()) != null) {
-			sb.append(line).append("\n");
-		}
-		reader.close();
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+        }
 		return sb.toString();
 	}
 
-	public static String getStringFromFile(String filePath) throws Exception {
-		File fl = new File(filePath);
-		FileInputStream fin = new FileInputStream(fl);
-		String ret = convertStreamToString(fin);
-		fin.close();
-		return ret;
-	}
+    public static String getStringFromFile(String filePath) throws Exception {
+        File fl = new File(filePath);
+        String ret;
+        try (FileInputStream fin = new FileInputStream(fl)) {
+            ret = convertStreamToString(fin);
+        }
+        return ret;
+    }
 
 	private void onTgVoipStop(Instance.FinalState finalState) {
 		if (user == null) {

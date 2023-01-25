@@ -22,16 +22,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 
-import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.ApplicationLoader;
-import org.telegram.messenger.FileLoader;
-import org.telegram.messenger.ImageLoader;
-import org.telegram.messenger.ImageReceiver;
-import org.telegram.messenger.MediaDataController;
-import org.telegram.messenger.NotificationCenter;
-import org.telegram.messenger.SharedConfig;
-import org.telegram.messenger.SvgHelper;
-import org.telegram.messenger.Utilities;
+import org.telegram.messenger.*;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.CombinedDrawable;
@@ -67,12 +58,15 @@ public class VideoScreenPreview extends FrameLayout implements PagerHeaderView, 
                     return;
                 }
 
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(ApplicationLoader.applicationContext, Uri.fromFile(file));
-                int width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-                int height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-                retriever.release();
-                aspectRatio = width / (float) height;
+                try(MediaMetadataRetriever retriever = new MediaMetadataRetriever()){
+                    retriever.setDataSource(ApplicationLoader.applicationContext, Uri.fromFile(file));
+                    int width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                    int height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                    aspectRatio = width / (float) height;
+                    retriever.release();
+                }catch (Exception e){
+                    FileLog.e(e);
+                }
             } else {
                 aspectRatio = 0.671f;
             }

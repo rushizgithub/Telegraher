@@ -16,10 +16,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 public class NotificationsService extends Service {
 
@@ -28,16 +29,21 @@ public class NotificationsService extends Service {
         super.onCreate();
         ApplicationLoader.postInitApplication();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "push_service_channel";
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,"Push Notifications Service",NotificationManager.IMPORTANCE_DEFAULT);
+            String CHANNEL_ID = "graher_notif";
+            NotificationChannelCompat channel = new NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
+                .setName("Telegraher Notifications Service")
+                .build();
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.createNotificationChannel(channel);
+
             Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setShowWhen(false)
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.msg_report_xxx)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
                 .setContentText("To let you receive push notifications w/o GApps").build();
-            startForeground(9999,notification);
+            startForeground(9999, notification);
         }
     }
 
