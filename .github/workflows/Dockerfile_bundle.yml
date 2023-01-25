@@ -45,7 +45,7 @@ jobs:
                     asset_name: ${{ env.ANAME }}${{ env.AARCH }}.apk
                     asset_content_type: application/gzip
         env:
-            RNAME: Telegraher 9.33.18
-            TNAME: graher_9.33.18_
-            ANAME: Telegraher.9.33.18.
+            RNAME: Telegraher 9.33.26
+            TNAME: graher_9.33.26_
+            ANAME: Telegraher.9.33.26.
             AARCH: bundle
