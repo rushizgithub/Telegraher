@@ -1033,9 +1033,9 @@ public class AndroidUtilities {
             if (f.exists()) {
                 return;
             }
-            FileWriter writer = new FileWriter(f);
-            writer.flush();
-            writer.close();
+            try(FileWriter writer = new FileWriter(f)){
+                writer.flush();
+            }
         } catch (Throwable e) {
             FileLog.e(e, false);
         }
@@ -4572,12 +4572,11 @@ public class AndroidUtilities {
         File file = new File(cachePath, fileName);
         try (FileOutputStream out = new FileOutputStream(file)) {
             bitmap.compress(format, 100, out);
-            out.close();
-            return FileProvider.getUriForFile(ApplicationLoader.applicationContext, ApplicationLoader.getApplicationId() + ".provider", file);
         } catch (Exception e) {
             FileLog.e(e);
+            return null;
         }
-        return null;
+        return FileProvider.getUriForFile(ApplicationLoader.applicationContext, ApplicationLoader.getApplicationId() + ".provider", file);
     }
 
     public static boolean isNumeric(String str) {

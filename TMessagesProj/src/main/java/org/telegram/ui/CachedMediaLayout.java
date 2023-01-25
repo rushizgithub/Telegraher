@@ -854,22 +854,17 @@ public class CachedMediaLayout extends FrameLayout implements NestedSizeNotifier
                 fileInfo.metadata = new CacheModel.FileInfo.FileMetadata();
                 fileInfo.metadata.loading = true;
                 Utilities.globalQueue.postRunnable(() -> {
-                    MediaMetadataRetriever mediaMetadataRetriever = null;
                     String title = "";
                     String author = "";
-                    try {
-                        mediaMetadataRetriever = new MediaMetadataRetriever();
+                    try (MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever()){
                         Uri uri = Uri.fromFile(fileInfo.file);
                         mediaMetadataRetriever.setDataSource(getContext(), uri);
 
                         title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
                         author = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                        mediaMetadataRetriever.release();
                     } catch (Exception e) {
                         FileLog.e(e);
-                    } finally {
-                        if (mediaMetadataRetriever != null) {
-                            mediaMetadataRetriever.release();
-                        }
                     }
                     String finalTitle = title;
                     String finalAuthor = author;

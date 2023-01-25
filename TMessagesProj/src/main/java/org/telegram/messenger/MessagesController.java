@@ -11110,7 +11110,7 @@ public class MessagesController extends BaseController implements NotificationCe
         SharedPrefsHelper.cleanupAccount(currentAccount);
 
         boolean shouldHandle = true;
-        ArrayList<NotificationCenter.NotificationCenterDelegate> observers = getNotificationCenter().getObservers(NotificationCenter.appDidLogout);
+        List<NotificationCenter.NotificationCenterDelegate> observers = getNotificationCenter().getObservers(NotificationCenter.appDidLogout);
         if (observers != null) {
             for (int a = 0, N = observers.size(); a < N; a++) {
                 if (observers.get(a) instanceof LaunchActivity) {

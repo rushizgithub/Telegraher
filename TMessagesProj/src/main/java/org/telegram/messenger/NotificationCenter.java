@@ -16,10 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class NotificationCenter {
 
@@ -274,14 +271,14 @@ public class NotificationCenter {
 
     public static final int telegraherSettingsUpdated = totalEvents++;
 
-    private SparseArray<ArrayList<NotificationCenterDelegate>> observers = new SparseArray<>();
-    private SparseArray<ArrayList<NotificationCenterDelegate>> removeAfterBroadcast = new SparseArray<>();
-    private SparseArray<ArrayList<NotificationCenterDelegate>> addAfterBroadcast = new SparseArray<>();
-    private ArrayList<DelayedPost> delayedPosts = new ArrayList<>(10);
-    private ArrayList<Runnable> delayedRunnables  = new ArrayList<>(10);
-    private ArrayList<Runnable> delayedRunnablesTmp  = new ArrayList<>(10);
-    private ArrayList<DelayedPost> delayedPostsTmp = new ArrayList<>(10);
-    private ArrayList<PostponeNotificationCallback> postponeCallbackList = new ArrayList<>(10);
+    private SparseArray<List<NotificationCenterDelegate>> observers = new SparseArray<>();
+    private SparseArray<List<NotificationCenterDelegate>> removeAfterBroadcast = new SparseArray<>();
+    private SparseArray<List<NotificationCenterDelegate>> addAfterBroadcast = new SparseArray<>();
+    private List<DelayedPost> delayedPosts = new ArrayList<>(10);
+    private List<Runnable> delayedRunnables  = new ArrayList<>(10);
+    private List<Runnable> delayedRunnablesTmp  = new ArrayList<>(10);
+    private List<DelayedPost> delayedPostsTmp = new ArrayList<>(10);
+    private List<PostponeNotificationCallback> postponeCallbackList = new ArrayList<>(10);
 
     private Runnable checkForExpiredNotifications;
 
@@ -379,7 +376,7 @@ public class NotificationCenter {
         }
         long minTime = Long.MAX_VALUE;
         long currentTime = SystemClock.elapsedRealtime();
-        ArrayList<Integer> expiredIndices = null;
+        List<Integer> expiredIndices = null;
         for (HashMap.Entry<Integer, AllowedNotifications> entry : this.allowedNotifications.entrySet()) {
             AllowedNotifications allowedNotification = entry.getValue();
             if (currentTime - allowedNotification.time > 1000) {
@@ -460,13 +457,13 @@ public class NotificationCenter {
         return currentHeavyOperationFlags;
     }
 
-    public ArrayList<NotificationCenterDelegate> getObservers(int id) {
+    public List<NotificationCenterDelegate> getObservers(int id) {
         return observers.get(id);
     }
 
     public void postNotificationName(int id, Object... args) {
         boolean allowDuringAnimation = id == startAllHeavyOperations || id == stopAllHeavyOperations || id == didReplacedPhotoInMemCache || id == closeChats || id == invalidateMotionBackground;
-        ArrayList<Integer> expiredIndices = null;
+        List<Integer> expiredIndices = null;
         if (!allowDuringAnimation && !allowedNotifications.isEmpty()) {
             int size = allowedNotifications.size();
             int allowedCount = 0;
@@ -530,7 +527,7 @@ public class NotificationCenter {
             }
         }
         broadcasting++;
-        ArrayList<NotificationCenterDelegate> objects = observers.get(id);
+        List<NotificationCenterDelegate> objects = observers.get(id);
         if (objects != null && !objects.isEmpty()) {
             for (int a = 0; a < objects.size(); a++) {
                 NotificationCenterDelegate obj = objects.get(a);
@@ -542,7 +539,7 @@ public class NotificationCenter {
             if (removeAfterBroadcast.size() != 0) {
                 for (int a = 0; a < removeAfterBroadcast.size(); a++) {
                     int key = removeAfterBroadcast.keyAt(a);
-                    ArrayList<NotificationCenterDelegate> arrayList = removeAfterBroadcast.get(key);
+                    List<NotificationCenterDelegate> arrayList = removeAfterBroadcast.get(key);
                     for (int b = 0; b < arrayList.size(); b++) {
                         removeObserver(arrayList.get(b), key);
                     }
@@ -552,7 +549,7 @@ public class NotificationCenter {
             if (addAfterBroadcast.size() != 0) {
                 for (int a = 0; a < addAfterBroadcast.size(); a++) {
                     int key = addAfterBroadcast.keyAt(a);
-                    ArrayList<NotificationCenterDelegate> arrayList = addAfterBroadcast.get(key);
+                    List<NotificationCenterDelegate> arrayList = addAfterBroadcast.get(key);
                     for (int b = 0; b < arrayList.size(); b++) {
                         addObserver(arrayList.get(b), key);
                     }
@@ -569,7 +566,7 @@ public class NotificationCenter {
             }
         }
         if (broadcasting != 0) {
-            ArrayList<NotificationCenterDelegate> arrayList = addAfterBroadcast.get(id);
+            List<NotificationCenterDelegate> arrayList = addAfterBroadcast.get(id);
             if (arrayList == null) {
                 arrayList = new ArrayList<>();
                 addAfterBroadcast.put(id, arrayList);
@@ -577,7 +574,7 @@ public class NotificationCenter {
             arrayList.add(observer);
             return;
         }
-        ArrayList<NotificationCenterDelegate> objects = observers.get(id);
+        List<NotificationCenterDelegate> objects = observers.get(id);
         if (objects == null) {
             observers.put(id, (objects = createArrayForId(id)));
         }
@@ -587,7 +584,7 @@ public class NotificationCenter {
         objects.add(observer);
     }
 
-    private ArrayList<NotificationCenterDelegate> createArrayForId(int id) {
+    private List<NotificationCenterDelegate> createArrayForId(int id) {
         // this notifications often add/remove
         // UniqArrayList for fast contains method check
         if (id == didReplacedPhotoInMemCache || id == stopAllHeavyOperations || id == startAllHeavyOperations) {
@@ -603,7 +600,7 @@ public class NotificationCenter {
             }
         }
         if (broadcasting != 0) {
-            ArrayList<NotificationCenterDelegate> arrayList = removeAfterBroadcast.get(id);
+            List<NotificationCenterDelegate> arrayList = removeAfterBroadcast.get(id);
             if (arrayList == null) {
                 arrayList = new ArrayList<>();
                 removeAfterBroadcast.put(id, arrayList);
@@ -611,7 +608,7 @@ public class NotificationCenter {
             arrayList.add(observer);
             return;
         }
-        ArrayList<NotificationCenterDelegate> objects = observers.get(id);
+        List<NotificationCenterDelegate> objects = observers.get(id);
         if (objects != null) {
             objects.remove(observer);
         }
@@ -739,7 +736,7 @@ public class NotificationCenter {
 
         @Override
         public boolean remove(@Nullable Object o) {
-            if (set.remove(0)) {
+            if (set.remove(o)) {
                 return super.remove(o);
             }
             return false;
