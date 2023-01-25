@@ -1,5 +1,11 @@
 # Changes
 
+* 9.33.26
+    * libs & gradle
+    * permissions update
+    * some good code practice (refactor)
+    * revisited notifications
+    * package fix for shortcut
 * 9.33.18
     * new OutOfMemory crash fix via foreground service (modded)
     * disable emoji status for chats also (but need to debug more)
