@@ -149,7 +149,7 @@ public class SharedConfig {
     public static boolean saveStreamMedia = true;
     public static boolean smoothKeyboard = true;
     public static boolean pauseMusicOnRecord = true;
-    public static boolean chatBlur = true;
+    public static boolean chatBlur = false;
     public static boolean noiseSupression;
     public static boolean noStatusBar = true;
     public static boolean forceRtmpStream;
@@ -538,7 +538,7 @@ public class SharedConfig {
             saveStreamMedia = preferences.getBoolean("saveStreamMedia", true);
             smoothKeyboard = preferences.getBoolean("smoothKeyboard2", true);
             pauseMusicOnRecord = preferences.getBoolean("pauseMusicOnRecord", false);
-            chatBlur = preferences.getBoolean("chatBlur", true);
+            chatBlur = preferences.getBoolean("chatBlur", false);
             forceDisableTabletMode = preferences.getBoolean("forceDisableTabletMode", false);
             streamAllVideo = preferences.getBoolean("streamAllVideo", BuildVars.DEBUG_VERSION);
             streamMkv = preferences.getBoolean("streamMkv", false);
@@ -1636,7 +1636,7 @@ public class SharedConfig {
     }
 
     public static boolean canBlurChat() {
-        return getDevicePerformanceClass() == PERFORMANCE_CLASS_HIGH;
+        return true;
     }
 
     public static boolean chatBlurEnabled() {

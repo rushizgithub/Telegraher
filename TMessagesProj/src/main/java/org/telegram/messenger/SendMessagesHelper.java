@@ -7244,9 +7244,9 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 opts.inJustDecodeBounds = true;
                 File file = FileLoader.getInstance(accountInstance.getCurrentAccount()).getPathToAttach(photoSize, forceCache);
 
-                FileInputStream is = new FileInputStream(file);
-                BitmapFactory.decodeStream(is, null, opts);
-                is.close();
+                try (FileInputStream is = new FileInputStream(file)) {
+                    BitmapFactory.decodeStream(is, null, opts);
+                }
 
                 float photoW = opts.outWidth;
                 float photoH = opts.outHeight;
@@ -7258,21 +7258,9 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 opts.inSampleSize = (int) scaleFactor;
                 opts.inPreferredConfig = Bitmap.Config.RGB_565;
                 if (Build.VERSION.SDK_INT >= 21) {
-                    is = new FileInputStream(file);
-                    bitmap[0] = BitmapFactory.decodeStream(is, null, opts);
-                    is.close();
-                } else {
-                    /*opts.inPurgeable = true;
-                    RandomAccessFile f = new RandomAccessFile(file, "r");
-                    int len = (int) f.length();
-                    int offset = 0;
-                    byte[] data = bytes != null && bytes.length >= len ? bytes : null;
-                    if (data == null) {
-                        bytes = data = new byte[len];
+                    try (FileInputStream is = new FileInputStream(file)) {
+                        bitmap[0] = BitmapFactory.decodeStream(is, null, opts);
                     }
-                    f.readFully(data, 0, len);
-                    f.close();
-                    bitmapFinal[0] = BitmapFactory.decodeByteArray(data, offset, len, opts);*/
                 }
             } catch (Throwable ignore) {
 

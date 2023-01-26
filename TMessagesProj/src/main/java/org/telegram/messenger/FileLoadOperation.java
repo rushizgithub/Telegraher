@@ -1323,9 +1323,9 @@ public class FileLoadOperation {
                 if (cacheFileTempLocal != null) {
                     if (ungzip) {
                         try {
-                            GZIPInputStream gzipInputStream = new GZIPInputStream(new FileInputStream(cacheFileTempLocal));
-                            FileLoader.copyFile(gzipInputStream, cacheFileGzipTemp, 1024 * 1024 * 2);
-                            gzipInputStream.close();
+                            try(GZIPInputStream gzipInputStream = new GZIPInputStream(new FileInputStream(cacheFileTempLocal))) {
+                                FileLoader.copyFile(gzipInputStream, cacheFileGzipTemp, 1024 * 1024 * 2);
+                            }
                             cacheFileTempLocal.delete();
                             cacheFileTempLocal = cacheFileGzipTemp;
                             ungzip = false;
