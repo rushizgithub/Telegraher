@@ -1,5 +1,10 @@
 # Changes
 
+* 9.33.27
+    * everyone can enable blur, it's disabled by default now
+    * auto-nigth settings are disabled by default
+    * disable emoji-status now disable emoji-status in chats also
+    * more try-with-resources & closing that way some opened streams
 * 9.33.26
     * libs & gradle update
     * permissions update
