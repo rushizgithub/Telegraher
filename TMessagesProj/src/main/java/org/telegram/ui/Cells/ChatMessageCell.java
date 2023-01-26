@@ -12744,6 +12744,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     }
 
     private Object getAuthorStatus() {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisableEmojiStatus", false)) return null;
         if (currentUser != null) {
             if (currentUser.emoji_status instanceof TLRPC.TL_emojiStatusUntil && ((TLRPC.TL_emojiStatusUntil) currentUser.emoji_status).until > (int) (System.currentTimeMillis() / 1000)) {
                 return ((TLRPC.TL_emojiStatusUntil) currentUser.emoji_status).document_id;
