@@ -1,5 +1,11 @@
 # Changes
 
+* 9.33.28
+    * removing memory leaks
+    * "optimise the code"
+    * removing old shit from early years also
+    * wanted to remove conditions about SDK <=19 (or even less).. damn there are hungreds of these cases, let TG clean
+      their code (it doesn't seriosly affect perfomance, just code keep legacy shit over the years).
 * 9.33.27
     * everyone can enable blur, it's disabled by default now
     * auto-nigth settings are disabled by default
