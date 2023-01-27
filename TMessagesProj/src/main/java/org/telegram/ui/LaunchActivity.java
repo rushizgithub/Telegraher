@@ -3169,11 +3169,9 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         Runnable cancelRunnable = null;
 
         String content;
-        InputStream inputStream = null;
-        try {
+        try (InputStream inputStream = getContentResolver().openInputStream(importUri);BufferedReader r = new BufferedReader(new InputStreamReader(inputStream))){
             int linesCount = 0;
-            inputStream = getContentResolver().openInputStream(importUri);
-            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+
             StringBuilder total = new StringBuilder();
             for (String line; (line = r.readLine()) != null && linesCount < 100; ) {
                 total.append(line).append('\n');
@@ -3183,14 +3181,6 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         } catch (Exception e) {
             FileLog.e(e);
             return;
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (Exception e2) {
-                FileLog.e(e2);
-            }
         }
         final TLRPC.TL_messages_checkHistoryImport req = new TLRPC.TL_messages_checkHistoryImport();
         req.import_head = content;

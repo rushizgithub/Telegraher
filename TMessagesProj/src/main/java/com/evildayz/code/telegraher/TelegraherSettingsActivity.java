@@ -991,7 +991,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private void killThatApp() {
         if (Build.VERSION.SDK_INT >= 21) {
             getParentActivity().finishAndRemoveTask();
-        } else if (Build.VERSION.SDK_INT >= 16) {
+        } else if (Build.VERSION.SDK_INT >= 19) {
             getParentActivity().finishAffinity();
         }
         System.exit(0);

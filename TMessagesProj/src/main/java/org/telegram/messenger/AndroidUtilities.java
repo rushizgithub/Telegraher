@@ -1757,20 +1757,18 @@ public class AndroidUtilities {
 
     public static ArrayList<File> getDataDirs() {
         ArrayList<File> result = null;
-        if (Build.VERSION.SDK_INT >= 19) {
-            File[] dirs = ApplicationLoader.applicationContext.getExternalFilesDirs(null);
-            if (dirs != null) {
-                for (int a = 0; a < dirs.length; a++) {
-                    if (dirs[a] == null) {
-                        continue;
-                    }
-                    String path = dirs[a].getAbsolutePath();
-
-                    if (result == null) {
-                        result = new ArrayList<>();
-                    }
-                    result.add(dirs[a]);
+        File[] dirs = ApplicationLoader.applicationContext.getExternalFilesDirs(null);
+        if (dirs != null) {
+            for (int a = 0; a < dirs.length; a++) {
+                if (dirs[a] == null) {
+                    continue;
                 }
+                String path = dirs[a].getAbsolutePath();
+
+                if (result == null) {
+                    result = new ArrayList<>();
+                }
+                result.add(dirs[a]);
             }
         }
         if (result == null) {
@@ -1784,21 +1782,19 @@ public class AndroidUtilities {
 
     public static ArrayList<File> getRootDirs() {
         ArrayList<File> result = null;
-        if (Build.VERSION.SDK_INT >= 19) {
-            File[] dirs = ApplicationLoader.applicationContext.getExternalFilesDirs(null);
-            if (dirs != null) {
-                for (int a = 0; a < dirs.length; a++) {
-                    if (dirs[a] == null) {
-                        continue;
+        File[] dirs = ApplicationLoader.applicationContext.getExternalFilesDirs(null);
+        if (dirs != null) {
+            for (int a = 0; a < dirs.length; a++) {
+                if (dirs[a] == null) {
+                    continue;
+                }
+                String path = dirs[a].getAbsolutePath();
+                int idx = path.indexOf("/Android");
+                if (idx >= 0) {
+                    if (result == null) {
+                        result = new ArrayList<>();
                     }
-                    String path = dirs[a].getAbsolutePath();
-                    int idx = path.indexOf("/Android");
-                    if (idx >= 0) {
-                        if (result == null) {
-                            result = new ArrayList<>();
-                        }
-                        result.add(new File(path.substring(0, idx)));
-                    }
+                    result.add(new File(path.substring(0, idx)));
                 }
             }
         }
@@ -1821,19 +1817,15 @@ public class AndroidUtilities {
         if (state == null || state.startsWith(Environment.MEDIA_MOUNTED)) {
             try {
                 File file;
-                if (Build.VERSION.SDK_INT >= 19) {
-                    File[] dirs = ApplicationLoader.applicationContext.getExternalCacheDirs();
-                    file = dirs[0];
-                    if (!TextUtils.isEmpty(SharedConfig.storageCacheDir)) {
-                        for (int a = 0; a < dirs.length; a++) {
-                            if (dirs[a] != null && dirs[a].getAbsolutePath().startsWith(SharedConfig.storageCacheDir)) {
-                                file = dirs[a];
-                                break;
-                            }
+                File[] dirs = ApplicationLoader.applicationContext.getExternalCacheDirs();
+                file = dirs[0];
+                if (!TextUtils.isEmpty(SharedConfig.storageCacheDir)) {
+                    for (int a = 0; a < dirs.length; a++) {
+                        if (dirs[a] != null && dirs[a].getAbsolutePath().startsWith(SharedConfig.storageCacheDir)) {
+                            file = dirs[a];
+                            break;
                         }
                     }
-                } else {
-                    file = ApplicationLoader.applicationContext.getExternalCacheDir();
                 }
                 if (file != null) {
                     return file;
@@ -3074,29 +3066,27 @@ public class AndroidUtilities {
         if (bytes == null) {
             return null;
         }
-        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        for (int i = 0; i < bytes.length; i++) {
-            final int b = bytes[i];
-            if (b == '=') {
-                try {
-                    final int u = Character.digit((char) bytes[++i], 16);
-                    final int l = Character.digit((char) bytes[++i], 16);
-                    buffer.write((char) ((u << 4) + l));
-                } catch (Exception e) {
-                    FileLog.e(e);
-                    return null;
+        try (final ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+            for (int i = 0; i < bytes.length; i++) {
+                final int b = bytes[i];
+                if (b == '=') {
+                    try {
+                        final int u = Character.digit((char) bytes[++i], 16);
+                        final int l = Character.digit((char) bytes[++i], 16);
+                        buffer.write((char) ((u << 4) + l));
+                    } catch (Exception e) {
+                        FileLog.e(e);
+                        return null;
+                    }
+                } else {
+                    buffer.write(b);
                 }
-            } else {
-                buffer.write(b);
             }
-        }
-        byte[] array = buffer.toByteArray();
-        try {
-            buffer.close();
+            return buffer.toByteArray();
         } catch (Exception e) {
             FileLog.e(e);
         }
-        return array;
+        return null;
     }
 
     public static boolean copyFile(InputStream sourceFile, File destFile) throws IOException {

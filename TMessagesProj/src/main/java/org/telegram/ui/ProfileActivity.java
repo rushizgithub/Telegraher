@@ -8527,11 +8527,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 boolean[] finished = new boolean[1];
                 long currentDate = System.currentTimeMillis();
 
-                BufferedInputStream origin = null;
-                ZipOutputStream out = null;
-                try {
-                    FileOutputStream dest = new FileOutputStream(zipFile);
-                    out = new ZipOutputStream(new BufferedOutputStream(dest));
+                try (FileOutputStream dest = new FileOutputStream(zipFile); ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest))) {
                     byte[] data = new byte[1024 * 64];
 
                     for (int i = 0; i < files.size(); i++) {
@@ -8542,28 +8538,19 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         if (!file.exists()) {
                             continue;
                         }
-                        FileInputStream fi = new FileInputStream(file);
-                        origin = new BufferedInputStream(fi, data.length);
 
-                        ZipEntry entry = new ZipEntry(file.getName());
-                        out.putNextEntry(entry);
-                        int count;
-                        while ((count = origin.read(data, 0, data.length)) != -1) {
-                            out.write(data, 0, count);
+                        try (FileInputStream fi = new FileInputStream(file);BufferedInputStream origin = new BufferedInputStream(fi, data.length)) {
+                            ZipEntry entry = new ZipEntry(file.getName());
+                            out.putNextEntry(entry);
+                            int count;
+                            while ((count = origin.read(data, 0, data.length)) != -1) {
+                                out.write(data, 0, count);
+                            }
                         }
-                        origin.close();
-                        origin = null;
                     }
                     finished[0] = true;
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    if (origin != null) {
-                        origin.close();
-                    }
-                    if (out != null) {
-                        out.close();
-                    }
                 }
 
                 AndroidUtilities.runOnUIThread(() -> {

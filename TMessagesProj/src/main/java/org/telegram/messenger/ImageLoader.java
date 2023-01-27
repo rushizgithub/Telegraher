@@ -764,10 +764,9 @@ public class ImageLoader {
                         originalBitmap = scaledBitmap;
                     }
                 }
-                FileOutputStream stream = new FileOutputStream(thumbFile);
-                originalBitmap.compress(Bitmap.CompressFormat.JPEG, info.big ? 83 : 60, stream);
-                try {
-                    stream.close();
+
+                try (FileOutputStream stream = new FileOutputStream(thumbFile)){
+                    originalBitmap.compress(Bitmap.CompressFormat.JPEG, info.big ? 83 : 60, stream);
                 } catch (Exception e) {
                     FileLog.e(e);
                 }
@@ -3561,10 +3560,8 @@ public class ImageLoader {
     public static Bitmap loadBitmap(String path, Uri uri, float maxWidth, float maxHeight, boolean useMaxScale) {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        InputStream inputStream = null;
 
         if (path == null && uri != null && uri.getScheme() != null) {
-            String imageFilePath = null;
             if (uri.getScheme().contains("file")) {
                 path = uri.getPath();
             } else if (Build.VERSION.SDK_INT < 30 || !"content".equals(uri.getScheme())) {
@@ -3579,12 +3576,8 @@ public class ImageLoader {
         if (path != null) {
             BitmapFactory.decodeFile(path, bmOptions);
         } else if (uri != null) {
-            boolean error = false;
-            try {
-                inputStream = ApplicationLoader.applicationContext.getContentResolver().openInputStream(uri);
+            try (InputStream inputStream = ApplicationLoader.applicationContext.getContentResolver().openInputStream(uri)){
                 BitmapFactory.decodeStream(inputStream, null, bmOptions);
-                inputStream.close();
-                inputStream = ApplicationLoader.applicationContext.getContentResolver().openInputStream(uri);
             } catch (Throwable e) {
                 FileLog.e(e);
                 return null;
@@ -3683,7 +3676,7 @@ public class ImageLoader {
                 }
             }
         } else if (uri != null) {
-            try {
+            try (InputStream inputStream = ApplicationLoader.applicationContext.getContentResolver().openInputStream(uri)){
                 b = BitmapFactory.decodeStream(inputStream, null, bmOptions);
                 if (b != null) {
                     if (bmOptions.inPurgeable) {
@@ -3697,12 +3690,6 @@ public class ImageLoader {
                 }
             } catch (Throwable e) {
                 FileLog.e(e);
-            } finally {
-                try {
-                    inputStream.close();
-                } catch (Throwable e) {
-                    FileLog.e(e);
-                }
             }
         }
 
@@ -3770,23 +3757,19 @@ public class ImageLoader {
             fileDir = location.volume_id != Integer.MIN_VALUE ? FileLoader.getDirectory(FileLoader.MEDIA_DIR_IMAGE) : FileLoader.getDirectory(FileLoader.MEDIA_DIR_CACHE);
         }
         final File cacheFile = new File(fileDir, fileName);
-        //TODO was crash in DEBUG_PRIVATE
-//        if (compressFormat == Bitmap.CompressFormat.JPEG && progressive && BuildVars.DEBUG_VERSION) {
-//            photoSize.size = Utilities.saveProgressiveJpeg(scaledBitmap, scaledBitmap.getWidth(), scaledBitmap.getHeight(), scaledBitmap.getRowBytes(), quality, cacheFile.getAbsolutePath());
-//        } else {
-        FileOutputStream stream = new FileOutputStream(cacheFile);
-        scaledBitmap.compress(compressFormat, quality, stream);
-        if (!cache) {
-            photoSize.size = (int) stream.getChannel().size();
+        try(FileOutputStream stream = new FileOutputStream(cacheFile)) {
+            scaledBitmap.compress(compressFormat, quality, stream);
+            if (!cache) {
+                photoSize.size = (int) stream.getChannel().size();
+            }
         }
-        stream.close();
         // }
         if (cache) {
-            ByteArrayOutputStream stream2 = new ByteArrayOutputStream();
-            scaledBitmap.compress(compressFormat, quality, stream2);
-            photoSize.bytes = stream2.toByteArray();
-            photoSize.size = photoSize.bytes.length;
-            stream2.close();
+            try(ByteArrayOutputStream stream2 = new ByteArrayOutputStream()) {
+                scaledBitmap.compress(compressFormat, quality, stream2);
+                photoSize.bytes = stream2.toByteArray();
+                photoSize.size = photoSize.bytes.length;
+            }
         }
         if (scaledBitmap != bitmap) {
             scaledBitmap.recycle();

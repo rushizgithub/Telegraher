@@ -520,8 +520,7 @@ public class NewContactBottomSheet extends BottomSheet implements AdapterView.On
 
         HashMap<String, String> languageMap = new HashMap<>();
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(ApplicationLoader.applicationContext.getResources().getAssets().open("countries.txt")));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ApplicationLoader.applicationContext.getResources().getAssets().open("countries.txt")))){
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] args = line.split(";");
@@ -542,7 +541,6 @@ public class NewContactBottomSheet extends BottomSheet implements AdapterView.On
                 }
                 languageMap.put(args[1], args[2]);
             }
-            reader.close();
         } catch (Exception e) {
             FileLog.e(e);
         }
@@ -709,14 +707,12 @@ public class NewContactBottomSheet extends BottomSheet implements AdapterView.On
 
     public static String getPhoneNumber(Context context, TLRPC.User user, String number, boolean withCoutryCode) {
         HashMap<String, String> codesMap = new HashMap<>();
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getResources().getAssets().open("countries.txt")));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(context.getResources().getAssets().open("countries.txt")))){
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] args = line.split(";");
                 codesMap.put(args[0], args[2]);
             }
-            reader.close();
         } catch (Exception e) {
             FileLog.e(e);
         }

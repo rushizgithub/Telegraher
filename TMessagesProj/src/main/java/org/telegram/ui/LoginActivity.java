@@ -2151,8 +2151,7 @@ public class LoginActivity extends BaseFragment {
 
             HashMap<String, String> languageMap = new HashMap<>();
 
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().getAssets().open("countries.txt")));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(getResources().getAssets().open("countries.txt")))){
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] args = line.split(";");
@@ -2173,7 +2172,6 @@ public class LoginActivity extends BaseFragment {
                     }
                     languageMap.put(args[1], args[2]);
                 }
-                reader.close();
             } catch (Exception e) {
                 FileLog.e(e);
             }

@@ -8986,10 +8986,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 canvas.drawBitmap(thumb, null, dstRect, bitmapPaint);
                 canvas.drawBitmap(bitmap, null, dstRect, bitmapPaint);
             }
-            FileOutputStream stream = new FileOutputStream(new File(finalPath));
-            dst.compress(Bitmap.CompressFormat.JPEG, size == thumbSize ? 83 : 87, stream);
-            try {
-                stream.close();
+            try (FileOutputStream stream = new FileOutputStream(finalPath)) {
+                dst.compress(Bitmap.CompressFormat.JPEG, size == thumbSize ? 83 : 87, stream);
             } catch (Exception e) {
                 FileLog.e(e);
             }
