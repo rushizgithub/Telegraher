@@ -792,9 +792,6 @@ public class ConnectionsManager extends BaseController {
 
     @SuppressLint("NewApi")
     protected byte getIpStrategy() {
-        if (Build.VERSION.SDK_INT < 19) {
-            return USE_IPV4_ONLY;
-        }
         if (BuildVars.LOGS_ENABLED) {
             try {
                 NetworkInterface networkInterface;
@@ -892,8 +889,6 @@ public class ConnectionsManager extends BaseController {
         }
 
         protected ResolvedDomain doInBackground(Void... voids) {
-            ByteArrayOutputStream outbuf = null;
-            InputStream httpConnectionStream = null;
             boolean done = false;
             try {
                 URL downloadUrl = new URL("https://www.google.com/resolve?name=" + currentHostName + "&type=A");
@@ -903,23 +898,22 @@ public class ConnectionsManager extends BaseController {
                 httpConnection.setConnectTimeout(1000);
                 httpConnection.setReadTimeout(2000);
                 httpConnection.connect();
-                httpConnectionStream = httpConnection.getInputStream();
 
-                outbuf = new ByteArrayOutputStream();
-
-                byte[] data = new byte[1024 * 32];
-                while (true) {
-                    int read = httpConnectionStream.read(data);
-                    if (read > 0) {
-                        outbuf.write(data, 0, read);
-                    } else if (read == -1) {
-                        break;
-                    } else {
-                        break;
+                JSONObject jsonObject;
+                try(InputStream httpConnectionStream = httpConnection.getInputStream();ByteArrayOutputStream outbuf = new ByteArrayOutputStream()) {
+                    byte[] data = new byte[1024 * 32];
+                    while (true) {
+                        int read = httpConnectionStream.read(data);
+                        if (read > 0) {
+                            outbuf.write(data, 0, read);
+                        } else if (read == -1) {
+                            break;
+                        } else {
+                            break;
+                        }
                     }
+                     jsonObject = new JSONObject(outbuf.toString("UTF-8"));
                 }
-
-                JSONObject jsonObject = new JSONObject(new String(outbuf.toByteArray()));
                 if (jsonObject.has("Answer")) {
                     JSONArray array = jsonObject.getJSONArray("Answer");
                     int len = array.length();
@@ -934,21 +928,6 @@ public class ConnectionsManager extends BaseController {
                 done = true;
             } catch (Throwable e) {
                 FileLog.e(e, false);
-            } finally {
-                try {
-                    if (httpConnectionStream != null) {
-                        httpConnectionStream.close();
-                    }
-                } catch (Throwable e) {
-                    FileLog.e(e, false);
-                }
-                try {
-                    if (outbuf != null) {
-                        outbuf.close();
-                    }
-                } catch (Exception ignore) {
-
-                }
             }
             if (!done) {
                 try {
