@@ -1772,20 +1772,10 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                             result.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
                         }
                         currentFile = new File(ApplicationLoader.getFilesDirFixed(), "default_theme.attheme");
-                        FileOutputStream stream = null;
-                        try {
-                            stream = new FileOutputStream(currentFile);
+                        try (FileOutputStream stream = new FileOutputStream(currentFile)){
                             stream.write(AndroidUtilities.getStringBytes(result.toString()));
                         } catch (Exception e) {
                             FileLog.e(e);
-                        } finally {
-                            try {
-                                if (stream != null) {
-                                    stream.close();
-                                }
-                            } catch (Exception e) {
-                                FileLog.e(e);
-                            }
                         }
                     } else if (themeInfo.assetName != null) {
                         currentFile = Theme.getAssetFile(themeInfo.assetName);
