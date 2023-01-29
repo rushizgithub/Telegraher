@@ -1,5 +1,8 @@
 # Changes
 
+* 9.33.29
+    * fixed bug when you copied a channel link graher copied dummy text
+    * more try-with-resources
 * 9.33.28
     * removing memory leaks
     * "optimise the code"
