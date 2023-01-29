@@ -4787,8 +4787,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     } else {
                         TLRPC.Chat chat = getMessagesController().getChat(chatId);
-                        String link = "https://" + getLink(ChatObject.getPublicUsername(chat), topicId);
-                        showDialog(new ShareAlert(getParentActivity(), null, link, false, link, false) {
+                        text = "https://" + getLink(ChatObject.getPublicUsername(chat), topicId);
+                        showDialog(new ShareAlert(getParentActivity(), null, text, false, text, false) {
                             @Override
                             protected void onSend(LongSparseArray<TLRPC.Dialog> dids, int count, TLRPC.TL_forumTopic topic) {
                                 AndroidUtilities.runOnUIThread(() -> {

@@ -42,9 +42,8 @@ public class Slice {
     }
 
     private void storeData(ByteBuffer data) {
-        try {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             final byte[] input = data.array();
-            FileOutputStream fos = new FileOutputStream(file);
 
             final Deflater deflater = new Deflater(Deflater.BEST_SPEED, true);
             deflater.setInput(input, data.arrayOffset(), data.remaining());
@@ -56,8 +55,6 @@ public class Slice {
                 fos.write(buf, 0, byteCount);
             }
             deflater.end();
-
-            fos.close();
         } catch (Exception e) {
             FileLog.e(e);
         }

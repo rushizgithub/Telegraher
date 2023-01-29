@@ -648,13 +648,8 @@ public class RLottieDrawable extends BitmapDrawable implements Animatable, Bitma
             readBuffer = new byte[64 * 1024];
             readBufferLocal.set(readBuffer);
         }
-        InputStream inputStream = null;
-        try {
-            if (path != null) {
-                inputStream = new FileInputStream(path);
-            } else {
-                inputStream = ApplicationLoader.applicationContext.getResources().openRawResource(rawRes);
-            }
+
+        try (InputStream inputStream = (path != null ? new FileInputStream(path) : ApplicationLoader.applicationContext.getResources().openRawResource(rawRes))) {
             int readLen;
             byte[] buffer = bufferLocal.get();
             if (buffer == null) {
@@ -675,14 +670,6 @@ public class RLottieDrawable extends BitmapDrawable implements Animatable, Bitma
             }
         } catch (Throwable e) {
             return null;
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (Throwable ignore) {
-
-            }
         }
 
         return new String(readBuffer, 0, totalRead);

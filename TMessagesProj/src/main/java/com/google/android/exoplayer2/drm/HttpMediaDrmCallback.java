@@ -161,8 +161,7 @@ public final class HttpMediaDrmCallback implements MediaDrmCallback {
               /* length= */ C.LENGTH_UNSET,
               /* key= */ null,
               DataSpec.FLAG_ALLOW_GZIP);
-      DataSourceInputStream inputStream = new DataSourceInputStream(dataSource, dataSpec);
-      try {
+      try(DataSourceInputStream inputStream = new DataSourceInputStream(dataSource, dataSpec)){
         return Util.toByteArray(inputStream);
       } catch (InvalidResponseCodeException e) {
         // For POST requests, the underlying network stack will not normally follow 307 or 308
@@ -175,8 +174,6 @@ public final class HttpMediaDrmCallback implements MediaDrmCallback {
           throw e;
         }
         url = redirectUrl;
-      } finally {
-        Util.closeQuietly(inputStream);
       }
     }
   }
