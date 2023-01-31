@@ -28,6 +28,8 @@ import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.HttpDataSource.InvalidResponseCodeException;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
+import org.telegram.messenger.FileLog;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -174,6 +176,8 @@ public final class HttpMediaDrmCallback implements MediaDrmCallback {
           throw e;
         }
         url = redirectUrl;
+      }catch (Exception e){
+          FileLog.e(e);
       }
     }
   }
