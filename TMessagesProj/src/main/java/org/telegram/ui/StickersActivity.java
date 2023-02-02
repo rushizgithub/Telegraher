@@ -144,6 +144,7 @@ public class StickersActivity extends BaseFragment implements NotificationCenter
 
     private ArrayList<TLRPC.TL_messages_stickerSet> emojiPacks;
     private List<TLRPC.StickerSetCovered> getFeaturedSets() {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)) return new ArrayList<>();
         final MediaDataController mediaDataController = MediaDataController.getInstance(currentAccount);
         List<TLRPC.StickerSetCovered> featuredStickerSets;
         if (currentType == MediaDataController.TYPE_EMOJIPACKS) {
