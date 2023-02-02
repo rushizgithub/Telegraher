@@ -1329,7 +1329,7 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
     public EmojiView(BaseFragment fragment, boolean needAnimatedEmoji, boolean needStickers, boolean needGif, final Context context, boolean needSearch, final TLRPC.ChatFull chatFull, ViewGroup parentView, Theme.ResourcesProvider resourcesProvider) {
         super(context);
         this.fragment = fragment;
-        this.allowAnimatedEmoji = needAnimatedEmoji;
+        this.allowAnimatedEmoji = needAnimatedEmoji && !MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false);
         this.resourcesProvider = resourcesProvider;
 
         int color = getThemedColor(Theme.key_chat_emojiBottomPanelIcon);
