@@ -1,5 +1,9 @@
 # Changes
 
+* 9.33.30
+    * catch exception to avoid that function crash in theory in one function call after removing closequetly
+    * disable premium emojis in emoji header list
+    * disable premium bitchie emojis in the emoji listing
 * 9.33.29
     * fixed bug when you copied a channel link graher copied dummy text
     * more try-with-resources
