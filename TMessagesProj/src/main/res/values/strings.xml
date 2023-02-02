@@ -6163,4 +6163,5 @@
     <string name="THUserRestrictionsSendGifs">Send GIFs</string>
     <string name="THUserRestrictionsSendGames">Send Games</string>
     <string name="THUserRestrictionsUseInlineBots">Use Inline Bots</string>
+    <string name="THGraheriumDisablePremiumEmojis">Disable premium emojis</string>
 </resources>

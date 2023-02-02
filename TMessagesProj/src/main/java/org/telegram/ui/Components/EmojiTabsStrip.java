@@ -27,12 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.math.MathUtils;
 
-import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.ImageReceiver;
-import org.telegram.messenger.MediaDataController;
-import org.telegram.messenger.MessageObject;
-import org.telegram.messenger.R;
-import org.telegram.messenger.UserConfig;
+import org.telegram.messenger.*;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.Premium.PremiumLockIconView;
@@ -269,7 +264,7 @@ public class EmojiTabsStrip extends ScrollableHorizontalScrollView {
                 contentView.addView(emojiTabs = new EmojiTabsView(context));
                 emojiTabs.id = "tabs".hashCode();
             }
-            if (onSettingsOpen != null) {
+            if (!MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false) && onSettingsOpen != null) {
                 contentView.addView(settingsTab = new EmojiTabButton(context, settingsDrawableId, false, true));
                 settingsTab.id = "settings".hashCode();
                 settingsTab.setAlpha(0);
@@ -343,6 +338,7 @@ public class EmojiTabsStrip extends ScrollableHorizontalScrollView {
     private ValueAnimator appearAnimation;
     private int appearCount;
     public void updateEmojiPacks(ArrayList<EmojiView.EmojiPack> emojiPacks) {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)) return;
         if (!includeAnimated) {
             return;
         }
