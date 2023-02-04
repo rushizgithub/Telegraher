@@ -476,7 +476,7 @@ public class SelectAnimatedEmojiDialog extends FrameLayout implements Notificati
         }
 
         boolean showSettings = baseFragment != null && type != TYPE_TOPIC_ICON;
-        emojiTabs = new EmojiTabsStrip(context, null, false, true, type, showSettings ? () -> {
+        emojiTabs = new EmojiTabsStrip(context, null, false, !(MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)), type, showSettings ? () -> {
             onSettings();
             baseFragment.presentFragment(new StickersActivity(MediaDataController.TYPE_EMOJIPACKS, frozenEmojiPacks));
             if (dismiss != null) {
@@ -2522,6 +2522,7 @@ public class SelectAnimatedEmojiDialog extends FrameLayout implements Notificati
         }
         ArrayList<TLRPC.TL_messages_stickerSet> installedEmojipacks = frozenEmojiPacks;
         ArrayList<TLRPC.StickerSetCovered> featuredEmojiPacks = new ArrayList<>(mediaDataController.getFeaturedEmojiSets());
+        if ((MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false))) featuredEmojiPacks.clear();
 
         ArrayList<Integer> prevRowHashCodes = new ArrayList<>(rowHashCodes);
         totalCount = 0;
