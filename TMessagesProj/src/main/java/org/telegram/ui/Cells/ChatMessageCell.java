@@ -3717,6 +3717,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     }
 
     public void updateAnimatedEmojis() {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)) return;
         if (!imageReceiversAttachState) {
             return;
         }
@@ -4009,6 +4010,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             if (currentMessageObject != null && !currentMessageObject.mediaExists) {
                 int canDownload = DownloadController.getInstance(currentAccount).canDownloadMedia(currentMessageObject.messageOwner);
                 TLRPC.Document document = currentMessageObject.getDocument();
+                if (MessageObject.isAnimatedStickerDocument(document, true)) return;
                 boolean loadDocumentFromImageReceiver = MessageObject.isStickerDocument(document) || MessageObject.isAnimatedStickerDocument(document, true) || MessageObject.isGifDocument(document) || MessageObject.isRoundVideoDocument(document);
                 if (!loadDocumentFromImageReceiver) {
                     TLRPC.PhotoSize photo = document == null ? FileLoader.getClosestPhotoSizeWithSize(currentMessageObject.photoThumbs, AndroidUtilities.getPhotoSize()) : null;
@@ -4026,9 +4028,11 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     updateButtonState(false, false, false);
                 }
             }
-            animatedEmojiReplyStack = AnimatedEmojiSpan.update(AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES, this, false, animatedEmojiReplyStack, replyTextLayout);
-            animatedEmojiDescriptionStack = AnimatedEmojiSpan.update(AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES, this, false, animatedEmojiDescriptionStack, descriptionLayout);
-            updateAnimatedEmojis();
+            if(!MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)){
+                animatedEmojiReplyStack = AnimatedEmojiSpan.update(AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES, this, false, animatedEmojiReplyStack, replyTextLayout);
+                animatedEmojiDescriptionStack = AnimatedEmojiSpan.update(AnimatedEmojiDrawable.CACHE_TYPE_MESSAGES, this, false, animatedEmojiDescriptionStack, descriptionLayout);
+                updateAnimatedEmojis();
+            }
         } else {
             radialProgress.onDetachedFromWindow();
             videoRadialProgress.onDetachedFromWindow();
@@ -4049,6 +4053,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
             if (currentMessageObject != null && !currentMessageObject.mediaExists && !currentMessageObject.putInDownloadsStore && !DownloadController.getInstance(currentAccount).isDownloading(currentMessageObject.messageOwner.id)) {
                 TLRPC.Document document = currentMessageObject.getDocument();
+                if (MessageObject.isAnimatedStickerDocument(document, true)) return;
                 boolean loadDocumentFromImageReceiver = MessageObject.isStickerDocument(document) || MessageObject.isAnimatedStickerDocument(document, true) || MessageObject.isGifDocument(document) || MessageObject.isRoundVideoDocument(document);
                 if (!loadDocumentFromImageReceiver) {
                     if (document != null) {
@@ -4061,9 +4066,11 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     }
                 }
             }
-            AnimatedEmojiSpan.release(this, animatedEmojiDescriptionStack);
-            AnimatedEmojiSpan.release(this, animatedEmojiReplyStack);
-            AnimatedEmojiSpan.release(this, animatedEmojiStack);
+            if(!MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)) {
+                AnimatedEmojiSpan.release(this, animatedEmojiDescriptionStack);
+                AnimatedEmojiSpan.release(this, animatedEmojiReplyStack);
+                AnimatedEmojiSpan.release(this, animatedEmojiStack);
+            }
         }
     }
 
@@ -6419,7 +6426,14 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     if (!(drawTopic && (currentMessageObject != null && currentMessageObject.replyMessageObject != null || forwardedNameLayout != null && forwardedNameLayout[0] != null))) {
                         additionHeight -= AndroidUtilities.dp(17);
                     }
-                } else if (!MessagesController.getGlobalTelegraherSettings().getBoolean("HideStickers", false) && messageObject.isAnyKindOfSticker()) {
+                } else if (
+                    !MessagesController.getGlobalTelegraherSettings().getBoolean("HideStickers", false) && messageObject.isAnyKindOfSticker()
+                        &&
+                        !(
+                            MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)
+                                && messageObject.isAnimatedAnimatedEmoji()
+                        )
+                ) {
 
                     drawBackground = false;
                     boolean isWebpSticker = messageObject.type == MessageObject.TYPE_STICKER;

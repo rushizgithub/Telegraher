@@ -323,6 +323,7 @@ public final class BulletinFactory {
     }
 
     public Bulletin createContainsEmojiBulletin(TLRPC.Document document, boolean inTopic, Utilities.Callback<TLRPC.InputStickerSet> openSet) {
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)) return null;
         TLRPC.InputStickerSet inputStickerSet = MessageObject.getInputStickerSet(document);
         if (inputStickerSet == null) {
             return null;
