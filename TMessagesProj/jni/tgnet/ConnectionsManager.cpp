@@ -884,8 +884,8 @@ void ConnectionsManager::onConnectionDataReceived(Connection *connection, Native
             if (datacenter->isHandshaking(connection->isMediaConnection)) {
                 datacenter->processHandshakeResponse(connection->isMediaConnection, object, messageId);
             } else {
-                processServerResponse(object, messageId, 0, 0, connection, 0, 0);
-                connection->addProcessedMessageId(messageId);
+                connection->reconnect();
+                return;
             }
             lastProtocolUsefullData = true;
             connection->setHasUsefullData();

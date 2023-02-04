@@ -1,5 +1,11 @@
 # Changes
 
+* 9.33.31
+    * fix from tg 9.4.0 for C-part tgnet
+    * disable premoji small & large
+    * option to hide video stickets in chats
+    * option to hide animated stickers in chats
+    * remove premoji from reactions also
 * 9.33.30
     * catch exception to avoid that function crash in theory in one function call after removing closequetly
     * disable premium emojis in emoji header list

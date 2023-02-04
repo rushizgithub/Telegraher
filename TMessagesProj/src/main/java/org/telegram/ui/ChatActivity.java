@@ -23882,7 +23882,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             }
                         }
 
-                        if (stickerSets.size() > 0 && !getMessagesController().premiumLocked) {
+                        if (!MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false) && stickerSets.size() > 0 && !getMessagesController().premiumLocked) {
                             View gap = new FrameLayout(contentView.getContext());
                             gap.setBackgroundColor(getThemedColor(Theme.key_actionBarDefaultSubmenuSeparator));
                             popupLayout.addView(gap, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 8));
@@ -27338,7 +27338,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
                     @Override
                     public boolean didPressAnimatedEmoji(ChatMessageCell cell, AnimatedEmojiSpan span) {
-                        if (getMessagesController().premiumLocked || span == null || span.standard) {
+                        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false) || getMessagesController().premiumLocked || span == null || span.standard) {
                             return false;
                         }
                         long documentId = span.getDocumentId();

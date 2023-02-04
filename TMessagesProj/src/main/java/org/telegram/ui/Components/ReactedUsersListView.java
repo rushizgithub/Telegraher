@@ -328,6 +328,10 @@ public class ReactedUsersListView extends FrameLayout {
         customEmojiStickerSets.clear();
         ArrayList<TLRPC.InputStickerSet> sets = new ArrayList<>();
         HashSet<Long> setIds = new HashSet<>();
+        if (MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)) {
+            customReactionsEmoji.clear();
+            return;
+        }
         for (int i = 0; i < customReactionsEmoji.size(); i++) {
             TLRPC.InputStickerSet stickerSet = MessageObject.getInputStickerSet(AnimatedEmojiDrawable.findDocument(currentAccount, customReactionsEmoji.get(i).documentId));
             if (stickerSet != null && !setIds.contains(stickerSet.id)) {
