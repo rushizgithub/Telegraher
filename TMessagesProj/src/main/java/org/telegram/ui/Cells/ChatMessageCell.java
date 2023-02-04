@@ -6428,10 +6428,13 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     }
                 } else if (
                     !MessagesController.getGlobalTelegraherSettings().getBoolean("HideStickers", false) && messageObject.isAnyKindOfSticker()
-                        &&
-                        !(
+                        && !(
                             MessagesController.getGlobalTelegraherSettings().getBoolean("GraheriumDisablePremiumEmojis", false)
                                 && messageObject.isAnimatedAnimatedEmoji()
+                        )
+                        && !(
+                            MessagesController.getGlobalTelegraherSettings().getBoolean("HideVideoStickers", false)
+                                && messageObject.isVideoSticker()
                         )
                 ) {
 

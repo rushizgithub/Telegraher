@@ -117,4 +117,5 @@
     <string name="THUserRestrictionsSendGames">Отправка Игр</string>
     <string name="THUserRestrictionsUseInlineBots">Использование Инлайн-Ботов</string>
     <string name="THGraheriumDisablePremiumEmojis">Отключить премиум emoji</string>
+    <string name="THChatHideVideoStickers">Скрывать видео стикеры в чатах</string>
 </resources>
