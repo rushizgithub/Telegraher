@@ -6436,6 +6436,10 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                             MessagesController.getGlobalTelegraherSettings().getBoolean("HideVideoStickers", false)
                                 && messageObject.isVideoSticker()
                         )
+                        && !(
+                            MessagesController.getGlobalTelegraherSettings().getBoolean("HideAnimatedStickers", false)
+                                && messageObject.isAnimatedSticker()
+                        )
                 ) {
 
                     drawBackground = false;

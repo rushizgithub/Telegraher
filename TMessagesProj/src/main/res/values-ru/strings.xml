@@ -118,4 +118,5 @@
     <string name="THUserRestrictionsUseInlineBots">Использование Инлайн-Ботов</string>
     <string name="THGraheriumDisablePremiumEmojis">Отключить премиум emoji</string>
     <string name="THChatHideVideoStickers">Скрывать видео стикеры в чатах</string>
+    <string name="THChatHideAnimatedStickers">Скрывать анимированные стикеры в чатах</string>
 </resources>

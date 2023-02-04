@@ -111,6 +111,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
     private int chatHideAllInSpoilersRow;
     private int chatRealForwardedMessageTimeRow;
     private int chatHideStickersRow;
+    private int chatHideAnimatedStickersRow;
     private int chatHideVideoStickersRow;
 
     private int videoLabelRoundBitrateRow;
@@ -204,6 +205,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
         chatHideAllInSpoilersRow = rowCount++;
         chatRealForwardedMessageTimeRow = rowCount++;
         chatHideStickersRow = rowCount++;
+        chatHideAnimatedStickersRow = rowCount++;
         chatHideVideoStickersRow = rowCount++;
 
         accountLabelRow = rowCount++;
@@ -400,6 +402,12 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                 SharedPreferences.Editor editor = preferences.edit();
                 enabled = preferences.getBoolean("HideStickers", false);
                 editor.putBoolean("HideStickers", !enabled);
+                editor.apply();
+            } else if (position == chatHideAnimatedStickersRow) {
+                SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
+                SharedPreferences.Editor editor = preferences.edit();
+                enabled = preferences.getBoolean("HideAnimatedStickers", false);
+                editor.putBoolean("HideAnimatedStickers", !enabled);
                 editor.apply();
             } else if (position == chatHideVideoStickersRow) {
                 SharedPreferences preferences = MessagesController.getGlobalTelegraherSettings();
@@ -710,6 +718,8 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THChatRealForwardedMessageTime), globalPreps.getBoolean("RealForwardedMessageTime", true), true);
                     } else if (position == chatHideStickersRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THChatHideStickers), globalPreps.getBoolean("HideStickers", false), true);
+                    } else if (position == chatHideAnimatedStickersRow) {
+                        checkCell.setTextAndCheck(LocaleController.getString(R.string.THChatHideAnimatedStickers), globalPreps.getBoolean("HideAnimatedStickers", false), true);
                     } else if (position == chatHideVideoStickersRow) {
                         checkCell.setTextAndCheck(LocaleController.getString(R.string.THChatHideVideoStickers), globalPreps.getBoolean("HideVideoStickers", false), true);
                     } else if (position == gifHDRow) {
@@ -971,7 +981,7 @@ public class TelegraherSettingsActivity extends BaseFragment implements Notifica
                     || position == hardwareDisableVibroRow
                     || position == chatDeleteMarkRow || position == chatEnableMessageHistoryRow || position == accountExtendVanillaRow || position == chatSBFullRow
                     || position == chatSwapToNextChannelRow || position == chatTabsOnForwardRow || position == chatDisableSpoilersRow || position == chatHideAllInSpoilersRow || position == chatRealForwardedMessageTimeRow
-                    || position == chatHideStickersRow || position == chatHideVideoStickersRow
+                    || position == chatHideStickersRow || position == chatHideAnimatedStickersRow || position == chatHideVideoStickersRow
                     || position == graheriumSpeedUpUpload || position == graheriumSpeedUpDownload || position == graheriumAnimateEveryAvatar || position == graheriumAnimatedStickerOverlays || position == graheriumVanillaStickerFlow || position == graheriumDisableEmojiStatus || position == graheriumDisablePremiumEmojis
                     || position == gifHDRow || position == videoRoundUseMainCameraRow
                     || position == uiAppHidePhoneNumberOnLeftPanelRow
